@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{758C2D36-CF92-4DED-BC66-CC0C481CE3A8}</ProjectGuid>
+    <RootNamespace>FancyBox</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>bin\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <TargetName>FancyBox</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>bin\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <TargetName>FancyBox</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PostBuildEvent>
+      <Command>xcopy "$(ColdBrewBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(GlfwBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(OpenAlBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>libmedialoader.lib;libpng.lib;jpeg.lib;libogg.lib;libvorbis.lib;opengl32.lib;glew32.lib;glfw3.lib;LibOVR.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PostBuildEvent>
+      <Command>xcopy "$(ColdBrewBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(GlfwBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(OpenAlBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>libmedialoader.lib;libpng.lib;jpeg.lib;libogg.lib;libvorbis.lib;opengl32.lib;glew32.lib;glfw3.lib;LibOVR.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\FancyBox.h" />
+    <ClInclude Include="include\graphics\glbuffer.h" />
+    <ClInclude Include="include\graphics\glframebuffer.h" />
+    <ClInclude Include="include\graphics\glprogram.h" />
+    <ClInclude Include="include\graphics\glshader.h" />
+    <ClInclude Include="include\graphics\gltexture.h" />
+    <ClInclude Include="include\graphics\gluniform.h" />
+    <ClInclude Include="include\graphics\gluniformblock.h" />
+    <ClInclude Include="include\graphics\glvertexarray.h" />
+    <ClInclude Include="include\input\axis.h" />
+    <ClInclude Include="include\input\button.h" />
+    <ClInclude Include="include\input\gamepad.h" />
+    <ClInclude Include="include\input\key.h" />
+    <ClInclude Include="include\input\mouse.h" />
+    <ClInclude Include="include\model\actor.h" />
+    <ClInclude Include="include\model\components\camera.h" />
+    <ClInclude Include="include\model\components\component.h" />
+    <ClInclude Include="include\model\components\light.h" />
+    <ClInclude Include="include\model\components\material.h" />
+    <ClInclude Include="include\model\components\meshfilter.h" />
+    <ClInclude Include="include\model\components\texturefilter.h" />
+    <ClInclude Include="include\model\components\transform.h" />
+    <ClInclude Include="include\scripting\scriptarray.h" />
+    <ClInclude Include="include\scripting\scriptentity.h" />
+    <ClInclude Include="include\scripting\scriptfile.h" />
+    <ClInclude Include="include\scripting\scriptmanager.h" />
+    <ClInclude Include="include\scripting\scriptobject.h" />
+    <ClInclude Include="include\scripting\scriptparameters.h" />
+    <ClInclude Include="include\system\callback.h" />
+    <ClInclude Include="include\system\global.h" />
+    <ClInclude Include="include\system\graphics.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\actor.cpp" />
+    <ClCompile Include="src\callback.cpp" />
+    <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\glbuffer.cpp" />
+    <ClCompile Include="src\glframebuffer.cpp" />
+    <ClCompile Include="src\glprogram.cpp" />
+    <ClCompile Include="src\glshader.cpp" />
+    <ClCompile Include="src\gltexture.cpp" />
+    <ClCompile Include="src\gluniform.cpp" />
+    <ClCompile Include="src\gluniformblock.cpp" />
+    <ClCompile Include="src\glvertexarray.cpp" />
+    <ClCompile Include="src\graphics.cpp" />
+    <ClCompile Include="src\light.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\material.cpp" />
+    <ClCompile Include="src\meshfilter.cpp" />
+    <ClCompile Include="src\scriptarray.cpp" />
+    <ClCompile Include="src\scriptfile.cpp" />
+    <ClCompile Include="src\scriptmanager.cpp" />
+    <ClCompile Include="src\scriptobject.cpp" />
+    <ClCompile Include="src\scriptparameters.cpp" />
+    <ClCompile Include="src\texturefilter.cpp" />
+    <ClCompile Include="src\transform.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
