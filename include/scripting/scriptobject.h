@@ -9,9 +9,9 @@ namespace fbox
 	public:
 
 		inline ScriptObject() : ScriptEntity(), _state(0) {}
-		inline ScriptObject(ScriptManager* manager);
-		inline ScriptObject(ScriptManager* manager, v8::Handle<v8::Object>& object);
-		inline ~ScriptObject();
+		ScriptObject(ScriptManager* manager);
+		ScriptObject(ScriptManager* manager, v8::Handle<v8::Object>& object);
+		~ScriptObject();
 
 		void set(String key, String value);
 		void set(String key, __int32 value);

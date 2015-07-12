@@ -5,11 +5,6 @@
 namespace fbox
 {
 
-	FBOXAPI void Actor::build()
-	{
-		this->transform = new Transform;
-		this->add(this->transform);
-	}
 	FBOXAPI void Actor::dispose()
 	{
 		for (List<Component*>::Iterator i = this->components.iteratorAtEnd(); i.inside(); i.previous())
@@ -22,6 +17,7 @@ namespace fbox
 		}
 
 		this->components.clear();
+		this->behaviors.clear();
 		this->transform = 0;
 		this->material = 0;
 		this->camera = 0;
@@ -39,10 +35,17 @@ namespace fbox
 		{
 			component->object = this;
 			this->components.add(component);
-
-			if (component->componentType == "Material")
+			if (component->componentType == "Transform")
+			{
+				this->transform = (Transform*)component;
+			}
+			else if (component->componentType == "Material")
 			{
 				this->material = (Material*)component;
+			}
+			else if (component->componentType == "Behavior")
+			{
+				this->behaviors.add((Behavior*)component);
 			}
 			else if (component->componentType == "Camera")
 			{
@@ -52,21 +55,6 @@ namespace fbox
 			{
 				this->light = (Light*)component;
 			}
-		}
-	}
-
-	FBOXAPI void Actor::attach(Mesh::Shape* shape)
-	{
-		if (shape != 0)
-		{
-			this->add(new MeshFilter(shape));
-		}
-	}
-	FBOXAPI void Actor::attach(Image::Surface* surface, TextureFilter::TEXTURETYPE type)
-	{
-		if (surface != 0 && type != TextureFilter::TEXTURE_NONE && this->material != 0)
-		{
-			this->add(new TextureFilter(surface, type));
 		}
 	}
 

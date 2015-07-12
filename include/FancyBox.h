@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(_WIN32)
+#if 0//defined(_WIN32)
 
 #if defined(FBOX_EXPORT)
 #define FBOXAPI __declspec(dllexport)
@@ -37,6 +37,7 @@ namespace fbox
 	class FBOXAPI MeshFilter;
 	class FBOXAPI TextureFilter;
 	class FBOXAPI Material;
+	class FBOXAPI Behavior;
 	class FBOXAPI Camera;
 	class FBOXAPI Light;
 
@@ -51,14 +52,8 @@ namespace fbox
 #include <dirent.h>
 
 #include <MediaLoader.h>
-//#include <vec2.hpp>
-//#include <vec3.hpp>
-//#include <vec4.hpp>
-//#include <geometric.hpp>
-//#include <mat3x3.hpp>
-//#include <mat4x4.hpp>
-//#include <ext.hpp>
 
+#include <random.hpp>
 #include <array.hpp>
 #include <list.hpp>
 
@@ -66,7 +61,6 @@ namespace fbox
 #include <GLFW\glfw3.h>
 #include <v8.h>
 
-//using namespace glm;
 using namespace medialoader;
 
 #include "input\button.h"
@@ -96,11 +90,14 @@ using namespace medialoader;
 #include "model\components\meshfilter.h"
 #include "model\components\texturefilter.h"
 #include "model\components\material.h"
+#include "model\components\behavior.h"
 #include "model\components\camera.h"
 #include "model\components\light.h"
 
 #include "model\actor.h"
 
 #include "system\global.h"
+#include "system\frame.h"
+#include "system\import.h"
 #include "system\callback.h"
 #include "system\graphics.h"

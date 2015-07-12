@@ -12,7 +12,7 @@ namespace fbox
 		inline Component(String type) : componentType(type) {}
 		inline ~Component() {}
 
-		inline virtual void bind() = 0;
+		virtual void bind() = 0;
 
 		Actor* object;
 		String componentType;

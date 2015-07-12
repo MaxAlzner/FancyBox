@@ -10,6 +10,7 @@ namespace fbox
 
 		enum LIGHTTYPE
 		{
+			NONE,
 			DIRECTIONAL,
 			POINT,
 			SPOT,
@@ -17,6 +18,7 @@ namespace fbox
 
 		inline Light() :
 			Component("Light"),
+			lightType(NONE),
 			intensity(1.0f) {}
 		inline Light(LIGHTTYPE lightType, const float intensity) :
 			Component("Light"),
@@ -24,7 +26,7 @@ namespace fbox
 			intensity(intensity) {}
 		inline ~Light() {}
 
-		inline void bind();
+		void bind();
 
 		LIGHTTYPE lightType;
 		float intensity;

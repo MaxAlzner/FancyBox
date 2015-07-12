@@ -4,14 +4,14 @@
 namespace fbox
 {
 
-	typedef enum FBOXAPI MouseButton
+	typedef enum MouseButton
 	{
 		BUTTON_LEFT = 0,
 		BUTTON_MIDDLE = 1,
 		BUTTON_RIGHT = 2,
 	} MouseButton;
 
-	typedef struct FBOXAPI MouseState
+	typedef struct MouseState
 	{
 
 		inline MouseState() : position(0.0f), scroll(0.0f), active(false) {}

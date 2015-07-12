@@ -32,7 +32,7 @@ namespace fbox
 		default: break;
 		}
 
-		const char* source = *this->_file;
+		const char* source = this->_file->raw();
 		this->_handle = glCreateShader(type);
 		glShaderSource(this->_handle, 1, (const char**)&source, 0);
 		glCompileShader(this->_handle);

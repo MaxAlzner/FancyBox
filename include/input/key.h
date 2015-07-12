@@ -4,7 +4,7 @@
 namespace fbox
 {
 
-	typedef enum FBOXAPI KeyCode
+	typedef enum KeyCode
 	{
 		KEY_UNKNOWN = 0,
 		KEY_BACKSPACE = 8,
@@ -169,7 +169,7 @@ namespace fbox
 		KEY_MENU = 319,
 	} KeyCode;
 
-	typedef struct FBOXAPI KeyboardState
+	typedef struct KeyboardState
 	{
 
 		inline KeyboardState()

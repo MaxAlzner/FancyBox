@@ -11,7 +11,7 @@ namespace fbox
 		inline Material() : Component("Material") {}
 		inline ~Material() {}
 
-		inline void bind();
+		void bind();
 
 	};
 

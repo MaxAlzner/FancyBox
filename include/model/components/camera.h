@@ -10,23 +10,26 @@ namespace fbox
 
 		inline Camera() :
 			Component("Camera"),
-			aperture(4.0f, 3.0f),
-			fov(60.0f) {}
-		inline Camera(const vec2& aperture, const float fov) :
+			aperture(0.0f),
+			clipping(0.0f),
+			fov(0.0f) {}
+		inline Camera(const vec2& aperture, const vec2& clipping, const float fov) :
 			Component("Camera"),
 			aperture(aperture),
+			clipping(clipping),
 			fov(fov) {}
 		inline ~Camera() {}
 
-		inline void bind();
+		void bind();
 
-		inline void adjust(float width, float height);
-		inline void adjust();
+		void adjust(float width, float height);
+		void adjust();
 
 		//inline ray getRay(float u, float v);
 		//inline ray getRay(vec2& uv);
 
 		vec2 aperture;
+		vec2 clipping;
 		float fov;
 
 	protected:

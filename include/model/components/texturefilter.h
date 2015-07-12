@@ -30,7 +30,7 @@ namespace fbox
 		inline TextureFilter(Image::Surface* surface, const TEXTURETYPE type) : Component("TextureFilter"), type(type) { this->texture.create(surface); }
 		inline ~TextureFilter() {}
 
-		inline void bind();
+		void bind();
 
 		const TEXTURETYPE type;
 		GlTexture texture;

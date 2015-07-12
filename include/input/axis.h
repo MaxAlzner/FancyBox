@@ -4,7 +4,7 @@
 namespace fbox
 {
 
-	typedef struct FBOXAPI Axis
+	typedef struct Axis
 	{
 
 		inline Axis()

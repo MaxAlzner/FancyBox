@@ -9,10 +9,10 @@ namespace fbox
 	public:
 
 		inline ScriptArray() : ScriptEntity(), _state(0) {}
-		inline ScriptArray(ScriptManager* manager);
-		inline ScriptArray(ScriptManager* manager, const int length);
-		inline ScriptArray(ScriptManager* manager, v8::Handle<v8::Array>& source);
-		inline ~ScriptArray();
+		ScriptArray(ScriptManager* manager);
+		ScriptArray(ScriptManager* manager, const int length);
+		ScriptArray(ScriptManager* manager, v8::Handle<v8::Array>& source);
+		~ScriptArray();
 
 		void add(String value);
 		void add(__int32 value);

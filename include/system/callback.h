@@ -4,14 +4,14 @@
 namespace fbox
 {
 
-	extern void OnLoad();
-	extern void OnUnload();
-	extern void OnStart();
-	extern void OnEnd();
+	FBOXAPI extern void OnLoad();
+	FBOXAPI extern void OnUnload();
+	FBOXAPI extern void OnStart();
+	FBOXAPI extern void OnEnd();
 
-	extern void OnReshape(int width, int height);
-	extern void OnUpdate();
-	extern void OnDraw();
+	FBOXAPI extern void OnReshape(int width, int height);
+	FBOXAPI extern void OnUpdate();
+	FBOXAPI extern void OnDraw();
 
 }
 

@@ -10,7 +10,7 @@ namespace fbox
 
 	}
 
-	FBOXAPI inline void Transform::recalculate()
+	FBOXAPI void Transform::recalculate()
 	{
 		this->space = mat4(1.0f);
 		this->space *= rotateX(this->rotation.x);
@@ -30,7 +30,7 @@ namespace fbox
 		this->up = normalize(vec3(0.0f, 1.0f, 0.0f) * spaceNormal);
 		this->forward = normalize(vec3(0.0f, 0.0f, 1.0f) * spaceNormal);
 	}
-	FBOXAPI inline void Transform::zero()
+	FBOXAPI void Transform::zero()
 	{
 		this->transformation = mat4(1.0f);
 		this->space = mat4(1.0f);
@@ -42,7 +42,7 @@ namespace fbox
 		this->forward = vec3(0.0f, 0.0f, 1.0f);
 	}
 
-	FBOXAPI inline void Transform::look(const vec3& focus)
+	FBOXAPI void Transform::look(const vec3& focus)
 	{
 		vec3 to = normalize(focus - this->position);
 	}

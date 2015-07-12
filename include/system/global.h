@@ -4,21 +4,28 @@
 namespace fbox
 {
 
-	static struct
+	typedef struct InputState
 	{
 
 		MouseState Mouse;
 		KeyboardState Key;
 		GamepadState Gamepad;
 
-	} Input;
+	} InputState;
 
-	static struct
-	{
+	extern FBOXAPI InputState Input;
 
-		Array<GlUniform> Uniforms;
+	extern FBOXAPI GlShader* VertexProgram;
+	extern FBOXAPI GlShader* FragmentProgram;
+	extern FBOXAPI GlProgram* MainProgram;
+	extern FBOXAPI Array<GlUniform*> Uniforms;
+	extern FBOXAPI Array<GlUniformBlock*> UniformBlocks;
 
-	} Renderer;
+	extern FBOXAPI Array<GlVertexArray*> VertexArrays;
+	extern FBOXAPI Array<GlTexture*> Textures;
+
+	extern FBOXAPI ScriptManager* MainScriptManager;
+	extern FBOXAPI Array<Actor*> Actors;
 
 }
 

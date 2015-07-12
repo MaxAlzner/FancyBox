@@ -12,12 +12,12 @@ namespace fbox
 		inline Transform(Transform* parent) : Component("Transform"), parent(parent != this ? parent : 0) { this->zero(); }
 		inline ~Transform() {}
 
-		inline void bind();
+		void bind();
 
-		inline void recalculate();
-		inline void zero();
+		void recalculate();
+		void zero();
 
-		inline void look(const vec3& focus);
+		void look(const vec3& focus);
 
 		const Transform* parent;
 		mat4 transformation;

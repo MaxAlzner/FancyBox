@@ -45,6 +45,7 @@ void OnFileDrop(GLFWwindow* window, int count, const char** paths)
 	for (int i = 0; i < count; i++)
 	{
 		String path = paths[i];
+		printf(" Dropped file: %s\n", (char*)path);
 	}
 }
 
@@ -90,12 +91,13 @@ int main(int argv, char** argc)
 	fbox::OnStart();
 	while (!glfwWindowShouldClose(window))
 	{
+		fbox::Frame::Start();
 		glfwPollEvents();
 		fbox::OnUpdate();
 		fbox::OnDraw();
 		glfwSwapBuffers(window);
+		fbox::Frame::Finish();
 	}
 
-	cleanup();
 	return 0;
 }

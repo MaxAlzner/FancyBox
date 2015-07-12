@@ -4,7 +4,7 @@
 namespace fbox
 {
 
-	typedef enum FBOXAPI ButtonCode
+	typedef enum ButtonCode
 	{
 		BUTTON_A = 0,
 		BUTTON_B = 1,
@@ -18,7 +18,7 @@ namespace fbox
 		BUTTON_R_STICK = 9,
 	} ButtonCode;
 
-	typedef enum FBOXAPI DPadCode
+	typedef enum DPadCode
 	{
 		DPAD_UP = 0,
 		DPAD_UP_RIGHT = 1,
@@ -30,7 +30,7 @@ namespace fbox
 		DPAD_UP_LEFT = 7,
 	} DPadCode;
 
-	typedef enum FBOXAPI AxisCode
+	typedef enum AxisCode
 	{
 		AXIS_L_STICK_X = 0,
 		AXIS_L_STICK_Y = 1,
@@ -40,7 +40,7 @@ namespace fbox
 		AXIS_R_TRIGGER = 5,
 	} AxisCode;
 
-	typedef struct FBOXAPI GamepadState
+	typedef struct GamepadState
 	{
 
 		inline GamepadState() : connected(false), user(-1) {}

@@ -91,6 +91,7 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     <ClInclude Include="include\input\key.h" />
     <ClInclude Include="include\input\mouse.h" />
     <ClInclude Include="include\model\actor.h" />
+    <ClInclude Include="include\model\components\behavior.h" />
     <ClInclude Include="include\model\components\camera.h" />
     <ClInclude Include="include\model\components\component.h" />
     <ClInclude Include="include\model\components\light.h" />
@@ -105,15 +106,20 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     <ClInclude Include="include\scripting\scriptobject.h" />
     <ClInclude Include="include\scripting\scriptparameters.h" />
     <ClInclude Include="include\system\callback.h" />
+    <ClInclude Include="include\system\frame.h" />
     <ClInclude Include="include\system\global.h" />
     <ClInclude Include="include\system\graphics.h" />
+    <ClInclude Include="include\system\import.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\actor.cpp" />
+    <ClCompile Include="src\behavior.cpp" />
     <ClCompile Include="src\callback.cpp" />
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\frame.cpp" />
     <ClCompile Include="src\glbuffer.cpp" />
     <ClCompile Include="src\glframebuffer.cpp" />
+    <ClCompile Include="src\global.cpp" />
     <ClCompile Include="src\glprogram.cpp" />
     <ClCompile Include="src\glshader.cpp" />
     <ClCompile Include="src\gltexture.cpp" />
@@ -121,6 +127,7 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     <ClCompile Include="src\gluniformblock.cpp" />
     <ClCompile Include="src\glvertexarray.cpp" />
     <ClCompile Include="src\graphics.cpp" />
+    <ClCompile Include="src\import.cpp" />
     <ClCompile Include="src\light.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\material.cpp" />

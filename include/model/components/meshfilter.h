@@ -12,7 +12,7 @@ namespace fbox
 		inline MeshFilter(Mesh::Shape* shape) : Component("MeshFilter") { this->vao.create(shape); }
 		inline ~MeshFilter() {}
 
-		inline void bind();
+		void bind();
 
 		GlVertexArray vao;
 

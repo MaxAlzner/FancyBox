@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene>
+	<actor name="MainCamera">
+		<transform>
+			<translate y="0.5" z="-4" />
+		</transform>
+		<camera x="4" y="3" fov="60" near="0.1" far="100" />
+	</actor>
+	<actor name="Catwalk1">
+		<texture type="diffuse" src="EV_Catwalk_D.tga" />
+		<texture type="normal" src="EV_Catwalk_N.tga" />
+		<texture type="specular" src="EV_Catwalk_S.tga" />
+		<mesh src="EV_Catwalk.obj" />
+	</actor>
+</scene>

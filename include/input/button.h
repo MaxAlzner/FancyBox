@@ -4,7 +4,7 @@
 namespace fbox
 {
 
-	typedef struct FBOXAPI Button
+	typedef struct Button
 	{
 
 		inline Button() : _latched(false), _pressed(false) {}
