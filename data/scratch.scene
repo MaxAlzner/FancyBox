@@ -2,11 +2,15 @@
 <scene>
 	<actor name="MainCamera">
 		<transform>
-			<translate y="0.5" z="-4" />
+			<translate y="3" z="-4" />
+			<rotate x="-30" />
 		</transform>
 		<camera x="4" y="3" fov="60" near="0.1" far="100" />
 	</actor>
 	<actor name="Catwalk1">
+		<transform>
+			<translate x="-2.4" />
+		</transform>
 		<texture type="diffuse" src="EV_Catwalk_D.tga" />
 		<texture type="normal" src="EV_Catwalk_N.tga" />
 		<texture type="specular" src="EV_Catwalk_S.tga" />

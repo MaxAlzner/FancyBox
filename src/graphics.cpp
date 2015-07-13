@@ -112,11 +112,11 @@ namespace fbox
 		else if (name == "uvOffset") return UNIFORM_FLAG_UV_OFFSET;
 		else if (name == "screenSize") return UNIFORM_FLAG_SIZE_SCREEN;
 		else if (name == "mapSize") return UNIFORM_FLAG_SIZE_MAP;
-		else if (name == "randomFilter") return UNIFORM_FLAG_RANDOM_FILTER;
+		else if (name == "randomFilter") return UNIFORM_FLAG_FILTER_RANDOM;
 		else if (name == "gamma") return UNIFORM_FLAG_GAMMA;
-		else if (name == "colorMap") return UNIFORM_FLAG_COLOR_MAP;
-		else if (name == "normalMap") return UNIFORM_FLAG_NORMAL_MAP;
-		else if (name == "specularMap") return UNIFORM_FLAG_SPECULAR_MAP;
+		else if (name == "colorMap") return UNIFORM_FLAG_MAP_COLOR;
+		else if (name == "normalMap") return UNIFORM_FLAG_MAP_NORMAL;
+		else if (name == "specularMap") return UNIFORM_FLAG_MAP_SPECULAR;
 		else if (name == "state") return UNIFORM_FLAG_STATE;
 		else return UNIFORM_FLAG_INVALID;
 	}

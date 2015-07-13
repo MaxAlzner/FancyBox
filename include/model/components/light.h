@@ -10,15 +10,15 @@ namespace fbox
 
 		enum LIGHTTYPE
 		{
-			NONE,
-			DIRECTIONAL,
-			POINT,
-			SPOT,
+			LIGHT_NONE,
+			LIGHT_DIRECTIONAL,
+			LIGHT_POINT,
+			LIGHT_SPOT,
 		};
 
 		inline Light() :
 			Component("Light"),
-			lightType(NONE),
+			lightType(LIGHT_NONE),
 			intensity(1.0f) {}
 		inline Light(LIGHTTYPE lightType, const float intensity) :
 			Component("Light"),

@@ -20,20 +20,14 @@ namespace fbox
 			TEXTURE_DISPLACEMENT,
 		};
 
-		enum SAMPLETYPE
-		{
-			SAMPLE_NEAREST,
-			SAMPLE_LINEAR,
-		};
-
 		inline TextureFilter() : Component("TextureFilter"), type(TEXTURE_NONE) {}
-		inline TextureFilter(Image::Surface* surface, const TEXTURETYPE type) : Component("TextureFilter"), type(type) { this->texture.create(surface); }
+		inline TextureFilter(const TEXTURETYPE type, GlTexture* texture) : Component("TextureFilter"), type(type), texture(texture) {}
 		inline ~TextureFilter() {}
 
 		void bind();
 
 		const TEXTURETYPE type;
-		GlTexture texture;
+		GlTexture* texture;
 
 	};
 

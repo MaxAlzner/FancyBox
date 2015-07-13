@@ -7,7 +7,7 @@ namespace fbox
 
 	FBOXAPI void Transform::bind()
 	{
-
+		GetUniform(UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD)->bind4x4f(this->transformation);
 	}
 
 	FBOXAPI void Transform::recalculate()

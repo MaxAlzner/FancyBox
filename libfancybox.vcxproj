@@ -76,6 +76,7 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\audio\albuffer.h" />
     <ClInclude Include="include\FancyBox.h" />
     <ClInclude Include="include\graphics\glbuffer.h" />
     <ClInclude Include="include\graphics\glframebuffer.h" />
@@ -99,6 +100,7 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     <ClInclude Include="include\model\components\meshfilter.h" />
     <ClInclude Include="include\model\components\texturefilter.h" />
     <ClInclude Include="include\model\components\transform.h" />
+    <ClInclude Include="include\model\scene.h" />
     <ClInclude Include="include\scripting\scriptarray.h" />
     <ClInclude Include="include\scripting\scriptentity.h" />
     <ClInclude Include="include\scripting\scriptfile.h" />
@@ -132,6 +134,7 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\material.cpp" />
     <ClCompile Include="src\meshfilter.cpp" />
+    <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\scriptarray.cpp" />
     <ClCompile Include="src\scriptfile.cpp" />
     <ClCompile Include="src\scriptmanager.cpp" />

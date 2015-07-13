@@ -78,16 +78,6 @@ int main(int argv, char** argc)
 	}
 
 	glfwMakeContextCurrent(window);
-	if (glewInit() != GLEW_OK)
-	{
-		exit(1);
-	}
-
-	if (!GLEW_VERSION_3_0)
-	{
-		exit(1);
-	}
-
 	fbox::OnStart();
 	while (!glfwWindowShouldClose(window))
 	{

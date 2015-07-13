@@ -9,7 +9,7 @@ namespace fbox
 	public:
 
 		inline ScriptFile() : ScriptEntity(), _script(0) {}
-		inline ScriptFile(ScriptManager* manager) : ScriptEntity(manager), _script(0) {}
+		inline ScriptFile(ScriptManager* manager) : ScriptEntity(manager), _script(0) { manager->_files.add(this); }
 		inline ~ScriptFile() {}
 
 		virtual void release();

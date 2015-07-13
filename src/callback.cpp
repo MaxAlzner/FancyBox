@@ -7,6 +7,12 @@ namespace fbox
 	
 	FBOXAPI void OnLoad()
 	{
+		Uniforms.resize(64);
+		UniformBlocks.resize(16);
+		VertexArrays.resize(64);
+		Textures.resize(64);
+		Assets.resize(64);
+
 		VertexProgram = new GlShader(GlShader::TYPE_VERTEX);
 		FragmentProgram = new GlShader(GlShader::TYPE_FRAGMENT);
 		MainProgram = new GlProgram;
@@ -18,30 +24,50 @@ namespace fbox
 		MainScriptManager = new ScriptManager;
 		MainScriptManager->build();
 
-		Import::Read("scratch.scene");
+		MainScene = new Scene;
 	}
 	FBOXAPI void OnUnload()
 	{
+		MainScene->dispose();
+		delete MainScene;
 		MainScriptManager->release();
 		delete MainScriptManager;
+		Textures.clear();
+		VertexArrays.clear();
+		UniformBlocks.clear();
+		Uniforms.clear();
 		MainProgram->release();
 		delete MainProgram;
 		VertexProgram->release();
 		delete VertexProgram;
 		FragmentProgram->release();
 		delete FragmentProgram;
+		Assets.clear();
 	}
 	FBOXAPI void OnStart()
 	{
-		Uniforms.resize(64);
-		UniformBlocks.resize(16);
-		VertexArrays.resize(64);
-		Textures.resize(64);
+		if (glewInit() != GLEW_OK)
+		{
+			exit(1);
+		}
+
+		if (!GLEW_VERSION_3_0)
+		{
+			exit(1);
+		}
+
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glDisable(GL_BLEND);
+
 		VertexProgram->compile();
 		FragmentProgram->compile();
 		MainProgram->link();
+		MainProgram->activate();
 		GrabUniforms();
 
+#if 0
 		const int filterSize = 32 * 2;
 		float* randoms = new float[filterSize];
 		for (int i = 0; i < filterSize; i += 2)
@@ -51,23 +77,14 @@ namespace fbox
 			randoms[i + 0] = cos(theta) * r;
 			randoms[i + 1] = sin(theta) * r;
 		}
-		GetUniform(UNIFORM_FLAG_RANDOM_FILTER)->bind2fv((const vec2*)randoms, filterSize / 2);
+		GetUniform(UNIFORM_FLAG_FILTER_RANDOM)->bind2fv((const vec2*)randoms, filterSize / 2);
 		delete[] randoms;
+#endif
 
-		Actors.resize(64);
+		Import::Read("scratch.scene");
 	}
 	FBOXAPI void OnEnd()
 	{
-		for (int i = 0; i < Actors.count(); i++)
-		{
-			Actor* actor = Actors[i];
-			if (actor != 0)
-			{
-				actor->dispose();
-				delete actor;
-			}
-		}
-
 		for (int i = 0; i < Textures.count(); i++)
 		{
 			GlTexture* texture = Textures[i];
@@ -107,11 +124,15 @@ namespace fbox
 			}
 		}
 
-		Actors.clear();
-		Textures.clear();
-		VertexArrays.clear();
-		UniformBlocks.clear();
-		Uniforms.clear();
+		for (int i = 0; i < Assets.count(); i++)
+		{
+			Media* asset = Assets[i];
+			if (asset != 0)
+			{
+				asset->release();
+				delete asset;
+			}
+		}
 	}
 
 	FBOXAPI void OnReshape(int width, int height)
@@ -120,12 +141,19 @@ namespace fbox
 	}
 	FBOXAPI void OnUpdate()
 	{
-
+		if (MainScene != 0)
+		{
+			MainScene->update();
+		}
 	}
 	FBOXAPI void OnDraw()
 	{
 		glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if (MainScene != 0)
+		{
+			MainScene->render();
+		}
 	}
 
 }

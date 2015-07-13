@@ -10,6 +10,10 @@ namespace fbox
 
 		static void Read(String filepath);
 
+		static void Register(String filepath, GlTexture** outTexture);
+		static void Register(String filepath, GlVertexArray** outVertexArray);
+		static void Register(String filepath, ScriptFile** outScriptFile);
+
 	protected:
 
 		static void ParseScene(XmlNode* node);

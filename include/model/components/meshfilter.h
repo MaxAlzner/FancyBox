@@ -9,12 +9,12 @@ namespace fbox
 	public:
 
 		inline MeshFilter() : Component("MeshFilter") {}
-		inline MeshFilter(Mesh::Shape* shape) : Component("MeshFilter") { this->vao.create(shape); }
+		inline MeshFilter(GlVertexArray* vao) : Component("MeshFilter"), vao(vao) {}
 		inline ~MeshFilter() {}
 
 		void bind();
 
-		GlVertexArray vao;
+		GlVertexArray* vao;
 
 	};
 

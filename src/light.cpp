@@ -9,11 +9,11 @@ namespace fbox
 	{
 		switch (this->lightType)
 		{
-		case LIGHTTYPE::DIRECTIONAL:
+		case LIGHT_DIRECTIONAL:
 			break;
-		case LIGHTTYPE::POINT:
+		case LIGHT_POINT:
 			break;
-		case LIGHTTYPE::SPOT:
+		case LIGHT_SPOT:
 			break;
 		}
 	}

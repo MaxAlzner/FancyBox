@@ -4,6 +4,9 @@
 
 namespace fbox
 {
+	using namespace Image;
+	using namespace Mesh;
+	using namespace Sound;
 
 	FBOXAPI void Import::Read(String filepath)
 	{
@@ -25,6 +28,59 @@ namespace fbox
 		delete file;
 	}
 
+	FBOXAPI void Import::Register(String filepath, GlTexture** outTexture)
+	{
+		Surface* surface = new Surface;
+		surface->read(filepath);
+		GlTexture* texture = new GlTexture;
+		texture->create(surface);
+		if (outTexture != 0)
+		{
+			*outTexture = texture;
+		}
+
+		TextureAsset asset;
+		asset.Filepath = filepath;
+		asset.Surface = surface;
+		asset.Texture = texture;
+		Assets.add(surface);
+		Textures.add(texture);
+		TextureAssets.add(asset);
+	}
+	FBOXAPI void Import::Register(String filepath, GlVertexArray** outVertexArray)
+	{
+		Shape* shape = new Shape;
+		shape->read(filepath);
+		GlVertexArray* vao = new GlVertexArray(MainProgram);
+		vao->create(shape);
+		if (outVertexArray != 0)
+		{
+			*outVertexArray = vao;
+		}
+
+		MeshAsset asset;
+		asset.Filepath = filepath;
+		asset.Shape = shape;
+		asset.VertexArrayObject = vao;
+		Assets.add(shape);
+		VertexArrays.add(vao);
+		MeshAssets.add(asset);
+	}
+	FBOXAPI void Import::Register(String filepath, ScriptFile** outScriptFile)
+	{
+		ScriptFile* script = new ScriptFile(MainScriptManager);
+		script->read(filepath);
+		if (outScriptFile != 0)
+		{
+			*outScriptFile = script;
+		}
+
+		ScriptAsset asset;
+		asset.Filepath = filepath;
+		asset.Script = script;
+		ScriptAssets.add(asset);
+	}
+
 	FBOXAPI void Import::ParseScene(XmlNode* node)
 	{
 		node = node->first_node();
@@ -42,7 +98,7 @@ namespace fbox
 	FBOXAPI void Import::ParseActor(XmlNode* node)
 	{
 		Actor* actor = new Actor;
-		String name = XmlFile::Value(node->last_attribute("name"));
+		actor->name = XmlFile::Value(node->last_attribute("name"));
 		node = node->first_node();
 		while (node != 0)
 		{
@@ -61,7 +117,7 @@ namespace fbox
 			}
 			else if (type == "texture")
 			{
-				actor->add(Import::ParseMaterial(node));
+				actor->add(Import::ParseTexture(node));
 			}
 			else if (type == "script")
 			{
@@ -69,15 +125,17 @@ namespace fbox
 			}
 			else if (type == "camera")
 			{
-				actor->add(Import::ParseMaterial(node));
+				actor->add(Import::ParseCamera(node));
 			}
 			else if (type == "light")
 			{
-				actor->add(Import::ParseMaterial(node));
+				actor->add(Import::ParseLight(node));
 			}
 
 			node = node->next_sibling();
 		}
+
+		MainScene->add(actor);
 	}
 
 	FBOXAPI void Import::ParseTransform(XmlNode* node, Transform* transform)
@@ -116,11 +174,29 @@ namespace fbox
 	FBOXAPI MeshFilter* Import::ParseMesh(XmlNode* node)
 	{
 		String src = XmlFile::Value(node->last_attribute("src"));
-		return new MeshFilter;
+		GlVertexArray* vao = 0;
+		Register(src, &vao);
+		return new MeshFilter(vao);
 	}
 	FBOXAPI TextureFilter* Import::ParseTexture(XmlNode* node)
 	{
 		String src = XmlFile::Value(node->last_attribute("src"));
+		String type = XmlFile::Value(node->last_attribute("type"));
+		GlTexture* texture = 0;
+		Register(src, &texture);
+		if (type == "diffuse")
+		{
+			return new TextureFilter(TextureFilter::TEXTURE_COLOR, texture);
+		}
+		else if (type == "normal")
+		{
+			return new TextureFilter(TextureFilter::TEXTURE_NORMAL, texture);
+		}
+		else if (type == "specular")
+		{
+			return new TextureFilter(TextureFilter::TEXTURE_SPECULAR, texture);
+		}
+
 		return new TextureFilter;
 	}
 	FBOXAPI Material* Import::ParseMaterial(XmlNode* node)
@@ -132,6 +208,8 @@ namespace fbox
 	FBOXAPI Behavior* Import::ParseBehavior(XmlNode* node)
 	{
 		String src = XmlFile::Value(node->last_attribute("src"));
+		ScriptFile* script = 0;
+		Register(src, &script);
 		return new Behavior;
 	}
 	FBOXAPI Camera* Import::ParseCamera(XmlNode* node)
@@ -149,15 +227,15 @@ namespace fbox
 		float intensity = XmlFile::ParseFloat(node->last_attribute("intensity"));
 		if (type == "point")
 		{
-			return new Light(Light::POINT, intensity);
+			return new Light(Light::LIGHT_POINT, intensity);
 		}
 		else if (type == "spot")
 		{
-			return new Light(Light::SPOT, intensity);
+			return new Light(Light::LIGHT_SPOT, intensity);
 		}
 		else if (type == "directional")
 		{
-			return new Light(Light::DIRECTIONAL, intensity);
+			return new Light(Light::LIGHT_DIRECTIONAL, intensity);
 		}
 
 		return new Light;

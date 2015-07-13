@@ -149,6 +149,7 @@ void main()
 	}
 	
 	vec3 albedo = (color * diffuse) + (shine * specular);
+	albedo = color + shine;
 	
 	outColor = vec4(albedo, 1.0);
 }

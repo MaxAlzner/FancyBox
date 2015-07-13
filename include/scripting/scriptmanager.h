@@ -8,8 +8,10 @@ namespace fbox
 	{
 	public:
 
-		inline ScriptManager() : isolate(0), context(0), _scope(0) {}
+		inline ScriptManager() : isolate(0) {}
 		inline ~ScriptManager() {}
+
+		friend class ScriptFile;
 
 		void build();
 		void release();
@@ -27,7 +29,7 @@ namespace fbox
 
 	protected:
 
-		v8::Context::Scope* _scope;
+		List<ScriptFile*> _files;
 
 	};
 

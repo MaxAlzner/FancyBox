@@ -14,15 +14,26 @@ namespace fbox
 
 		this->context = new v8::Local < v8::Context > ;
 		*this->context = v8::Context::New(this->isolate);
-		this->_scope = new v8::Context::Scope(*this->context);
+
+		static v8::Context::Scope ContextScope(*this->context);
 	}
 	FBOXAPI void ScriptManager::release()
 	{
-		if (this->_scope != 0)
+		for (List<ScriptFile*>::Iterator i = this->_files.iterator(); i.inside(); i.next())
 		{
-			delete this->_scope;
-			this->_scope = 0;
+			ScriptFile* script = i.current();
+			if (script != 0)
+			{
+				script->release();
+				delete script;
+			}
 		}
+
+		//if (this->_scope != 0)
+		//{
+		//	delete this->_scope;
+		//	this->_scope = 0;
+		//}
 
 		if (this->context != 0)
 		{
@@ -64,7 +75,7 @@ namespace fbox
 
 	FBOXAPI bool ScriptManager::isEmpty() const
 	{
-		return this->isolate == 0 || this->context == 0 || this->context->IsEmpty() || this->_scope == 0;
+		return this->isolate == 0 || this->context == 0 || this->context->IsEmpty();
 	}
 
 	FBOXAPI String ScriptManager::lastError() const

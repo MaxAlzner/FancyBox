@@ -25,6 +25,8 @@ namespace fbox
 	class FBOXAPI GlShader;
 	class FBOXAPI GlProgram;
 
+	class FBOXAPI AlBuffer;
+
 	class FBOXAPI ScriptEntity;
 	class FBOXAPI ScriptObject;
 	class FBOXAPI ScriptArray;
@@ -42,6 +44,7 @@ namespace fbox
 	class FBOXAPI Light;
 
 	class FBOXAPI Actor;
+	class FBOXAPI Scene;
 }
 
 #include <stdlib.h>
@@ -59,6 +62,8 @@ namespace fbox
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+#include <AL\al.h>
+#include <AL\alc.h>
 #include <v8.h>
 
 using namespace medialoader;
@@ -78,12 +83,14 @@ using namespace medialoader;
 #include "graphics\glshader.h"
 #include "graphics\glprogram.h"
 
+#include "audio\albuffer.h"
+
 #include "scripting\scriptentity.h"
+#include "scripting\scriptmanager.h"
 #include "scripting\scriptobject.h"
 #include "scripting\scriptarray.h"
 #include "scripting\scriptparameters.h"
 #include "scripting\scriptfile.h"
-#include "scripting\scriptmanager.h"
 
 #include "model\components\component.h"
 #include "model\components\transform.h"
@@ -95,6 +102,7 @@ using namespace medialoader;
 #include "model\components\light.h"
 
 #include "model\actor.h"
+#include "model\scene.h"
 
 #include "system\global.h"
 #include "system\frame.h"
