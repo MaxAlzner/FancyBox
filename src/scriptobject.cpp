@@ -5,21 +5,19 @@
 namespace fbox
 {
 
-	FBOXAPI ScriptObject::ScriptObject(ScriptManager* manager)
+	FBOXAPI ScriptObject::ScriptObject()
 	{
-		this->_manager = manager;
 		this->_state = 0;
-		if (this->_manager != 0)
+		if (ScriptManager::Started())
 		{
 			this->_state = new v8::Handle < v8::Object > ;
-			*this->_state = v8::Object::New(this->_manager->isolate);
+			*this->_state = v8::Object::New(ScriptManager::Isolate);
 		}
 	}
-	FBOXAPI ScriptObject::ScriptObject(ScriptManager* manager, v8::Handle<v8::Object>& object)
+	FBOXAPI ScriptObject::ScriptObject(v8::Handle<v8::Object>& object)
 	{
-		this->_manager = manager;
 		this->_state = 0;
-		if (this->_manager != 0)
+		if (ScriptManager::Started())
 		{
 			this->_state = new v8::Handle<v8::Object>;
 			*this->_state = object;
@@ -33,55 +31,53 @@ namespace fbox
 			delete this->_state;
 			this->_state = 0;
 		}
-
-		this->_manager = 0;
 	}
 
 	FBOXAPI void ScriptObject::set(String key, String value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(v8::String::New(key), v8::String::New(value));
 		}
 	}
 	FBOXAPI void ScriptObject::set(String key, __int32 value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(v8::String::New(key), v8::Int32::New(value));
 		}
 	}
 	FBOXAPI void ScriptObject::set(String key, bool value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(v8::String::New(key), v8::Boolean::New(value));
 		}
 	}
 	FBOXAPI void ScriptObject::set(String key, float value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(v8::String::New(key), v8::Number::New((double)value));
 		}
 	}
 	FBOXAPI void ScriptObject::set(String key, double value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(v8::String::New(key), v8::Number::New(value));
 		}
 	}
 	FBOXAPI void ScriptObject::set(String key, ScriptObject& object)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !((v8::Handle<v8::Value>)object).IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)object).IsEmpty())
 		{
 			(*this->_state)->Set(v8::String::New(key), (v8::Handle<v8::Object>)object);
 		}
 	}
 	FBOXAPI void ScriptObject::set(String key, ScriptArray& object)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !((v8::Handle<v8::Value>)object).IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)object).IsEmpty())
 		{
 			(*this->_state)->Set(v8::String::New(key), (v8::Handle<v8::Value>)object);
 		}
@@ -89,7 +85,7 @@ namespace fbox
 
 	FBOXAPI String ScriptObject::gets(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsString())
@@ -103,7 +99,7 @@ namespace fbox
 	}
 	FBOXAPI __int32 ScriptObject::geti(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsInt32())
@@ -116,7 +112,7 @@ namespace fbox
 	}
 	FBOXAPI bool ScriptObject::getb(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsBoolean())
@@ -129,7 +125,7 @@ namespace fbox
 	}
 	FBOXAPI float ScriptObject::getf(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsNumber())
@@ -142,7 +138,7 @@ namespace fbox
 	}
 	FBOXAPI double ScriptObject::getd(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsNumber())
@@ -155,12 +151,12 @@ namespace fbox
 	}
 	FBOXAPI ScriptObject ScriptObject::get(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsObject())
 			{
-				return ScriptObject(this->_manager, v8::Local<v8::Object>::Cast(value));
+				return ScriptObject(v8::Local<v8::Object>::Cast(value));
 			}
 		}
 
@@ -168,12 +164,12 @@ namespace fbox
 	}
 	FBOXAPI ScriptArray ScriptObject::getarr(String key)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty() && value->IsArray())
 			{
-				return ScriptArray(this->_manager, v8::Local<v8::Array>::Cast(value));
+				return ScriptArray(v8::Local<v8::Array>::Cast(value));
 			}
 		}
 
@@ -182,7 +178,7 @@ namespace fbox
 
 	FBOXAPI void ScriptObject::call(String name)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(name));
 			if (!value.IsEmpty() && value->IsFunction())
@@ -194,8 +190,8 @@ namespace fbox
 	}
 	FBOXAPI void ScriptObject::call(String name, ScriptObject& parameter)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() &&
-			!parameter._manager != 0 && parameter._state != 0 && !parameter._state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() &&
+			parameter._state != 0 && !parameter._state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(name));
 			if (!value.IsEmpty() && value->IsFunction())
@@ -208,7 +204,7 @@ namespace fbox
 	}
 	FBOXAPI void ScriptObject::call(String name, ScriptParameters& parameters)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && parameters.count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && parameters.count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(name));
 			if (!value.IsEmpty() && value->IsFunction())
@@ -221,7 +217,7 @@ namespace fbox
 
 	FBOXAPI ScriptObject ScriptObject::construct(String name)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(name));
 			if (!value.IsEmpty() && value->IsFunction())
@@ -230,7 +226,7 @@ namespace fbox
 				v8::Handle<v8::Value> created = func->CallAsConstructor(0, 0);
 				if (!created.IsEmpty() && created->IsObject())
 				{
-					return ScriptObject(this->_manager, v8::Handle<v8::Object>::Cast(created));
+					return ScriptObject(v8::Handle<v8::Object>::Cast(created));
 				}
 			}
 		}
@@ -239,8 +235,8 @@ namespace fbox
 	}
 	FBOXAPI ScriptObject ScriptObject::construct(String name, ScriptObject& parameter)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() &&
-			!parameter._manager != 0 && parameter._state != 0 && !parameter._state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() &&
+			parameter._state != 0 && !parameter._state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(name));
 			if (!value.IsEmpty() && value->IsFunction())
@@ -250,7 +246,7 @@ namespace fbox
 				v8::Handle<v8::Value> created = func->CallAsConstructor(1, (v8::Handle<v8::Value>*)&arg);
 				if (!created.IsEmpty() && created->IsObject())
 				{
-					return ScriptObject(this->_manager, v8::Handle<v8::Object>::Cast(created));
+					return ScriptObject(v8::Handle<v8::Object>::Cast(created));
 				}
 			}
 		}
@@ -259,7 +255,7 @@ namespace fbox
 	}
 	FBOXAPI ScriptObject ScriptObject::construct(String name, ScriptParameters& parameters)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && parameters.count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && parameters.count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(name));
 			if (!value.IsEmpty() && value->IsFunction())
@@ -268,7 +264,7 @@ namespace fbox
 				v8::Handle<v8::Value> created = func->CallAsConstructor(parameters.count(), parameters);
 				if (!created.IsEmpty() && created->IsObject())
 				{
-					return ScriptObject(this->_manager, v8::Handle<v8::Object>::Cast(created));
+					return ScriptObject(v8::Handle<v8::Object>::Cast(created));
 				}
 			}
 		}
@@ -278,7 +274,7 @@ namespace fbox
 
 	FBOXAPI String ScriptObject::typeof(String key) const
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(v8::String::New(key));
 			if (!value.IsEmpty())
@@ -303,10 +299,9 @@ namespace fbox
 	}
 	FBOXAPI ScriptArray ScriptObject::properties() const
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 		{
-			v8::Handle<v8::Array> names = (*this->_state)->GetPropertyNames();
-			return ScriptArray(this->_manager, names);
+			return ScriptArray((*this->_state)->GetPropertyNames());
 		}
 
 		return ScriptArray();

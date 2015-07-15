@@ -5,7 +5,7 @@
 namespace fbox
 {
 
-	FBOXAPI void ScriptFile::release()
+	FBOXAPI void ScriptFile::dispose()
 	{
 		if (this->_script != 0)
 		{
@@ -13,20 +13,18 @@ namespace fbox
 			delete this->_script;
 			this->_script = 0;
 		}
-
-		this->_manager = 0;
 	}
 
 	FBOXAPI void ScriptFile::read(String filepath)
 	{
 		File* file = new File;
 		file->read(filepath);
-		if (this->_manager != 0 && !this->_manager->isEmpty() && !file->isEmpty())
+		if (ScriptManager::Started() && !file->isEmpty())
 		{
-			v8::Local<v8::String> source = v8::String::NewFromUtf8(this->_manager->isolate, (const char*)file);
+			v8::Local<v8::String> source = v8::String::NewFromUtf8(ScriptManager::Isolate, file->raw());
 			if (!source.IsEmpty())
 			{
-				this->_script = new v8::Handle < v8::Script > ;
+				this->_script = new v8::Handle<v8::Script>;
 				*this->_script = v8::Script::Compile(source);
 			}
 		}
@@ -36,12 +34,12 @@ namespace fbox
 	}
 	FBOXAPI void ScriptFile::read(const char* blob, unsigned int bytes)
 	{
-		if (this->_manager != 0 && !this->_manager->isEmpty() && blob != 0 && bytes > 0)
+		if (ScriptManager::Started() && blob != 0 && bytes > 0)
 		{
-			v8::Local<v8::String> source = v8::String::NewFromUtf8(this->_manager->isolate, blob);
+			v8::Local<v8::String> source = v8::String::NewFromUtf8(ScriptManager::Isolate, blob);
 			if (!source.IsEmpty())
 			{
-				this->_script = new v8::Handle < v8::Script > ;
+				this->_script = new v8::Handle<v8::Script>;
 				*this->_script = v8::Script::Compile(source);
 			}
 		}

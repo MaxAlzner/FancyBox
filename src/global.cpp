@@ -21,7 +21,6 @@ namespace fbox
 	FBOXAPI List<AudioAsset> AudioAssets;
 	FBOXAPI List<ScriptAsset> ScriptAssets;
 
-	FBOXAPI ScriptManager* MainScriptManager = 0;
 	FBOXAPI Camera* MainCamera = 0;
 	FBOXAPI Scene* MainScene = 0;
 

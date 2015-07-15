@@ -8,28 +8,24 @@ namespace fbox
 	{
 	public:
 
-		inline ScriptManager() : isolate(0) {}
-		inline ~ScriptManager() {}
-
 		friend class ScriptFile;
 
-		void build();
-		void release();
+		static void Initialize();
+		static void Dispose();
 
-		ScriptObject global();
+		static ScriptObject Global();
 
-		void execute(String command);
+		static ScriptFile* Register(String filepath);
+		static void Execute(String command);
 
-		bool isEmpty() const;
+		static bool Started();
 
-		String lastError() const;
-
-		v8::Isolate* isolate;
-		v8::Local<v8::Context>* context;
+		static v8::Isolate* Isolate;
 
 	protected:
 
-		List<ScriptFile*> _files;
+		static v8::Local<v8::Context> Context;
+		static List<ScriptFile*> Files;
 
 	};
 

@@ -21,17 +21,12 @@ namespace fbox
 		VertexProgram->read("base.vert");
 		FragmentProgram->read("base.frag");
 
-		MainScriptManager = new ScriptManager;
-		MainScriptManager->build();
-
 		MainScene = new Scene;
 	}
 	FBOXAPI void OnUnload()
 	{
 		MainScene->dispose();
 		delete MainScene;
-		MainScriptManager->release();
-		delete MainScriptManager;
 		Textures.clear();
 		VertexArrays.clear();
 		UniformBlocks.clear();
@@ -46,6 +41,8 @@ namespace fbox
 	}
 	FBOXAPI void OnStart()
 	{
+		ScriptManager::Initialize();
+
 		if (glewInit() != GLEW_OK)
 		{
 			exit(1);
@@ -80,11 +77,11 @@ namespace fbox
 		GetUniform(UNIFORM_FLAG_FILTER_RANDOM)->bind2fv((const vec2*)randoms, filterSize / 2);
 		delete[] randoms;
 #endif
-
-		Import::Read("scratch.scene");
 	}
 	FBOXAPI void OnEnd()
 	{
+		ScriptManager::Dispose();
+
 		for (int i = 0; i < Textures.count(); i++)
 		{
 			GlTexture* texture = Textures[i];

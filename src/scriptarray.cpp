@@ -5,33 +5,30 @@
 namespace fbox
 {
 
-	FBOXAPI ScriptArray::ScriptArray(ScriptManager* manager)
+	FBOXAPI ScriptArray::ScriptArray()
 	{
-		this->_manager = manager;
 		this->_state = 0;
-		if (this->_manager != 0)
+		if (ScriptManager::Started())
 		{
-			this->_state = new v8::Handle < v8::Array > ;
-			*this->_state = v8::Array::New(this->_manager->isolate);
+			this->_state = new v8::Handle<v8::Array>;
+			*this->_state = v8::Array::New(ScriptManager::Isolate);
 		}
 	}
-	FBOXAPI ScriptArray::ScriptArray(ScriptManager* manager, const int length)
+	FBOXAPI ScriptArray::ScriptArray(const int length)
 	{
-		this->_manager = manager;
 		this->_state = 0;
-		if (this->_manager != 0)
+		if (ScriptManager::Started())
 		{
-			this->_state = new v8::Handle < v8::Array > ;
-			*this->_state = v8::Array::New(this->_manager->isolate, length);
+			this->_state = new v8::Handle<v8::Array>;
+			*this->_state = v8::Array::New(ScriptManager::Isolate, length);
 		}
 	}
-	FBOXAPI ScriptArray::ScriptArray(ScriptManager* manager, v8::Handle<v8::Array>& source)
+	FBOXAPI ScriptArray::ScriptArray(v8::Handle<v8::Array>& source)
 	{
-		this->_manager = manager;
 		this->_state = 0;
-		if (this->_manager != 0)
+		if (ScriptManager::Started())
 		{
-			this->_state = new v8::Handle < v8::Array > ;
+			this->_state = new v8::Handle<v8::Array>;
 			*this->_state = source;
 		}
 	}
@@ -43,55 +40,53 @@ namespace fbox
 			delete this->_state;
 			this->_state = 0;
 		}
-
-		this->_manager = 0;
 	}
 
 	FBOXAPI void ScriptArray::add(String value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(this->count(), v8::String::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::add(__int32 value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(this->count(), v8::Int32::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::add(bool value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(this->count(), v8::Boolean::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::add(float value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(this->count(), v8::Number::New((double)value));
 		}
 	}
 	FBOXAPI void ScriptArray::add(double value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(this->count(), v8::Number::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::add(ScriptObject& value)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !((v8::Handle<v8::Value>)value).IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)value).IsEmpty())
 		{
 			(*this->_state)->Set(this->count(), (v8::Handle<v8::Value>)value);
 		}
 	}
 	FBOXAPI void ScriptArray::add(ScriptArray& value)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !((v8::Handle<v8::Value>)value).IsEmpty())
+		if (ScriptManager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)value).IsEmpty())
 		{
 			(*this->_state)->Set(this->count(), (v8::Handle<v8::Value>)value);
 		}
@@ -99,49 +94,49 @@ namespace fbox
 
 	FBOXAPI void ScriptArray::set(const int index, String value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, v8::String::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::set(const int index, __int32 value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, v8::Int32::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::set(const int index, bool value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, v8::Boolean::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::set(const int index, float value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, v8::Number::New((double)value));
 		}
 	}
 	FBOXAPI void ScriptArray::set(const int index, double value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, v8::Number::New(value));
 		}
 	}
 	FBOXAPI void ScriptArray::set(const int index, ScriptObject& value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, (v8::Handle<v8::Value>)value);
 		}
 	}
 	FBOXAPI void ScriptArray::set(const int index, ScriptArray& value)
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			(*this->_state)->Set(index, (v8::Handle<v8::Value>)value);
 		}
@@ -149,7 +144,7 @@ namespace fbox
 
 	FBOXAPI String ScriptArray::gets(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsString())
@@ -163,7 +158,7 @@ namespace fbox
 	}
 	FBOXAPI __int32 ScriptArray::geti(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsInt32())
@@ -176,7 +171,7 @@ namespace fbox
 	}
 	FBOXAPI bool ScriptArray::getb(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsBoolean())
@@ -189,7 +184,7 @@ namespace fbox
 	}
 	FBOXAPI float ScriptArray::getf(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsNumber())
@@ -202,7 +197,7 @@ namespace fbox
 	}
 	FBOXAPI double ScriptArray::getd(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsNumber())
@@ -215,12 +210,12 @@ namespace fbox
 	}
 	FBOXAPI ScriptObject ScriptArray::get(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsObject())
 			{
-				return ScriptObject(this->_manager, v8::Local<v8::Object>::Cast(value));
+				return ScriptObject(v8::Local<v8::Object>::Cast(value));
 			}
 		}
 
@@ -228,12 +223,12 @@ namespace fbox
 	}
 	FBOXAPI ScriptArray ScriptArray::getarr(const int index)
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty() && value->IsArray())
 			{
-				return ScriptArray(this->_manager, v8::Local<v8::Array>::Cast(value));
+				return ScriptArray(v8::Local<v8::Array>::Cast(value));
 			}
 		}
 
@@ -242,7 +237,7 @@ namespace fbox
 
 	FBOXAPI String ScriptArray::typeof(const int index) const
 	{
-		if (this->_manager != 0 && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
+		if (ScriptManager::Started() && this->_state != 0 && !this->_state->IsEmpty() && this->count() > 0)
 		{
 			v8::Local<v8::Value> value = (*this->_state)->Get(index);
 			if (!value.IsEmpty())
@@ -268,7 +263,7 @@ namespace fbox
 
 	FBOXAPI const int ScriptArray::count() const
 	{
-		if (this->_manager != 0 && this->_state != 0)
+		if (ScriptManager::Started() && this->_state != 0)
 		{
 			return (int)(*this->_state)->Length();
 		}

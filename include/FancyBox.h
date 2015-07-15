@@ -27,12 +27,11 @@ namespace fbox
 
 	class FBOXAPI AlBuffer;
 
-	class FBOXAPI ScriptEntity;
+	class FBOXAPI ScriptManager;
 	class FBOXAPI ScriptObject;
 	class FBOXAPI ScriptArray;
 	class FBOXAPI ScriptParameters;
 	class FBOXAPI ScriptFile;
-	class FBOXAPI ScriptManager;
 
 	class FBOXAPI Component;
 	class FBOXAPI Transform;
@@ -85,7 +84,6 @@ using namespace medialoader;
 
 #include "audio\albuffer.h"
 
-#include "scripting\scriptentity.h"
 #include "scripting\scriptmanager.h"
 #include "scripting\scriptobject.h"
 #include "scripting\scriptarray.h"

@@ -4,14 +4,13 @@
 namespace fbox
 {
 
-	class FBOXAPI ScriptArray : public ScriptEntity
+	class FBOXAPI ScriptArray
 	{
 	public:
 
-		inline ScriptArray() : ScriptEntity(), _state(0) {}
-		ScriptArray(ScriptManager* manager);
-		ScriptArray(ScriptManager* manager, const int length);
-		ScriptArray(ScriptManager* manager, v8::Handle<v8::Array>& source);
+		ScriptArray();
+		ScriptArray(const int length);
+		ScriptArray(v8::Handle<v8::Array>& source);
 		~ScriptArray();
 
 		void add(String value);

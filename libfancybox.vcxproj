@@ -102,7 +102,6 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     <ClInclude Include="include\model\components\transform.h" />
     <ClInclude Include="include\model\scene.h" />
     <ClInclude Include="include\scripting\scriptarray.h" />
-    <ClInclude Include="include\scripting\scriptentity.h" />
     <ClInclude Include="include\scripting\scriptfile.h" />
     <ClInclude Include="include\scripting\scriptmanager.h" />
     <ClInclude Include="include\scripting\scriptobject.h" />

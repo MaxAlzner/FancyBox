@@ -4,13 +4,12 @@
 namespace fbox
 {
 
-	class FBOXAPI ScriptObject : public ScriptEntity
+	class FBOXAPI ScriptObject
 	{
 	public:
 
-		inline ScriptObject() : ScriptEntity(), _state(0) {}
-		ScriptObject(ScriptManager* manager);
-		ScriptObject(ScriptManager* manager, v8::Handle<v8::Object>& object);
+		ScriptObject();
+		ScriptObject(v8::Handle<v8::Object>& object);
 		~ScriptObject();
 
 		void set(String key, String value);

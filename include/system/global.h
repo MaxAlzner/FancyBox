@@ -64,7 +64,6 @@ namespace fbox
 	extern FBOXAPI List<AudioAsset> AudioAssets;
 	extern FBOXAPI List<ScriptAsset> ScriptAssets;
 
-	extern FBOXAPI ScriptManager* MainScriptManager;
 	extern FBOXAPI Camera* MainCamera;
 	extern FBOXAPI Scene* MainScene;
 

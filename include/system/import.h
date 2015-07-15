@@ -16,6 +16,7 @@ namespace fbox
 
 	protected:
 
+		static void ParseScript(XmlNode* node);
 		static void ParseScene(XmlNode* node);
 		static void ParseActor(XmlNode* node);
 

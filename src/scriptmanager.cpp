@@ -5,64 +5,94 @@
 namespace fbox
 {
 
-	FBOXAPI void ScriptManager::build()
+	v8::Isolate* ScriptManager::Isolate = 0;
+	v8::Local<v8::Context> ScriptManager::Context;
+	List<ScriptFile*> ScriptManager::Files;
+
+	static void FatalErrorCallback(const char* location, const char* message)
 	{
-		this->isolate = v8::Isolate::New();
-
-		static v8::Isolate::Scope IsolateScope(this->isolate);
-		static v8::HandleScope ScopeHandle(this->isolate);
-
-		this->context = new v8::Local < v8::Context > ;
-		*this->context = v8::Context::New(this->isolate);
-
-		static v8::Context::Scope ContextScope(*this->context);
+		printf(" ERROR: %s %s\n", location, message);
 	}
-	FBOXAPI void ScriptManager::release()
+
+	static void DebugLogCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
 	{
-		for (List<ScriptFile*>::Iterator i = this->_files.iterator(); i.inside(); i.next())
+		int length = info.Length();
+		printf("LOG: ");
+		for (int i = 0; i < length; i++)
+		{
+			if (i > 0)
+			{
+				printf(", ");
+			}
+
+			printf("%s", *v8::String::Utf8Value(info[i]));
+		}
+
+		printf("\n");
+	}
+
+	FBOXAPI void ScriptManager::Initialize()
+	{
+		v8::V8::InitializeICU();
+		v8::V8::Initialize();
+		v8::V8::SetFatalErrorHandler(FatalErrorCallback);
+		Isolate = v8::Isolate::New();
+
+		static v8::Isolate::Scope IsolateScope(Isolate);
+		static v8::HandleScope ScopeHandle(Isolate);
+
+		Context = v8::Context::New(Isolate);
+
+		static v8::Context::Scope ContextScope(Context);
+
+		v8::Local<v8::Object> debug = v8::Object::New(Isolate);
+		debug->Set(v8::String::NewFromUtf8(Isolate, "Log"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
+		debug->Set(v8::String::NewFromUtf8(Isolate, "Warning"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
+		debug->Set(v8::String::NewFromUtf8(Isolate, "Error"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
+		Context->Global()->Set(v8::String::NewFromUtf8(Isolate, "Debug"), debug);
+	}
+	FBOXAPI void ScriptManager::Dispose()
+	{
+		for (List<ScriptFile*>::Iterator i = Files.iterator(); i.inside(); i.next())
 		{
 			ScriptFile* script = i.current();
 			if (script != 0)
 			{
-				script->release();
+				script->dispose();
 				delete script;
 			}
 		}
-
-		//if (this->_scope != 0)
-		//{
-		//	delete this->_scope;
-		//	this->_scope = 0;
-		//}
-
-		if (this->context != 0)
+		
+		v8::V8::TerminateExecution(Isolate);
+		if (Isolate != 0)
 		{
-			this->context->Clear();
-			delete this->context;
-			this->context = 0;
+			Isolate->Dispose();
+			Isolate = 0;
 		}
 
-		if (this->isolate != 0)
-		{
-			v8::V8::TerminateExecution(this->isolate);
-			this->isolate->Dispose();
-			this->isolate = 0;
-		}
+		v8::V8::Dispose();
 	}
 
-	FBOXAPI ScriptObject ScriptManager::global()
+	FBOXAPI ScriptObject ScriptManager::Global()
 	{
-		if (this->context != 0 && !this->context->IsEmpty())
+		if (!Context.IsEmpty())
 		{
-			return ScriptObject(this, (*this->context)->Global());
+			return ScriptObject(Context->Global());
 		}
 
 		return ScriptObject();
 	}
 
-	FBOXAPI void ScriptManager::execute(String command)
+	FBOXAPI ScriptFile* ScriptManager::Register(String filepath)
 	{
-		v8::Local<v8::String> source = v8::String::NewFromUtf8(this->isolate, command);
+		ScriptFile* file = new ScriptFile;
+		file->read(filepath);
+		file->run();
+		return file;
+	}
+	FBOXAPI void ScriptManager::Execute(String command)
+	{
+		v8::Local<v8::String> source = v8::String::NewFromUtf8(Isolate, command);
 		if (!source.IsEmpty())
 		{
 			v8::Local<v8::Script> script = v8::Script::Compile(source);
@@ -73,29 +103,9 @@ namespace fbox
 		}
 	}
 
-	FBOXAPI bool ScriptManager::isEmpty() const
+	FBOXAPI bool ScriptManager::Started()
 	{
-		return this->isolate == 0 || this->context == 0 || this->context->IsEmpty();
-	}
-
-	FBOXAPI String ScriptManager::lastError() const
-	{
-		v8::Local<v8::StackTrace> trace = v8::StackTrace::CurrentStackTrace(10, v8::StackTrace::StackTraceOptions::kOverview);
-		if (!trace.IsEmpty())
-		{
-			int count = trace->GetFrameCount();
-			for (int i = 0; i < count; i++)
-			{
-				v8::Local<v8::StackFrame> frame = trace->GetFrame(i);
-				if (!frame.IsEmpty())
-				{
-					v8::String::Utf8Value funcName(frame->GetFunctionName());
-					v8::String::Utf8Value scriptName(frame->GetScriptName());
-				}
-			}
-		}
-
-		return String::Empty();
+		return Isolate != 0;
 	}
 
 }

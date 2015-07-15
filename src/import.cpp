@@ -68,7 +68,7 @@ namespace fbox
 	}
 	FBOXAPI void Import::Register(String filepath, ScriptFile** outScriptFile)
 	{
-		ScriptFile* script = new ScriptFile(MainScriptManager);
+		ScriptFile* script = new ScriptFile;
 		script->read(filepath);
 		if (outScriptFile != 0)
 		{
@@ -81,6 +81,12 @@ namespace fbox
 		ScriptAssets.add(asset);
 	}
 
+	FBOXAPI void Import::ParseScript(XmlNode* node)
+	{
+		String src = XmlFile::Value(node->last_attribute("src"));
+		ScriptFile* script = 0;
+		Register(src, &script);
+	}
 	FBOXAPI void Import::ParseScene(XmlNode* node)
 	{
 		node = node->first_node();
@@ -207,10 +213,8 @@ namespace fbox
 	}
 	FBOXAPI Behavior* Import::ParseBehavior(XmlNode* node)
 	{
-		String src = XmlFile::Value(node->last_attribute("src"));
-		ScriptFile* script = 0;
-		Register(src, &script);
-		return new Behavior;
+		String name = XmlFile::Value(node->last_attribute("name"));
+		return new Behavior(name);
 	}
 	FBOXAPI Camera* Import::ParseCamera(XmlNode* node)
 	{

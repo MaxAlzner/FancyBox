@@ -1,27 +1,26 @@
 
+Debug.Log('Running TestBehavior');
 function TestBehavior()
 {
-    this.Name = 'TestBehavior';
+	this.Name = 'TestBehavior';
 	this.Num = 0;
 	this.Value = 0.5;
 	this.Enabled = false;
-	this.Transform = null;
 
 	this.OnStart = function()
 	{
-		console.log('OnStart called');
+		Debug.Log('OnStart called');
 	};
 
 	this.OnEnd = function()
 	{
-		console.log('OnEnd called');
+		Debug.Log('OnEnd called');
 	};
 
 	this.OnUpdate = function()
 	{
-		console.log('OnUpdate called');
+		Debug.Log('OnUpdate called');
 		this.Num++;
-		console.log('Number of times called', this.Num);
-		//console.log('this', JSON.stringify(this));
+		Debug.Log('Number of times called', this.Num);
 	};
 }

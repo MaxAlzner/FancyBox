@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <scene>
+	<script src="testbehavior.js" />
+	<script src="turntable.js" />
 	<actor name="MainCamera">
 		<transform>
 			<translate y="3" z="-4" />
@@ -15,5 +17,6 @@
 		<texture type="normal" src="EV_Catwalk_N.tga" />
 		<texture type="specular" src="EV_Catwalk_S.tga" />
 		<mesh src="EV_Catwalk.obj" />
+		<behavior name="TurnTable" />
 	</actor>
 </scene>

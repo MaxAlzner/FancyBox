@@ -4,15 +4,14 @@
 namespace fbox
 {
 
-	class FBOXAPI ScriptFile : public ScriptEntity
+	class FBOXAPI ScriptFile
 	{
 	public:
 
-		inline ScriptFile() : ScriptEntity(), _script(0) {}
-		inline ScriptFile(ScriptManager* manager) : ScriptEntity(manager), _script(0) { manager->_files.add(this); }
+		inline ScriptFile() : _script(0) { ScriptManager::Files.add(this); }
 		inline ~ScriptFile() {}
 
-		virtual void release();
+		virtual void dispose();
 
 		virtual void read(String filepath);
 		virtual void read(const char* blob, unsigned int bytes);

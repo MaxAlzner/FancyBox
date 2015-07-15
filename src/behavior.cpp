@@ -10,4 +10,13 @@ namespace fbox
 
 	}
 
+	FBOXAPI void Behavior::start()
+	{
+
+	}
+	FBOXAPI void Behavior::update()
+	{
+
+	}
+
 }
