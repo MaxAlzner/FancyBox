@@ -31,9 +31,28 @@ namespace fbox
 		return this->transform == 0 && this->material == 0 && this->components.count() < 1;
 	}
 
+	FBOXAPI void Actor::start()
+	{
+		for (List<Behavior*>::Iterator i = this->behaviors.iterator(); i.inside(); i.next())
+		{
+			Behavior* behavior = i.current();
+			if (behavior != 0)
+			{
+				behavior->start();
+			}
+		}
+	}
 	FBOXAPI void Actor::update()
 	{
 		this->transform->recalculate();
+		for (List<Behavior*>::Iterator i = this->behaviors.iterator(); i.inside(); i.next())
+		{
+			Behavior* behavior = i.current();
+			if (behavior != 0)
+			{
+				behavior->update();
+			}
+		}
 	}
 	FBOXAPI void Actor::render()
 	{

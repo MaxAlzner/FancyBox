@@ -97,6 +97,10 @@ namespace fbox
 			{
 				Import::ParseActor(node);
 			}
+			else if (type == "script")
+			{
+				Import::ParseScript(node);
+			}
 
 			node = node->next_sibling();
 		}
@@ -125,7 +129,7 @@ namespace fbox
 			{
 				actor->add(Import::ParseTexture(node));
 			}
-			else if (type == "script")
+			else if (type == "behavior")
 			{
 				actor->add(Import::ParseBehavior(node));
 			}

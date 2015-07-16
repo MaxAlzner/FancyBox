@@ -15,6 +15,7 @@ namespace fbox
 
 		static ScriptObject Global();
 
+		static void Run();
 		static ScriptFile* Register(String filepath);
 		static void Execute(String command);
 

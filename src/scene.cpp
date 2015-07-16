@@ -25,6 +25,17 @@ namespace fbox
 		return this->actors.count() < 1;
 	}
 
+	FBOXAPI void Scene::start()
+	{
+		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())
+		{
+			Actor* actor = i.current();
+			if (actor != 0)
+			{
+				actor->start();
+			}
+		}
+	}
 	FBOXAPI void Scene::update()
 	{
 		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())

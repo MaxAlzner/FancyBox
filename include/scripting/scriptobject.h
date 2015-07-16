@@ -39,6 +39,7 @@ namespace fbox
 		String typeof(String key) const;
 		ScriptArray properties() const;
 
+		void operator=(const ScriptObject& object);
 		void operator=(v8::Handle<v8::Object>& object);
 		operator v8::Handle<v8::Object>() const;
 		operator v8::Handle<v8::Value>() const;

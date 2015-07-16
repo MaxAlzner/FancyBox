@@ -23,6 +23,7 @@ namespace fbox
 
 		bool isEmpty() const;
 
+		void start();
 		void update();
 		void render();
 

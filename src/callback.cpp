@@ -39,7 +39,8 @@ namespace fbox
 		delete FragmentProgram;
 		Assets.clear();
 	}
-	FBOXAPI void OnStart()
+
+	FBOXAPI void OnInitialize()
 	{
 		ScriptManager::Initialize();
 
@@ -78,7 +79,7 @@ namespace fbox
 		delete[] randoms;
 #endif
 	}
-	FBOXAPI void OnEnd()
+	FBOXAPI void OnDispose()
 	{
 		ScriptManager::Dispose();
 
@@ -135,6 +136,42 @@ namespace fbox
 	FBOXAPI void OnReshape(int width, int height)
 	{
 		glViewport(0, 0, width, height);
+	}
+
+	FBOXAPI void OnStart()
+	{
+		ScriptManager::Run();
+
+		ScriptObject global = ScriptManager::Global();
+		ScriptArray globals = global.properties();
+		for (int i = 0; i < globals.count(); i++)
+		{
+			printf(" %d ). %s : %s\n", i + 1, (const char*)(globals.gets(i)), (const char*)(global.typeof(globals.gets(i))));
+			ScriptObject property = global.get(globals.gets(i));
+			ScriptArray props = property.properties();
+			for (int k = 0; k < props.count(); k++)
+			{
+				printf("   %d ). %s : %s\n", k + 1, (const char*)(props.gets(k)), (const char*)(property.typeof(props.gets(k))));
+			}
+		}
+
+		//ScriptObject test0 = ScriptManager::Global().construct("TestBehavior");
+		//ScriptArray test0props = test0.properties();
+		//for (int i = 0; i < test0props.count(); i++)
+		//{
+		//	printf(" %d ). %s : %s\n", i + 1, (const char*)(test0props.gets(i)), (const char*)(test0.typeof(test0props.gets(i))));
+		//}
+
+		//test0.call("OnStart");
+		//test0.call("OnUpdate");
+		//test0.call("OnUpdate");
+		//test0.call("OnUpdate");
+		//test0.call("OnEnd");
+
+		if (MainScene != 0)
+		{
+			MainScene->start();
+		}
 	}
 	FBOXAPI void OnUpdate()
 	{

@@ -27,7 +27,6 @@ namespace fbox
 	{
 		if (this->_state != 0)
 		{
-			this->_state->Clear();
 			delete this->_state;
 			this->_state = 0;
 		}
@@ -307,6 +306,13 @@ namespace fbox
 		return ScriptArray();
 	}
 
+	FBOXAPI void ScriptObject::operator=(const ScriptObject& object)
+	{
+		if (this->_state != 0)
+		{
+			*this->_state = *object._state;
+		}
+	}
 	FBOXAPI void ScriptObject::operator=(v8::Handle<v8::Object>& object)
 	{
 		if (this->_state != 0)

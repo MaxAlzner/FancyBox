@@ -14,10 +14,9 @@ namespace fbox
 		printf(" ERROR: %s %s\n", location, message);
 	}
 
-	static void DebugLogCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+	static void CallbackInfoPrint(const v8::FunctionCallbackInfo<v8::Value>& info)
 	{
 		int length = info.Length();
-		printf("LOG: ");
 		for (int i = 0; i < length; i++)
 		{
 			if (i > 0)
@@ -29,6 +28,22 @@ namespace fbox
 		}
 
 		printf("\n");
+	}
+
+	static void DebugLogCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+	{
+		printf("LOG: ");
+		CallbackInfoPrint(info);
+	}
+	static void DebugWarningCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+	{
+		printf("WARNING: ");
+		CallbackInfoPrint(info);
+	}
+	static void DebugErrorCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+	{
+		printf("ERROR: ");
+		CallbackInfoPrint(info);
 	}
 
 	FBOXAPI void ScriptManager::Initialize()
@@ -47,8 +62,8 @@ namespace fbox
 
 		v8::Local<v8::Object> debug = v8::Object::New(Isolate);
 		debug->Set(v8::String::NewFromUtf8(Isolate, "Log"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
-		debug->Set(v8::String::NewFromUtf8(Isolate, "Warning"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
-		debug->Set(v8::String::NewFromUtf8(Isolate, "Error"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
+		debug->Set(v8::String::NewFromUtf8(Isolate, "Warning"), v8::FunctionTemplate::New(Isolate, DebugWarningCallback)->GetFunction());
+		debug->Set(v8::String::NewFromUtf8(Isolate, "Error"), v8::FunctionTemplate::New(Isolate, DebugErrorCallback)->GetFunction());
 		Context->Global()->Set(v8::String::NewFromUtf8(Isolate, "Debug"), debug);
 	}
 	FBOXAPI void ScriptManager::Dispose()
@@ -83,6 +98,17 @@ namespace fbox
 		return ScriptObject();
 	}
 
+	FBOXAPI void ScriptManager::Run()
+	{
+		for (List<ScriptFile*>::Iterator i = Files.iterator(); i.inside(); i.next())
+		{
+			ScriptFile* script = i.current();
+			if (script != 0)
+			{
+				script->run();
+			}
+		}
+	}
 	FBOXAPI ScriptFile* ScriptManager::Register(String filepath)
 	{
 		ScriptFile* file = new ScriptFile;

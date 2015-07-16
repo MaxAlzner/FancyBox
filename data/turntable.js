@@ -1,10 +1,12 @@
-var TurnTable = (function() {
+var TurnTable = (function()
+{
 	'use strict';
-	return function () {
+	return function ()
+	{
+		this.Delta = 0;
 		this.OnStart = function()
 		{
 			Debug.Log('TurnTable started');
-			this.Delta = 0;
 		};
 		this.OnUpdate = function()
 		{

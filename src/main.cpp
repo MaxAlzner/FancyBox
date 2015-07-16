@@ -52,7 +52,7 @@ void OnFileDrop(GLFWwindow* window, int count, const char** paths)
 
 void cleanup()
 {
-	fbox::OnEnd();
+	fbox::OnDispose();
 	fbox::OnUnload();
 	glfwTerminate();
 }
@@ -79,36 +79,10 @@ int main(int argv, char** argc)
 	}
 
 	glfwMakeContextCurrent(window);
-	fbox::OnStart();
+	fbox::OnInitialize();
 	OnFileDrop(window, argv - 1, (const char**)argc + 1);
 
-	fbox::ScriptManager::Register("testbehavior.js");
-	fbox::ScriptObject global = fbox::ScriptManager::Global();
-	fbox::ScriptArray globals = global.properties();
-	for (int i = 0; i < globals.count(); i++)
-	{
-		printf(" %d ). %s : %s\n", i + 1, (const char*)(globals.gets(i)), (const char*)(global.typeof(globals.gets(i))));
-		fbox::ScriptObject property = global.get(globals.gets(i));
-		fbox::ScriptArray props = property.properties();
-		for (int k = 0; k < props.count(); k++)
-		{
-			printf("   %d ). %s : %s\n", k + 1, (const char*)(props.gets(k)), (const char*)(property.typeof(props.gets(k))));
-		}
-	}
-
-	fbox::ScriptObject test0 = fbox::ScriptManager::Global().construct("TestBehavior");
-	fbox::ScriptArray test0props = test0.properties();
-	for (int i = 0; i < test0props.count(); i++)
-	{
-		printf(" %d ). %s : %s\n", i + 1, (const char*)(test0props.gets(i)), (const char*)(test0.typeof(test0props.gets(i))));
-	}
-
-	test0.call("OnStart");
-	test0.call("OnUpdate");
-	test0.call("OnUpdate");
-	test0.call("OnUpdate");
-	test0.call("OnEnd");
-
+	fbox::OnStart();
 	while (!glfwWindowShouldClose(window))
 	{
 		fbox::Frame::Start();
