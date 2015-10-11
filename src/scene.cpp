@@ -7,9 +7,9 @@ namespace fbox
 
 	FBOXAPI void Scene::dispose()
 	{
-		for (List<Actor*>::Iterator i = this->actors.iteratorAtEnd(); i.inside(); i.previous())
+		for (std::list<Actor*>::reverse_iterator i = this->actors.rbegin(); i != this->actors.rend(); i++)
 		{
-			Actor* actor = i.current();
+			Actor* actor = *i;
 			if (actor != 0)
 			{
 				actor->dispose();
@@ -20,16 +20,16 @@ namespace fbox
 		this->actors.clear();
 	}
 
-	FBOXAPI bool Scene::isEmpty() const
+	FBOXAPI bool Scene::empty() const
 	{
-		return this->actors.count() < 1;
+		return this->actors.size() < 1;
 	}
 
 	FBOXAPI void Scene::start()
 	{
-		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())
+		for (std::list<Actor*>::iterator i = this->actors.begin(); i != this->actors.end(); i++)
 		{
-			Actor* actor = i.current();
+			Actor* actor = *i;
 			if (actor != 0)
 			{
 				actor->start();
@@ -38,9 +38,9 @@ namespace fbox
 	}
 	FBOXAPI void Scene::update()
 	{
-		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())
+		for (std::list<Actor*>::iterator i = this->actors.begin(); i != this->actors.end(); i++)
 		{
-			Actor* actor = i.current();
+			Actor* actor = *i;
 			if (actor != 0)
 			{
 				actor->update();
@@ -49,9 +49,9 @@ namespace fbox
 	}
 	FBOXAPI void Scene::render()
 	{
-		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())
+		for (std::list<Actor*>::iterator i = this->actors.begin(); i != this->actors.end(); i++)
 		{
-			Actor* actor = i.current();
+			Actor* actor = *i;
 			if (actor != 0)
 			{
 				if (actor->camera != 0)
@@ -66,9 +66,9 @@ namespace fbox
 			}
 		}
 
-		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())
+		for (std::list<Actor*>::iterator i = this->actors.begin(); i != this->actors.end(); i++)
 		{
-			Actor* actor = i.current();
+			Actor* actor = *i;
 			if (actor != 0)
 			{
 				actor->render();
@@ -80,15 +80,15 @@ namespace fbox
 	{
 		if (actor != 0)
 		{
-			this->actors.add(actor);
+			this->actors.push_back(actor);
 		}
 	}
 
-	FBOXAPI Actor* Scene::findActor(String name)
+	FBOXAPI Actor* Scene::findActor(string& name)
 	{
-		for (List<Actor*>::Iterator i = this->actors.iterator(); i.inside(); i.next())
+		for (std::list<Actor*>::iterator i = this->actors.begin(); i != this->actors.end(); i++)
 		{
-			Actor* actor = i.current();
+			Actor* actor = *i;
 			if (actor != 0 && actor->name == name)
 			{
 				return actor;
@@ -96,6 +96,10 @@ namespace fbox
 		}
 
 		return 0;
+	}
+	FBOXAPI Actor* Scene::findActor(const char* name)
+	{
+		return this->findActor(string(name));
 	}
 
 }

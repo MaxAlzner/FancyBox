@@ -21,7 +21,7 @@ namespace fbox
 
 		void dispose();
 
-		bool isEmpty() const;
+		bool empty() const;
 
 		void start();
 		void update();
@@ -29,17 +29,18 @@ namespace fbox
 
 		void add(Component* component);
 
-		Component* findComponent(String type);
+		Component* findComponent(string& type);
+		Component* findComponent(const char* type);
 
-		String name;
+		string name;
 		Transform* transform;
 		MeshFilter* meshfilter;
 		Material* material;
 		Camera* camera;
 		Light* light;
-		List<Component*> components;
-		List<TextureFilter*> texturefilters;
-		List<Behavior*> behaviors;
+		std::list<Component*> components;
+		std::list<TextureFilter*> texturefilters;
+		std::list<Behavior*> behaviors;
 
 	};
 

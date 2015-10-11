@@ -7,15 +7,14 @@ namespace fbox
 	
 	FBOXAPI void OnLoad()
 	{
-		Uniforms.resize(64);
+		Uniforms.resize(32);
 		UniformBlocks.resize(16);
 		VertexArrays.resize(64);
 		Textures.resize(64);
-		Assets.resize(64);
 
-		VertexProgram = new GlShader(GlShader::TYPE_VERTEX);
-		FragmentProgram = new GlShader(GlShader::TYPE_FRAGMENT);
-		MainProgram = new GlProgram;
+		VertexProgram = new gl::Shader(gl::Shader::TYPE_VERTEX);
+		FragmentProgram = new gl::Shader(gl::Shader::TYPE_FRAGMENT);
+		MainProgram = new gl::Program;
 		MainProgram->vertex(VertexProgram);
 		MainProgram->fragment(FragmentProgram);
 		VertexProgram->read("base.vert");
@@ -27,22 +26,66 @@ namespace fbox
 	{
 		MainScene->dispose();
 		delete MainScene;
+		MainScene = 0;
+		MainProgram->release();
+		delete MainProgram;
+		MainProgram = 0;
+		FragmentProgram->release();
+		delete FragmentProgram;
+		FragmentProgram = 0;
+		VertexProgram->release();
+		delete VertexProgram;
+		VertexProgram = 0;
+
+		for (uint i = 0; i < Textures.size(); i++)
+		{
+			gl::Texture* texture = Textures[i];
+			if (texture != 0)
+			{
+				texture->release();
+				delete texture;
+			}
+		}
+
+		for (uint i = 0; i < VertexArrays.size(); i++)
+		{
+			gl::VertexArray* vao = VertexArrays[i];
+			if (vao != 0)
+			{
+				vao->release();
+				delete vao;
+			}
+		}
+
+		for (uint i = 0; i < UniformBlocks.size(); i++)
+		{
+			gl::UniformBlock* uniform = UniformBlocks[i];
+			if (uniform != 0)
+			{
+				uniform->release();
+				delete uniform;
+			}
+		}
+
+		for (uint i = 0; i < Uniforms.size(); i++)
+		{
+			gl::Uniform* uniform = Uniforms[i];
+			if (uniform != 0)
+			{
+				delete uniform;
+			}
+		}
+
 		Textures.clear();
 		VertexArrays.clear();
 		UniformBlocks.clear();
 		Uniforms.clear();
-		MainProgram->release();
-		delete MainProgram;
-		VertexProgram->release();
-		delete VertexProgram;
-		FragmentProgram->release();
-		delete FragmentProgram;
-		Assets.clear();
 	}
 
 	FBOXAPI void OnInitialize()
 	{
-		ScriptManager::Initialize();
+		js::Manager::Initialize();
+		FreeImage_Initialise();
 
 		if (glewInit() != GLEW_OK)
 		{
@@ -81,56 +124,9 @@ namespace fbox
 	}
 	FBOXAPI void OnDispose()
 	{
-		ScriptManager::Dispose();
-
-		for (int i = 0; i < Textures.count(); i++)
-		{
-			GlTexture* texture = Textures[i];
-			if (texture != 0)
-			{
-				texture->release();
-				delete texture;
-			}
-		}
-
-		for (int i = 0; i < VertexArrays.count(); i++)
-		{
-			GlVertexArray* vao = VertexArrays[i];
-			if (vao != 0)
-			{
-				vao->release();
-				delete vao;
-			}
-		}
-
-		for (int i = 0; i < UniformBlocks.count(); i++)
-		{
-			GlUniformBlock* uniform = UniformBlocks[i];
-			if (uniform != 0)
-			{
-				uniform->release();
-				delete uniform;
-			}
-		}
-
-		for (int i = 0; i < Uniforms.count(); i++)
-		{
-			GlUniform* uniform = Uniforms[i];
-			if (uniform != 0)
-			{
-				delete uniform;
-			}
-		}
-
-		for (int i = 0; i < Assets.count(); i++)
-		{
-			Media* asset = Assets[i];
-			if (asset != 0)
-			{
-				asset->release();
-				delete asset;
-			}
-		}
+		ReleaseAssets();
+		FreeImage_DeInitialise();
+		js::Manager::Dispose();
 	}
 
 	FBOXAPI void OnReshape(int width, int height)
@@ -140,34 +136,21 @@ namespace fbox
 
 	FBOXAPI void OnStart()
 	{
-		ScriptManager::Run();
-
-		ScriptObject global = ScriptManager::Global();
-		ScriptArray globals = global.properties();
+#if 0
+		js::Object global = js::Manager::Global();
+		js::Array globals = global.properties();
 		for (int i = 0; i < globals.count(); i++)
 		{
-			printf(" %d ). %s : %s\n", i + 1, (const char*)(globals.gets(i)), (const char*)(global.typeof(globals.gets(i))));
-			ScriptObject property = global.get(globals.gets(i));
-			ScriptArray props = property.properties();
+			printf(" %d ). %s : %s\n", i + 1, (const char*)globals.gets(i).data(), (const char*)global.typeof(globals.gets(i)).data());
+			js::Object property = global.get(globals.gets(i));
+			js::Array props = property.properties();
 			for (int k = 0; k < props.count(); k++)
 			{
-				printf("   %d ). %s : %s\n", k + 1, (const char*)(props.gets(k)), (const char*)(property.typeof(props.gets(k))));
+				printf("   %d ). %s : %s\n", k + 1, (const char*)props.gets(k).data(), (const char*)property.typeof(props.gets(k)).data());
 			}
 		}
 
-		//ScriptObject test0 = ScriptManager::Global().construct("TestBehavior");
-		//ScriptArray test0props = test0.properties();
-		//for (int i = 0; i < test0props.count(); i++)
-		//{
-		//	printf(" %d ). %s : %s\n", i + 1, (const char*)(test0props.gets(i)), (const char*)(test0.typeof(test0props.gets(i))));
-		//}
-
-		//test0.call("OnStart");
-		//test0.call("OnUpdate");
-		//test0.call("OnUpdate");
-		//test0.call("OnUpdate");
-		//test0.call("OnEnd");
-
+#endif
 		if (MainScene != 0)
 		{
 			MainScene->start();

@@ -52,95 +52,76 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PostBuildEvent>
-      <Command>xcopy "$(ColdBrewBinDir)*.dll" "$(OutDir)" /Y
-xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
+      <Command>xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(GlfwBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(OpenAlBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>libmedialoader.lib;libpng.lib;jpeg.lib;libogg.lib;libvorbis.lib;opengl32.lib;glew32.lib;glfw3.lib;LibOVR.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;OpenAL32.lib;FreeImage.lib;libshape.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PostBuildEvent>
-      <Command>xcopy "$(ColdBrewBinDir)*.dll" "$(OutDir)" /Y
-xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
+      <Command>xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(GlfwBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(OpenAlBinDir)*.dll" "$(OutDir)" /Y
+xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>libmedialoader.lib;libpng.lib;jpeg.lib;libogg.lib;libvorbis.lib;opengl32.lib;glew32.lib;glfw3.lib;LibOVR.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;OpenAL32.lib;FreeImage.lib;libshape.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\audio\albuffer.h" />
+    <ClInclude Include="include\audio\buffer.h" />
     <ClInclude Include="include\FancyBox.h" />
-    <ClInclude Include="include\graphics\glbuffer.h" />
-    <ClInclude Include="include\graphics\glframebuffer.h" />
-    <ClInclude Include="include\graphics\glprogram.h" />
-    <ClInclude Include="include\graphics\glshader.h" />
-    <ClInclude Include="include\graphics\gltexture.h" />
-    <ClInclude Include="include\graphics\gluniform.h" />
-    <ClInclude Include="include\graphics\gluniformblock.h" />
-    <ClInclude Include="include\graphics\glvertexarray.h" />
+    <ClInclude Include="include\graphics\buffer.h" />
+    <ClInclude Include="include\graphics\framebuffer.h" />
+    <ClInclude Include="include\graphics\program.h" />
+    <ClInclude Include="include\graphics\shader.h" />
+    <ClInclude Include="include\graphics\texture.h" />
+    <ClInclude Include="include\graphics\uniform.h" />
+    <ClInclude Include="include\graphics\uniformblock.h" />
+    <ClInclude Include="include\graphics\vertexarray.h" />
     <ClInclude Include="include\input\axis.h" />
     <ClInclude Include="include\input\button.h" />
     <ClInclude Include="include\input\gamepad.h" />
     <ClInclude Include="include\input\key.h" />
     <ClInclude Include="include\input\mouse.h" />
     <ClInclude Include="include\model\actor.h" />
-    <ClInclude Include="include\model\components\behavior.h" />
-    <ClInclude Include="include\model\components\camera.h" />
-    <ClInclude Include="include\model\components\component.h" />
-    <ClInclude Include="include\model\components\light.h" />
-    <ClInclude Include="include\model\components\material.h" />
-    <ClInclude Include="include\model\components\meshfilter.h" />
-    <ClInclude Include="include\model\components\texturefilter.h" />
-    <ClInclude Include="include\model\components\transform.h" />
+    <ClInclude Include="include\model\component.h" />
     <ClInclude Include="include\model\scene.h" />
-    <ClInclude Include="include\scripting\scriptarray.h" />
-    <ClInclude Include="include\scripting\scriptfile.h" />
-    <ClInclude Include="include\scripting\scriptmanager.h" />
-    <ClInclude Include="include\scripting\scriptobject.h" />
-    <ClInclude Include="include\scripting\scriptparameters.h" />
+    <ClInclude Include="include\scripting\array.h" />
+    <ClInclude Include="include\scripting\manager.h" />
+    <ClInclude Include="include\scripting\object.h" />
+    <ClInclude Include="include\scripting\functionparameters.h" />
     <ClInclude Include="include\system\callback.h" />
     <ClInclude Include="include\system\frame.h" />
     <ClInclude Include="include\system\global.h" />
-    <ClInclude Include="include\system\graphics.h" />
-    <ClInclude Include="include\system\import.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\actor.cpp" />
-    <ClCompile Include="src\behavior.cpp" />
     <ClCompile Include="src\callback.cpp" />
-    <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\component.cpp" />
     <ClCompile Include="src\frame.cpp" />
-    <ClCompile Include="src\glbuffer.cpp" />
-    <ClCompile Include="src\glframebuffer.cpp" />
+    <ClCompile Include="src\graphics\buffer.cpp" />
+    <ClCompile Include="src\graphics\framebuffer.cpp" />
     <ClCompile Include="src\global.cpp" />
-    <ClCompile Include="src\glprogram.cpp" />
-    <ClCompile Include="src\glshader.cpp" />
-    <ClCompile Include="src\gltexture.cpp" />
-    <ClCompile Include="src\gluniform.cpp" />
-    <ClCompile Include="src\gluniformblock.cpp" />
-    <ClCompile Include="src\glvertexarray.cpp" />
-    <ClCompile Include="src\graphics.cpp" />
-    <ClCompile Include="src\import.cpp" />
-    <ClCompile Include="src\light.cpp" />
+    <ClCompile Include="src\graphics\program.cpp" />
+    <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\texture.cpp" />
+    <ClCompile Include="src\graphics\uniform.cpp" />
+    <ClCompile Include="src\graphics\uniformblock.cpp" />
+    <ClCompile Include="src\graphics\vertexarray.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\material.cpp" />
-    <ClCompile Include="src\meshfilter.cpp" />
     <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\scriptarray.cpp" />
-    <ClCompile Include="src\scriptfile.cpp" />
-    <ClCompile Include="src\scriptmanager.cpp" />
-    <ClCompile Include="src\scriptobject.cpp" />
-    <ClCompile Include="src\scriptparameters.cpp" />
-    <ClCompile Include="src\texturefilter.cpp" />
-    <ClCompile Include="src\transform.cpp" />
+    <ClCompile Include="src\scripting\functionparameters.cpp" />
+    <ClCompile Include="src\scripting\array.cpp" />
+    <ClCompile Include="src\scripting\manager.cpp" />
+    <ClCompile Include="src\scripting\object.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

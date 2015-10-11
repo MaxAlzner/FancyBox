@@ -1,5 +1,4 @@
 
-Debug.Log('Running TestBehavior');
 function TestBehavior()
 {
 	this.Name = 'TestBehavior';

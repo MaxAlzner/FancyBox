@@ -17,7 +17,7 @@ namespace fbox
 		inline MouseState() : position(0.0f), scroll(0.0f), active(false) {}
 		inline ~MouseState() {}
 
-		vec2 position;
+		glm::vec2 position;
 		float scroll;
 		Button left;
 		Button right;

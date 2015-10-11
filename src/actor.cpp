@@ -7,9 +7,9 @@ namespace fbox
 
 	FBOXAPI void Actor::dispose()
 	{
-		for (List<Component*>::Iterator i = this->components.iteratorAtEnd(); i.inside(); i.previous())
+		for (std::list<Component*>::reverse_iterator i = this->components.rbegin(); i != this->components.rend(); i++)
 		{
-			Component* component = i.current();
+			Component* component = *i;
 			if (component != 0)
 			{
 				delete component;
@@ -26,16 +26,16 @@ namespace fbox
 		this->light = 0;
 	}
 
-	FBOXAPI bool Actor::isEmpty() const
+	FBOXAPI bool Actor::empty() const
 	{
-		return this->transform == 0 && this->material == 0 && this->components.count() < 1;
+		return this->transform == 0 && this->material == 0 && this->components.size() < 1;
 	}
 
 	FBOXAPI void Actor::start()
 	{
-		for (List<Behavior*>::Iterator i = this->behaviors.iterator(); i.inside(); i.next())
+		for (std::list<Behavior*>::iterator i = this->behaviors.begin(); i != this->behaviors.end(); i++)
 		{
-			Behavior* behavior = i.current();
+			Behavior* behavior = *i;
 			if (behavior != 0)
 			{
 				behavior->start();
@@ -45,9 +45,9 @@ namespace fbox
 	FBOXAPI void Actor::update()
 	{
 		this->transform->recalculate();
-		for (List<Behavior*>::Iterator i = this->behaviors.iterator(); i.inside(); i.next())
+		for (std::list<Behavior*>::iterator i = this->behaviors.begin(); i != this->behaviors.end(); i++)
 		{
-			Behavior* behavior = i.current();
+			Behavior* behavior = *i;
 			if (behavior != 0)
 			{
 				behavior->update();
@@ -56,11 +56,11 @@ namespace fbox
 	}
 	FBOXAPI void Actor::render()
 	{
-		GetUniform(UNIFORM_FLAG_UV_OFFSET)->bind2f(vec2(0.0f));
-		GetUniform(UNIFORM_FLAG_UV_REPEAT)->bind2f(vec2(1.0f));
-		for (List<Component*>::Iterator i = this->components.iterator(); i.inside(); i.next())
+		GetUniform(UNIFORM_FLAG_UV_OFFSET)->bind2f(glm::vec2(0.0f));
+		GetUniform(UNIFORM_FLAG_UV_REPEAT)->bind2f(glm::vec2(1.0f));
+		for (std::list<Component*>::iterator i = this->components.begin(); i != this->components.end(); i++)
 		{
-			Component* component = i.current();
+			Component* component = *i;
 			if (component != 0)
 			{
 				component->bind();
@@ -78,7 +78,7 @@ namespace fbox
 		if (component != 0)
 		{
 			component->object = this;
-			this->components.add(component);
+			this->components.push_back(component);
 			if (component->componentType == "Transform")
 			{
 				this->transform = (Transform*)component;
@@ -89,7 +89,7 @@ namespace fbox
 			}
 			else if (component->componentType == "TextureFilter")
 			{
-				this->texturefilters.add((TextureFilter*)component);
+				this->texturefilters.push_back((TextureFilter*)component);
 			}
 			else if (component->componentType == "Material")
 			{
@@ -97,7 +97,7 @@ namespace fbox
 			}
 			else if (component->componentType == "Behavior")
 			{
-				this->behaviors.add((Behavior*)component);
+				this->behaviors.push_back((Behavior*)component);
 			}
 			else if (component->componentType == "Camera")
 			{
@@ -110,11 +110,11 @@ namespace fbox
 		}
 	}
 
-	FBOXAPI Component* Actor::findComponent(String type)
+	FBOXAPI Component* Actor::findComponent(string& type)
 	{
-		for (List<Component*>::Iterator i = this->components.iterator(); i.inside(); i.next())
+		for (std::list<Component*>::iterator i = this->components.begin(); i != this->components.end(); i++)
 		{
-			Component* component = i.current();
+			Component* component = *i;
 			if (component != 0 && component->componentType == type)
 			{
 				return component;
@@ -122,6 +122,10 @@ namespace fbox
 		}
 
 		return 0;
+	}
+	FBOXAPI Component* Actor::findComponent(const char* type)
+	{
+		return this->findComponent(string(type));
 	}
 
 }

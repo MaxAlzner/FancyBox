@@ -16,12 +16,12 @@ namespace fbox
 
 		inline void deadzone(const float value)
 		{
-			this->_deadzone = min(max(value, 0.0f), 1.0f);
+			this->_deadzone = fmin(fmax(value, 0.0f), 1.0f);
 		}
 
 		inline void operator=(const float value)
 		{
-			this->_value = min(max(value, -1.0f), 1.0f);
+			this->_value = fmin(fmax(value, -1.0f), 1.0f);
 		}
 		inline void operator=(const Axis& axis)
 		{

@@ -13,7 +13,7 @@ namespace fbox
 
 		void dispose();
 
-		bool isEmpty() const;
+		bool empty() const;
 
 		void start();
 		void update();
@@ -21,10 +21,11 @@ namespace fbox
 
 		void add(Actor* actor);
 
-		Actor* findActor(String name);
+		Actor* findActor(string& name);
+		Actor* findActor(const char* name);
 
-		String name;
-		List<Actor*> actors;
+		string name;
+		std::list<Actor*> actors;
 
 	};
 

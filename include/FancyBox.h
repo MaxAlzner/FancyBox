@@ -16,22 +16,30 @@
 
 namespace fbox
 {
-	class FBOXAPI GlUniform;
-	class FBOXAPI GlTexture;
-	class FBOXAPI GlBuffer;
-	class FBOXAPI GlUniformBlock;
-	class FBOXAPI GlVertexArray;
-	class FBOXAPI GlFramebuffer;
-	class FBOXAPI GlShader;
-	class FBOXAPI GlProgram;
+	namespace gl
+	{
+		class FBOXAPI Uniform;
+		class FBOXAPI Texture;
+		class FBOXAPI Buffer;
+		class FBOXAPI UniformBlock;
+		class FBOXAPI VertexArray;
+		class FBOXAPI Framebuffer;
+		class FBOXAPI Shader;
+		class FBOXAPI Program;
+	}
 
-	class FBOXAPI AlBuffer;
+	namespace al
+	{
+		class FBOXAPI Buffer;
+	}
 
-	class FBOXAPI ScriptManager;
-	class FBOXAPI ScriptObject;
-	class FBOXAPI ScriptArray;
-	class FBOXAPI ScriptParameters;
-	class FBOXAPI ScriptFile;
+	namespace js
+	{
+		class FBOXAPI Object;
+		class FBOXAPI Array;
+		class FBOXAPI FunctionParameters;
+		class FBOXAPI Manager;
+	}
 
 	class FBOXAPI Component;
 	class FBOXAPI Transform;
@@ -46,6 +54,10 @@ namespace fbox
 	class FBOXAPI Scene;
 }
 
+#if defined(_WIN32) || defined(__WIN32__)
+#include <Windows.h>
+#endif
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -53,57 +65,52 @@ namespace fbox
 #include <time.h>
 #include <dirent.h>
 
-#include <MediaLoader.h>
+#include <string>
+#include <vector>
+#include <list>
 
-#include <random.hpp>
-#include <array.hpp>
-#include <list.hpp>
+#include <rapidxml.hpp>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <shape.h>
 
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include <AL\al.h>
-#include <AL\alc.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include <v8.h>
+#include <FreeImage.h>
 
-using namespace medialoader;
+typedef std::string string;
+typedef FIBITMAP surface;
+typedef unsigned int uint;
 
-#include "input\button.h"
-#include "input\axis.h"
-#include "input\mouse.h"
-#include "input\key.h"
-#include "input\gamepad.h"
+#include "input/button.h"
+#include "input/axis.h"
+#include "input/mouse.h"
+#include "input/key.h"
+#include "input/gamepad.h"
 
-#include "graphics\gluniform.h"
-#include "graphics\gltexture.h"
-#include "graphics\glbuffer.h"
-#include "graphics\gluniformblock.h"
-#include "graphics\glvertexarray.h"
-#include "graphics\glframebuffer.h"
-#include "graphics\glshader.h"
-#include "graphics\glprogram.h"
+#include "graphics/uniform.h"
+#include "graphics/texture.h"
+#include "graphics/buffer.h"
+#include "graphics/uniformblock.h"
+#include "graphics/vertexarray.h"
+#include "graphics/framebuffer.h"
+#include "graphics/shader.h"
+#include "graphics/program.h"
 
-#include "audio\albuffer.h"
+#include "audio/buffer.h"
 
-#include "scripting\scriptmanager.h"
-#include "scripting\scriptobject.h"
-#include "scripting\scriptarray.h"
-#include "scripting\scriptparameters.h"
-#include "scripting\scriptfile.h"
+#include "scripting/manager.h"
+#include "scripting/object.h"
+#include "scripting/array.h"
+#include "scripting/functionparameters.h"
 
-#include "model\components\component.h"
-#include "model\components\transform.h"
-#include "model\components\meshfilter.h"
-#include "model\components\texturefilter.h"
-#include "model\components\material.h"
-#include "model\components\behavior.h"
-#include "model\components\camera.h"
-#include "model\components\light.h"
+#include "model/component.h"
+#include "model/actor.h"
+#include "model/scene.h"
 
-#include "model\actor.h"
-#include "model\scene.h"
-
-#include "system\global.h"
-#include "system\frame.h"
-#include "system\import.h"
-#include "system\callback.h"
-#include "system\graphics.h"
+#include "system/global.h"
+#include "system/frame.h"
+#include "system/callback.h"
