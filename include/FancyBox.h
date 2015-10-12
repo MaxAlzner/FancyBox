@@ -54,6 +54,8 @@ namespace fbox
 	class FBOXAPI Scene;
 }
 
+#define _USE_MATH_DEFINES
+
 #if defined(_WIN32) || defined(__WIN32__)
 #include <Windows.h>
 #endif

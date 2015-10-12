@@ -15,7 +15,7 @@ namespace fbox
 
 			static Object Global();
 
-			static void Register(string& filepath);
+			static void Register(string& filename);
 			static void Execute(string& command);
 
 			static bool Started();

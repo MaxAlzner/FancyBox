@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <scene>
-	<script src="testbehavior.js" />
 	<script src="turntable.js" />
+	<script src="pulsinglight.js" />
 	<actor name="MainCamera">
 		<transform>
-			<translate y="3" z="-4" />
-			<rotate x="-30" />
+			<translate x="0" y="1" z="4" />
+			<rotate x="-10" y="180" />
 		</transform>
-		<camera x="4" y="3" fov="60" near="0.1" far="100" />
+		<camera x="4" y="3" fov="45" near="0.1" far="100" />
 	</actor>
-	<actor name="Catwalk1">
-		<transform>
-			<translate x="-2.4" />
-		</transform>
-		<texture type="diffuse" src="EV_Catwalk_D.tga" />
-		<texture type="normal" src="EV_Catwalk_N.tga" />
-		<texture type="specular" src="EV_Catwalk_S.tga" />
-		<mesh src="EV_Catwalk.obj" />
+	<actor name="Platform1">
+		<texture type="diffuse" src="EV_Platform_D.tga" />
+		<texture type="normal" src="EV_Platform_N.tga" />
+		<texture type="specular" src="EV_Platform_S.tga" />
+		<mesh src="EV_Platform.obj" />
 		<behavior name="TurnTable" />
+	</actor>
+	<actor name="Stairs1">
+		<transform>
+			<translate x="2.5" />
+		</transform>
+		<texture type="diffuse" src="EV_Stairs_D.tga" />
+		<texture type="normal" src="EV_Stairs_N.tga" />
+		<texture type="specular" src="EV_Stairs_S.tga" />
+		<mesh src="EV_Stairs.obj" />
+	</actor>
+	<actor name="Stairs2">
+		<transform>
+			<translate x="-2.5" />
+			<rotate y="180" />
+		</transform>
+		<texture type="diffuse" src="EV_Stairs_D.tga" />
+		<texture type="normal" src="EV_Stairs_N.tga" />
+		<texture type="specular" src="EV_Stairs_S.tga" />
+		<mesh src="EV_Stairs.obj" />
+	</actor>
+	<actor name="PointLight1">
+		<transform>
+			<translate y="1" x="0" />
+		</transform>
+		<light type="point" intensity="2" color="rgba(255, 255, 255, 1.0)" />
+		<behavior name="PulsingLight" />
 	</actor>
 </scene>

@@ -55,8 +55,7 @@
       <Command>xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(GlfwBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(OpenAlBinDir)*.dll" "$(OutDir)" /Y
-xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y
-xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
+xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;OpenAL32.lib;FreeImage.lib;libshape.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -68,8 +67,7 @@ xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
       <Command>xcopy "$(GlewBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(GlfwBinDir)*.dll" "$(OutDir)" /Y
 xcopy "$(OpenAlBinDir)*.dll" "$(OutDir)" /Y
-xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y
-xcopy "$(ProjectDir)data" "$(OutDir)" /Y /R /E</Command>
+xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;OpenAL32.lib;FreeImage.lib;libshape.lib;winmm.lib;ws2_32.lib;icui18n.lib;icuuc.lib;v8_base.ia32.lib;v8_snapshot.lib;%(AdditionalDependencies)</AdditionalDependencies>

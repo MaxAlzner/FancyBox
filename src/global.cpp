@@ -139,15 +139,17 @@ namespace fbox
 		else if (name == "directionalLight_forward_ws") return UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR;
 		else if (name == "directionalLight_color") return UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR;
 		else if (name == "directionalLight_intensity") return UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY;
+		//else if (name == "pointLight_pos_ws") return UNIFORM_FLAG_LIGHT_POINT_POSITION;
+		//else if (name == "pointLight_color") return UNIFORM_FLAG_LIGHT_POINT_COLOR;
+		//else if (name == "pointLight_intensity") return UNIFORM_FLAG_LIGHT_POINT_INTENSITY;
+		//else if (name == "pointLight_range") return UNIFORM_FLAG_LIGHT_POINT_RANGE;
+		else if (name == "numOfPointLights") return UNIFORM_FLAG_LIGHT_POINT_NUM;
 		//else if (name == "spotLight_pos_ws") return UNIFORM_FLAG_LIGHT_SPOT_POSITION;
 		//else if (name == "spotLight_forward_ws") return UNIFORM_FLAG_LIGHT_SPOT_VECTOR;
 		//else if (name == "spotLight_color") return UNIFORM_FLAG_LIGHT_SPOT_COLOR;
 		//else if (name == "spotLight_intensity") return UNIFORM_FLAG_LIGHT_SPOT_INTENSITY;
 		//else if (name == "spotLight_range") return UNIFORM_FLAG_LIGHT_SPOT_RANGE;
-		//else if (name == "pointLight_pos_ws") return UNIFORM_FLAG_LIGHT_POINT_POSITION;
-		//else if (name == "pointLight_color") return UNIFORM_FLAG_LIGHT_POINT_COLOR;
-		//else if (name == "pointLight_intensity") return UNIFORM_FLAG_LIGHT_POINT_INTENSITY;
-		//else if (name == "pointLight_range") return UNIFORM_FLAG_LIGHT_POINT_RANGE;
+		else if (name == "numOfSpotLights") return UNIFORM_FLAG_LIGHT_SPOT_NUM;
 		else if (name == "overlay") return UNIFORM_FLAG_COLOR_OVERLAY;
 		else if (name == "highlight") return UNIFORM_FLAG_COLOR_HIGHLIGHT;
 		else if (name == "roughness") return UNIFORM_FLAG_BRDF_ROUGHNESS;
@@ -431,18 +433,20 @@ namespace fbox
 	FBOXAPI Light* Import::ParseLight(XmlNode* node)
 	{
 		string type = Value(node->last_attribute("type"));
-		float intensity = ParseFloat(node->last_attribute("intensity"));
+		glm::vec4 color = ParseColor(node->last_attribute("color"));
+		float intensity = ParseFloat(node->last_attribute("intensity"), 1.0f);
+		float range = ParseFloat(node->last_attribute("range"), 5.0f);
 		if (type == "point")
 		{
-			return new Light(Light::LIGHT_POINT, intensity);
+			return new Light(Light::LIGHT_POINT, color, intensity);
 		}
 		else if (type == "spot")
 		{
-			return new Light(Light::LIGHT_SPOT, intensity);
+			return new Light(Light::LIGHT_SPOT, color, intensity, range);
 		}
 		else if (type == "directional")
 		{
-			return new Light(Light::LIGHT_DIRECTIONAL, intensity);
+			return new Light(Light::LIGHT_DIRECTIONAL, color, intensity, range);
 		}
 
 		return new Light;
@@ -514,6 +518,20 @@ namespace fbox
 		if (child != 0) c.g = ParseFloat(child, 1.0f);
 		child = node->first_node("blue");
 		if (child != 0) c.b = ParseFloat(child, 1.0f);
+
+		return c;
+	}
+	FBOXAPI glm::vec4 Import::ParseColor(XmlAttribute* attr)
+	{
+		glm::vec4 c(1.0f);
+		if (attr != 0)
+		{
+			int r, g, b;
+			sscanf_s(attr->value(), "rgba(%d, %d, %d, %f)", &r, &g, &b, &c.a);
+			c.r = float(r) / 255.0f;
+			c.g = float(g) / 255.0f;
+			c.b = float(b) / 255.0f;
+		}
 
 		return c;
 	}

@@ -136,13 +136,13 @@ namespace fbox
 
 	FBOXAPI void OnStart()
 	{
-#if 0
+#if 1
 		js::Object global = js::Manager::Global();
 		js::Array globals = global.properties();
 		for (int i = 0; i < globals.count(); i++)
 		{
 			printf(" %d ). %s : %s\n", i + 1, (const char*)globals.gets(i).data(), (const char*)global.typeof(globals.gets(i)).data());
-			js::Object property = global.get(globals.gets(i));
+			js::Object property = global.get(globals.gets(i).data());
 			js::Array props = property.properties();
 			for (int k = 0; k < props.count(); k++)
 			{
@@ -158,6 +158,48 @@ namespace fbox
 	}
 	FBOXAPI void OnUpdate()
 	{
+		if (Input.Key[KEY_Q])
+		{
+			MainCamera->object->transform->rotation.y += 5.0f;
+		}
+
+		if (Input.Key[KEY_E])
+		{
+			MainCamera->object->transform->rotation.y -= 5.0f;
+		}
+
+		if (Input.Key[KEY_Z])
+		{
+			MainCamera->object->transform->rotation.x += 5.0f;
+		}
+
+		if (Input.Key[KEY_C])
+		{
+			MainCamera->object->transform->rotation.x -= 5.0f;
+		}
+
+		if (Input.Key[KEY_W])
+		{
+			MainCamera->object->transform->position += MainCamera->object->transform->forward * 0.1f;
+		}
+
+		if (Input.Key[KEY_S])
+		{
+			MainCamera->object->transform->position -= MainCamera->object->transform->forward * 0.1f;
+		}
+
+		if (Input.Key[KEY_A])
+		{
+			MainCamera->object->transform->position += MainCamera->object->transform->right * 0.1f;
+		}
+
+		if (Input.Key[KEY_D])
+		{
+			MainCamera->object->transform->position -= MainCamera->object->transform->right * 0.1f;
+		}
+
+		//MainScene->findActor("PointLight1")->transform->position.y = sin((float(Frame::Current()) / 60.0f) * M_PI) + 0.5f;
+
 		if (MainScene != 0)
 		{
 			MainScene->update();

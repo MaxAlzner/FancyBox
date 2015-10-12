@@ -184,17 +184,29 @@ namespace fbox
 		inline Light() :
 			Component("Light"),
 			lightType(LIGHT_NONE),
-			intensity(1.0f) {}
-		inline Light(LIGHTTYPE lightType, const float intensity) :
+			color(1.0f),
+			intensity(1.0f),
+			range(5.0f) {}
+		inline Light(LIGHTTYPE lightType, glm::vec4& color, const float intensity) :
 			Component("Light"),
 			lightType(lightType),
-			intensity(intensity) {}
+			color(color),
+			intensity(intensity),
+			range(5.0f) {}
+		inline Light(LIGHTTYPE lightType, glm::vec4& color, const float intensity, const float range) :
+			Component("Light"),
+			lightType(lightType),
+			color(color),
+			intensity(intensity),
+			range(range) {}
 		inline ~Light() {}
 
 		void bind();
 
 		LIGHTTYPE lightType;
+		glm::vec4 color;
 		float intensity;
+		float range;
 
 	protected:
 

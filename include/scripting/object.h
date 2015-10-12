@@ -14,30 +14,35 @@ namespace fbox
 			Object(v8::Handle<v8::Object>& object);
 			~Object();
 
-			void set(string& key, string& value);
-			void set(string& key, __int32 value);
-			void set(string& key, bool value);
-			void set(string& key, float value);
-			void set(string& key, double value);
-			void set(string& key, Object& object);
-			void set(string& key, Array& object);
+			void set(const char* key, string& value);
+			void set(const char* key, __int32 value);
+			void set(const char* key, bool value);
+			void set(const char* key, float value);
+			void set(const char* key, double value);
+			void set(const char* key, Object& object);
+			void set(const char* key, Array& object);
 
-			string gets(string& key);
-			__int32 geti(string& key);
-			bool getb(string& key);
-			float getf(string& key);
-			double getd(string& key);
-			Object get(string& key);
-			Array getarr(string& key);
+			string gets(const char* key);
+			__int32 geti(const char* key);
+			bool getb(const char* key);
+			float getf(const char* key);
+			double getd(const char* key);
+			Object get(const char* key);
+			Array getarr(const char* key);
 
+			void call(const char* name);
 			void call(string& name);
-			void call(string& name, Object& parameter);
+			void call(const char* name, FunctionParameters& parameters);
 			void call(string& name, FunctionParameters& parameters);
 
+			Object construct(const char* name);
 			Object construct(string& name);
-			Object construct(string& name, Object& parameter);
+			Object construct(const char* name, FunctionParameters& parameters);
 			Object construct(string& name, FunctionParameters& parameters);
 
+			void accessor(const char* prop, const char* type, void* src, int size, bool setter = true);
+
+			string typeof(const char* key) const;
 			string typeof(string& key) const;
 			Array properties() const;
 
@@ -48,16 +53,8 @@ namespace fbox
 
 		protected:
 
-			void _getter(v8::Local<v8::String> prop, const v8::PropertyCallbackInfo<v8::Value>& info);
-			void _setter(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
-
-			template <typename T> class propertyLink
-			{
-			public:
-
-				T* source;
-
-			};
+			static void _getterCallback(v8::Local<v8::String> prop, const v8::PropertyCallbackInfo<v8::Value>& info);
+			static void _setterCallback(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 
 			v8::Handle<v8::Object>* _state;
 

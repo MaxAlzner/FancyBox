@@ -93,33 +93,60 @@ namespace fbox
 			this->state = js::Manager::Global().construct(this->name);
 		}
 
-#if 0
-		ScriptArray props = this->state.properties();
-		for (ScriptArray::Iterator i = props.begin(); i < props.count(); i++)
+		this->state.accessor("name", "string", &this->name, sizeof(string), false);
+		js::Object transform;
+		transform.accessor("tx", "number", &this->object->transform->position.x, sizeof(float));
+		transform.accessor("ty", "number", &this->object->transform->position.y, sizeof(float));
+		transform.accessor("tz", "number", &this->object->transform->position.z, sizeof(float));
+		transform.accessor("rx", "number", &this->object->transform->rotation.x, sizeof(float));
+		transform.accessor("ry", "number", &this->object->transform->rotation.y, sizeof(float));
+		transform.accessor("rz", "number", &this->object->transform->rotation.z, sizeof(float));
+		transform.accessor("sx", "number", &this->object->transform->scale.x, sizeof(float));
+		transform.accessor("sy", "number", &this->object->transform->scale.y, sizeof(float));
+		transform.accessor("sz", "number", &this->object->transform->scale.z, sizeof(float));
+		this->state.set("transform", transform);
+		if (this->object->material != 0)
 		{
-			printf(" %d ). %s : %s\n", i.index() + 1, (const char*)i.gets(), (const char*)this->state.typeof(i.gets()));
+			js::Object material;
+			this->state.set("material", material);
 		}
-#endif
 
-		this->state.call((string)"OnStart");
+		if (this->object->camera != 0)
+		{
+			js::Object camera;
+			camera.accessor("fov", "number", &this->object->camera->fov, sizeof(float));
+			this->state.set("camera", camera);
+		}
+
+		if (this->object->light != 0)
+		{
+			js::Object light;
+			light.accessor("intensity", "number", &this->object->light->intensity, sizeof(float));
+			light.accessor("range", "number", &this->object->light->range, sizeof(float));
+			this->state.set("light", light);
+		}
+
+		this->state.call("OnStart");
 	}
 	FBOXAPI void Behavior::end()
 	{
-		this->state.call((string)"OnEnd");
+		this->state.call("OnEnd");
 	}
 	FBOXAPI void Behavior::update()
 	{
-		//this->state.call("OnUpdate");
+		this->state.call("OnUpdate");
 	}
 
 	FBOXAPI void Camera::bind()
 	{
 		vec3 eye = this->object->transform->position;
 		vec3 focus = eye + (this->object->transform->forward);
-		mat4 view = lookAt(eye, focus, -this->object->transform->up);
+		vec3 up = this->object->transform->up;
+		mat4 view = lookAt(eye, focus, up);
 		mat4 proj = perspective(this->fov, this->aperture.x / this->aperture.y, this->clipping.x, this->clipping.y);
 		GetUniform(UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA)->bind4x4f(view);
 		GetUniform(UNIFORM_FLAG_MATRIX_PROJECTION)->bind4x4f(proj);
+		MainCamera = this;
 	}
 
 	FBOXAPI void Camera::adjust(float width, float height)
@@ -133,14 +160,31 @@ namespace fbox
 
 	FBOXAPI void Light::bind()
 	{
-		switch (this->lightType)
+		if (this->lightType == LIGHT_DIRECTIONAL)
 		{
-		case LIGHT_DIRECTIONAL:
-			break;
-		case LIGHT_POINT:
-			break;
-		case LIGHT_SPOT:
-			break;
+			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR)->bind3f(this->object->transform->forward);
+			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR)->bind3f(vec3(1.0f, 1.0f, 0.0f));
+			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY)->bind1f(1.0f);
+		}
+		else if (this->lightType == LIGHT_POINT)
+		{
+			struct
+			{
+				vec4 position;
+				vec4 color;
+				float intensity;
+				float range;
+			} lightData;
+			lightData.position = vec4(this->object->transform->position, 1.0);
+			lightData.color = this->color;
+			lightData.intensity = this->intensity;
+			lightData.range = this->range;
+			GetUniformBlock(UNIFORM_BLOCK_LIGHT_POINT1)->bind(&lightData, sizeof(lightData));
+			GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(1);
+		}
+		else if (this->lightType == LIGHT_SPOT)
+		{
+
 		}
 	}
 

@@ -17,15 +17,17 @@ namespace fbox
 		UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR,
 		UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR,
 		UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY,
+		//UNIFORM_FLAG_LIGHT_POINT_POSITION,
+		//UNIFORM_FLAG_LIGHT_POINT_COLOR,
+		//UNIFORM_FLAG_LIGHT_POINT_INTENSITY,
+		//UNIFORM_FLAG_LIGHT_POINT_RANGE,
+		UNIFORM_FLAG_LIGHT_POINT_NUM,
 		//UNIFORM_FLAG_LIGHT_SPOT_POSITION,
 		//UNIFORM_FLAG_LIGHT_SPOT_VECTOR,
 		//UNIFORM_FLAG_LIGHT_SPOT_COLOR,
 		//UNIFORM_FLAG_LIGHT_SPOT_INTENSITY,
 		//UNIFORM_FLAG_LIGHT_SPOT_RANGE,
-		//UNIFORM_FLAG_LIGHT_POINT_POSITION,
-		//UNIFORM_FLAG_LIGHT_POINT_COLOR,
-		//UNIFORM_FLAG_LIGHT_POINT_INTENSITY,
-		//UNIFORM_FLAG_LIGHT_POINT_RANGE,
+		UNIFORM_FLAG_LIGHT_SPOT_NUM,
 
 		UNIFORM_FLAG_COLOR_OVERLAY,
 		UNIFORM_FLAG_COLOR_HIGHLIGHT,
@@ -81,6 +83,23 @@ namespace fbox
 		GamepadState Gamepad;
 
 	} InputState;
+
+	typedef struct PointLightData
+	{
+
+		inline PointLightData(glm::vec4& position, glm::vec4& color, const float intensity, const float range) :
+			position(position),
+			color(color),
+			intensity(intensity),
+			range(range) {}
+		inline ~PointLightData() {}
+
+		glm::vec4 position;
+		glm::vec4 color;
+		float intensity;
+		float range;
+
+	} PointLightData;
 
 	typedef struct TextureAsset
 	{
@@ -171,6 +190,7 @@ namespace fbox
 		static bool ParseBool(XmlNode* node, bool defaultValue = false);
 		static bool ParseBool(XmlAttribute* attr, bool defaultValue = false);
 		static glm::vec4 ParseColor(XmlNode* node);
+		static glm::vec4 ParseColor(XmlAttribute* attr);
 		static string Value(XmlAttribute* attr);
 
 	};
