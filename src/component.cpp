@@ -95,15 +95,9 @@ namespace fbox
 
 		this->state.accessor("name", "string", &this->name, sizeof(string), false);
 		js::Object transform;
-		transform.accessor("tx", "number", &this->object->transform->position.x, sizeof(float));
-		transform.accessor("ty", "number", &this->object->transform->position.y, sizeof(float));
-		transform.accessor("tz", "number", &this->object->transform->position.z, sizeof(float));
-		transform.accessor("rx", "number", &this->object->transform->rotation.x, sizeof(float));
-		transform.accessor("ry", "number", &this->object->transform->rotation.y, sizeof(float));
-		transform.accessor("rz", "number", &this->object->transform->rotation.z, sizeof(float));
-		transform.accessor("sx", "number", &this->object->transform->scale.x, sizeof(float));
-		transform.accessor("sy", "number", &this->object->transform->scale.y, sizeof(float));
-		transform.accessor("sz", "number", &this->object->transform->scale.z, sizeof(float));
+		transform.accessor("position", &this->object->transform->position, true);
+		transform.accessor("rotation", &this->object->transform->rotation, true);
+		transform.accessor("scale", &this->object->transform->scale, true);
 		this->state.set("transform", transform);
 		if (this->object->material != 0)
 		{
@@ -114,6 +108,8 @@ namespace fbox
 		if (this->object->camera != 0)
 		{
 			js::Object camera;
+			camera.accessor("aperture", &this->object->camera->aperture, true);
+			camera.accessor("clipping", &this->object->camera->clipping, true);
 			camera.accessor("fov", "number", &this->object->camera->fov, sizeof(float));
 			this->state.set("camera", camera);
 		}
@@ -121,6 +117,7 @@ namespace fbox
 		if (this->object->light != 0)
 		{
 			js::Object light;
+			light.accessor("color", &this->object->light->color, true);
 			light.accessor("intensity", "number", &this->object->light->intensity, sizeof(float));
 			light.accessor("range", "number", &this->object->light->range, sizeof(float));
 			this->state.set("light", light);

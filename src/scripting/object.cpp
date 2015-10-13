@@ -41,7 +41,7 @@ namespace fbox
 				(*this->_state)->Set(v8::String::New(key), v8::String::New(value.data()));
 			}
 		}
-		FBOXAPI void Object::set(const char* key, __int32 value)
+		FBOXAPI void Object::set(const char* key, int32_t value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -98,7 +98,7 @@ namespace fbox
 
 			return string();
 		}
-		FBOXAPI __int32 Object::geti(const char* key)
+		FBOXAPI int32_t Object::geti(const char* key)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
@@ -266,6 +266,77 @@ namespace fbox
 				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
 			}
 		}
+		FBOXAPI void Object::accessor(const char* prop, Object& object, bool setter)
+		{
+			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && object._state != 0)
+			{
+				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
+				data->Set(0, v8::String::New("object"));
+				data->Set(1, *object._state);
+				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
+			}
+		}
+		FBOXAPI void Object::accessor(const char* prop, Array& object, bool setter)
+		{
+			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
+			{
+				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
+				data->Set(0, v8::String::New("array"));
+				data->Set(1, (v8::Handle<v8::Value>)object);
+				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
+			}
+		}
+		FBOXAPI void Object::accessor(const char* prop, glm::vec2* v, bool setter)
+		{
+			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && v != 0)
+			{
+				Object obj;
+				obj.accessor("x", "number", &v->x, sizeof(float), true);
+				obj.accessor("y", "number", &v->y, sizeof(float), true);
+				obj.accessor("r", "number", &v->r, sizeof(float), true);
+				obj.accessor("g", "number", &v->g, sizeof(float), true);
+				obj.accessor("s", "number", &v->s, sizeof(float), true);
+				obj.accessor("t", "number", &v->t, sizeof(float), true);
+				this->accessor(prop, obj, setter);
+			}
+		}
+		FBOXAPI void Object::accessor(const char* prop, glm::vec3* v, bool setter)
+		{
+			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && v != 0)
+			{
+				Object obj;
+				obj.accessor("x", "number", &v->x, sizeof(float), true);
+				obj.accessor("y", "number", &v->y, sizeof(float), true);
+				obj.accessor("z", "number", &v->z, sizeof(float), true);
+				obj.accessor("r", "number", &v->r, sizeof(float), true);
+				obj.accessor("g", "number", &v->g, sizeof(float), true);
+				obj.accessor("b", "number", &v->b, sizeof(float), true);
+				obj.accessor("s", "number", &v->s, sizeof(float), true);
+				obj.accessor("t", "number", &v->t, sizeof(float), true);
+				obj.accessor("p", "number", &v->p, sizeof(float), true);
+				this->accessor(prop, obj, setter);
+			}
+		}
+		FBOXAPI void Object::accessor(const char* prop, glm::vec4* v, bool setter)
+		{
+			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && v != 0)
+			{
+				Object obj;
+				obj.accessor("x", "number", &v->x, sizeof(float), true);
+				obj.accessor("y", "number", &v->y, sizeof(float), true);
+				obj.accessor("z", "number", &v->z, sizeof(float), true);
+				obj.accessor("w", "number", &v->w, sizeof(float), true);
+				obj.accessor("r", "number", &v->r, sizeof(float), true);
+				obj.accessor("g", "number", &v->g, sizeof(float), true);
+				obj.accessor("b", "number", &v->b, sizeof(float), true);
+				obj.accessor("a", "number", &v->a, sizeof(float), true);
+				obj.accessor("s", "number", &v->s, sizeof(float), true);
+				obj.accessor("t", "number", &v->t, sizeof(float), true);
+				obj.accessor("p", "number", &v->p, sizeof(float), true);
+				obj.accessor("q", "number", &v->q, sizeof(float), true);
+				this->accessor(prop, obj, setter);
+			}
+		}
 
 		FBOXAPI string Object::typeof(const char* key) const
 		{
@@ -350,6 +421,7 @@ namespace fbox
 			else if (type == "number") { return info.GetReturnValue().Set(*((float*)src->Int32Value())); }
 			else if (type == "int32") { return info.GetReturnValue().Set(*((int32_t*)src->Int32Value())); }
 			else if (type == "uint32") { return info.GetReturnValue().Set(*((uint32_t*)src->Int32Value())); }
+			else if (type == "array" || type == "object") { return info.GetReturnValue().Set(src); }
 		}
 		FBOXAPI void Object::_setterCallback(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
 		{
@@ -362,6 +434,26 @@ namespace fbox
 			else if (type == "number" && (value->IsNumber() || value->IsNumberObject())) { *((float*)src->Int32Value()) = (float)value->NumberValue(); }
 			else if (type == "int32" && value->IsInt32()) { *((int32_t*)src->Int32Value()) = value->Int32Value(); }
 			else if (type == "uint32" && value->IsUint32()) { *((uint32_t*)src->Int32Value()) = value->Uint32Value(); }
+			else if (type == "array" && value->IsArray())
+			{
+				v8::Handle<v8::Array> obj = src.As<v8::Array>();
+				v8::Handle<v8::Array> values = value.As<v8::Array>();
+				obj.Clear();
+				for (int i = 0; i < values->Length(); i++)
+				{
+					obj->Set(i, values->Get(i));
+				}
+			}
+			else if (type == "object" && value->IsObject())
+			{
+				v8::Handle<v8::Object> obj = src.As<v8::Object>();
+				v8::Handle<v8::Object> values = value.As<v8::Object>();
+				v8::Handle<v8::Array> props = values->GetPropertyNames();
+				for (int i = 0; i < props->Length(); i++)
+				{
+					obj->Set(props->Get(i), values->Get(props->Get(i)));
+				}
+			}
 		}
 
 	}

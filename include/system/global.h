@@ -156,6 +156,38 @@ namespace fbox
 	FBOXAPI extern gl::Uniform* GetUniform(UNIFORM_FLAG flag);
 	FBOXAPI extern gl::UniformBlock* GetUniformBlock(UNIFORM_BLOCK block);
 
+	class FBOXAPI Frame
+	{
+	public:
+
+		typedef __int64 frameValue;
+		typedef __int64 clockValue;
+		typedef float timeValue;
+
+		static frameValue Count;
+		static frameValue Current;
+		static frameValue Rate;
+
+		static timeValue FixedTime;
+		static timeValue DeltaTime;
+
+		static void SetFramesPerSecond(frameValue fps);
+
+		static void Start();
+		static void Finish();
+
+	protected:
+
+		static clockValue Ping;
+		static clockValue LastFrameTicks;
+		static clockValue LastSecond;
+
+		static frameValue FramesPerSecond;
+		static clockValue TicksPerSecond;
+		static clockValue TicksPerFrame;
+
+	};
+
 	class FBOXAPI Import
 	{
 	public:

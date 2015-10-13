@@ -198,6 +198,53 @@ namespace fbox
 		return 0;
 	}
 
+	FBOXAPI Frame::frameValue Frame::Count = 0;
+	FBOXAPI Frame::frameValue Frame::Current = 0;
+	FBOXAPI Frame::frameValue Frame::Rate = 0;
+
+	FBOXAPI Frame::timeValue Frame::FixedTime = 0.0f;
+	FBOXAPI Frame::timeValue Frame::DeltaTime = 0.0f;
+
+	FBOXAPI Frame::clockValue Frame::Ping = 0;
+	FBOXAPI Frame::clockValue Frame::LastFrameTicks = 0;
+	FBOXAPI Frame::clockValue Frame::LastSecond = 0;
+
+	FBOXAPI Frame::frameValue Frame::FramesPerSecond = 60;
+	FBOXAPI Frame::clockValue Frame::TicksPerSecond = CLOCKS_PER_SEC;
+	FBOXAPI Frame::clockValue Frame::TicksPerFrame = Frame::TicksPerSecond / Frame::FramesPerSecond;
+
+	FBOXAPI void Frame::SetFramesPerSecond(frameValue fps)
+	{
+		FramesPerSecond = fps;
+		TicksPerSecond = CLOCKS_PER_SEC;
+		TicksPerFrame = TicksPerSecond / clockValue(fps);
+	}
+
+	FBOXAPI void Frame::Start()
+	{
+		clockValue NewPing = clock();
+		clockValue ThisSecond = NewPing / TicksPerSecond;
+
+		Current++;
+		if (LastSecond != ThisSecond)
+		{
+			Rate = Current;
+			Current = 0;
+			LastSecond = ThisSecond;
+		}
+
+		Ping = NewPing;
+	}
+	FBOXAPI void Frame::Finish()
+	{
+		clockValue NewPing = clock();
+		LastFrameTicks = NewPing > Ping ? NewPing - Ping : 0;
+		FixedTime = float(Ping) / float(TicksPerSecond);
+		DeltaTime = float(LastFrameTicks) / float(TicksPerSecond);
+
+		Count++;
+	}
+
 	FBOXAPI void Import::Read(string& filename)
 	{
 		FILE* file = fopen(filename.data(), "r");

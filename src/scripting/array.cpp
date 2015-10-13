@@ -50,7 +50,7 @@ namespace fbox
 				(*this->_state)->Set(this->count(), v8::String::New(value.data()));
 			}
 		}
-		FBOXAPI void Array::add(__int32 value)
+		FBOXAPI void Array::add(int32_t value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -100,7 +100,7 @@ namespace fbox
 				(*this->_state)->Set(index, v8::String::New(value.data()));
 			}
 		}
-		FBOXAPI void Array::set(const int index, __int32 value)
+		FBOXAPI void Array::set(const int index, int32_t value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -157,7 +157,7 @@ namespace fbox
 
 			return string();
 		}
-		FBOXAPI __int32 Array::geti(const int index)
+		FBOXAPI int32_t Array::geti(const int index)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
@@ -243,19 +243,19 @@ namespace fbox
 				v8::Local<v8::Value> value = (*this->_state)->Get(index);
 				if (!value.IsEmpty())
 				{
-					if (value->IsUndefined()) return "undefined";
-					else if (value->IsNull()) return "null";
-					else if (value->IsString() || value->IsStringObject()) return "string";
-					else if (value->IsSymbol() || value->IsSymbolObject()) return "symbol";
-					else if (value->IsFunction()) return "function";
-					else if (value->IsArray()) return "array";
-					else if (value->IsObject()) return "object";
-					else if (value->IsBoolean() || value->IsBooleanObject()) return "boolean";
-					else if (value->IsNumber() || value->IsNumberObject()) return "number";
-					else if (value->IsInt32()) return "int32";
-					else if (value->IsUint32()) return "uint32";
-					else if (value->IsDate()) return "date";
-					else if (value->IsRegExp()) return "regex";
+					if (value->IsUndefined()) { return "undefined"; }
+					else if (value->IsNull()) { return "null"; }
+					else if (value->IsString() || value->IsStringObject()) { return "string"; }
+					else if (value->IsSymbol() || value->IsSymbolObject()) { return "symbol"; }
+					else if (value->IsFunction()) { return "function"; }
+					else if (value->IsArray()) { return "array"; }
+					else if (value->IsObject()) { return "object"; }
+					else if (value->IsBoolean() || value->IsBooleanObject()) { return "boolean"; }
+					else if (value->IsNumber() || value->IsNumberObject()) { return "number"; }
+					else if (value->IsInt32()) { return "int32"; }
+					else if (value->IsUint32()) { return "uint32"; }
+					else if (value->IsDate()) { return "date"; }
+					else if (value->IsRegExp()) { return "regex"; }
 				}
 			}
 
@@ -317,7 +317,7 @@ namespace fbox
 		{
 			this->add(value);
 		}
-		FBOXAPI void Array::operator+=(__int32 value)
+		FBOXAPI void Array::operator+=(int32_t value)
 		{
 			this->add(value);
 		}
@@ -356,7 +356,7 @@ namespace fbox
 
 			return string();
 		}
-		FBOXAPI int Array::Iterator::geti()
+		FBOXAPI int32_t Array::Iterator::geti()
 		{
 			if (Manager::Started() && this->_array != 0 && this->_array->_state != 0 && !this->_array->_state->IsEmpty())
 			{
@@ -439,23 +439,7 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_array != 0 && this->_array->_state != 0 && !this->_array->_state->IsEmpty())
 			{
-				v8::Local<v8::Value> value = (*this->_array->_state)->Get(this->_index);
-				if (!value.IsEmpty())
-				{
-					if (value->IsUndefined()) return "undefined";
-					else if (value->IsNull()) return "null";
-					else if (value->IsString() || value->IsStringObject()) return "string";
-					else if (value->IsSymbol() || value->IsSymbolObject()) return "symbol";
-					else if (value->IsFunction()) return "function";
-					else if (value->IsArray()) return "array";
-					else if (value->IsObject()) return "object";
-					else if (value->IsBoolean() || value->IsBooleanObject()) return "boolean";
-					else if (value->IsNumber() || value->IsNumberObject()) return "number";
-					else if (value->IsInt32()) return "int32";
-					else if (value->IsUint32()) return "uint32";
-					else if (value->IsDate()) return "date";
-					else if (value->IsRegExp()) return "regex";
-				}
+				return this->_array->typeof(this->_index);
 			}
 
 			return "undefined";

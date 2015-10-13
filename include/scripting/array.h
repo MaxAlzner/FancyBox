@@ -19,7 +19,7 @@ namespace fbox
 			friend class Iterator;
 
 			void add(string& value);
-			void add(__int32 value);
+			void add(int32_t value);
 			void add(bool value);
 			void add(float value);
 			void add(double value);
@@ -27,7 +27,7 @@ namespace fbox
 			void add(Array& value);
 
 			void set(const int index, string& value);
-			void set(const int index, __int32 value);
+			void set(const int index, int32_t value);
 			void set(const int index, bool value);
 			void set(const int index, float value);
 			void set(const int index, double value);
@@ -35,7 +35,7 @@ namespace fbox
 			void set(const int index, Array& value);
 
 			string gets(const int index);
-			int geti(const int index);
+			int32_t geti(const int index);
 			bool getb(const int index);
 			float getf(const int index);
 			double getd(const int index);
@@ -70,7 +70,7 @@ namespace fbox
 				inline ~Iterator() {}
 
 				string gets();
-				int geti();
+				int32_t geti();
 				bool getb();
 				float getf();
 				double getd();

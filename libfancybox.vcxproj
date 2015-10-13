@@ -96,15 +96,13 @@ xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y</Command>
     <ClInclude Include="include\scripting\manager.h" />
     <ClInclude Include="include\scripting\object.h" />
     <ClInclude Include="include\scripting\functionparameters.h" />
-    <ClInclude Include="include\system\callback.h" />
-    <ClInclude Include="include\system\frame.h" />
+    <ClInclude Include="include\system\event.h" />
     <ClInclude Include="include\system\global.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\actor.cpp" />
-    <ClCompile Include="src\callback.cpp" />
+    <ClCompile Include="src\event.cpp" />
     <ClCompile Include="src\component.cpp" />
-    <ClCompile Include="src\frame.cpp" />
     <ClCompile Include="src\graphics\buffer.cpp" />
     <ClCompile Include="src\graphics\framebuffer.cpp" />
     <ClCompile Include="src\global.cpp" />

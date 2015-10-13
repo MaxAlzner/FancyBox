@@ -121,6 +121,51 @@ namespace fbox
 		GetUniform(UNIFORM_FLAG_FILTER_RANDOM)->bind2fv((const vec2*)randoms, filterSize / 2);
 		delete[] randoms;
 #endif
+
+		js::Object global = js::Manager::Global();
+		js::Object mouse;
+		mouse.accessor("position", &Input.Mouse.position);
+		mouse.accessor("scroll", "number", &Input.Mouse.scroll, sizeof(float), false);
+		mouse.accessor("left", "boolean", &Input.Mouse.left, sizeof(bool), false);
+		mouse.accessor("middle", "boolean", &Input.Mouse.middle, sizeof(bool), false);
+		mouse.accessor("right", "boolean", &Input.Mouse.right, sizeof(bool), false);
+		mouse.accessor("active", "boolean", &Input.Mouse.active, sizeof(bool), false);
+		global.accessor("Mouse", mouse);
+		js::Object key;
+		global.accessor("Key", key);
+		js::Object gamepad;
+		gamepad.accessor("a", "boolean", &Input.Gamepad.a, sizeof(bool), false);
+		gamepad.accessor("b", "boolean", &Input.Gamepad.b, sizeof(bool), false);
+		gamepad.accessor("x", "boolean", &Input.Gamepad.x, sizeof(bool), false);
+		gamepad.accessor("y", "boolean", &Input.Gamepad.y, sizeof(bool), false);
+		js::Object bumpers;
+		bumpers.accessor("left", "boolean", &Input.Gamepad.bumperLeft, sizeof(bool), false);
+		bumpers.accessor("right", "boolean", &Input.Gamepad.bumperRight, sizeof(bool), false);
+		gamepad.accessor("bumpers", bumpers);
+		js::Object sticks;
+		js::Object leftStick;
+		leftStick.accessor("x", "number", &Input.Gamepad.stickLeft.x, sizeof(float), false);
+		leftStick.accessor("y", "number", &Input.Gamepad.stickLeft.y, sizeof(float), false);
+		leftStick.accessor("pressed", "boolean", &Input.Gamepad.stickButtonLeft, sizeof(bool), false);
+		sticks.accessor("left", leftStick);
+		js::Object rightStick;
+		rightStick.accessor("x", "number", &Input.Gamepad.stickRight.x, sizeof(float), false);
+		rightStick.accessor("y", "number", &Input.Gamepad.stickRight.y, sizeof(float), false);
+		rightStick.accessor("pressed", "boolean", &Input.Gamepad.stickButtonRight, sizeof(bool), false);
+		sticks.accessor("right", rightStick);
+		gamepad.accessor("sticks", sticks);
+		gamepad.accessor("back", "boolean", &Input.Gamepad.back, sizeof(bool), false);
+		gamepad.accessor("start", "boolean", &Input.Gamepad.start, sizeof(bool), false);
+		gamepad.accessor("connected", "boolean", &Input.Gamepad.a, sizeof(bool), false);
+		gamepad.accessor("user", "int32", &Input.Gamepad.a, sizeof(int), false);
+		global.accessor("Gamepad", gamepad);
+		js::Object frame;
+		frame.accessor("count", "int32", &Frame::Count, sizeof(Frame::frameValue), false);
+		frame.accessor("current", "int32", &Frame::Current, sizeof(Frame::frameValue), false);
+		frame.accessor("rate", "int32", &Frame::Rate, sizeof(Frame::frameValue), false);
+		frame.accessor("fixedTime", "number", &Frame::FixedTime, sizeof(Frame::timeValue), false);
+		frame.accessor("deltaTime", "number", &Frame::DeltaTime, sizeof(Frame::timeValue), false);
+		global.accessor("Frame", frame);
 	}
 	FBOXAPI void OnDispose()
 	{

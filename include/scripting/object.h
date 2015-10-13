@@ -15,7 +15,7 @@ namespace fbox
 			~Object();
 
 			void set(const char* key, string& value);
-			void set(const char* key, __int32 value);
+			void set(const char* key, int32_t value);
 			void set(const char* key, bool value);
 			void set(const char* key, float value);
 			void set(const char* key, double value);
@@ -23,7 +23,7 @@ namespace fbox
 			void set(const char* key, Array& object);
 
 			string gets(const char* key);
-			__int32 geti(const char* key);
+			int32_t geti(const char* key);
 			bool getb(const char* key);
 			float getf(const char* key);
 			double getd(const char* key);
@@ -41,6 +41,11 @@ namespace fbox
 			Object construct(string& name, FunctionParameters& parameters);
 
 			void accessor(const char* prop, const char* type, void* src, int size, bool setter = true);
+			void accessor(const char* prop, Object& object, bool setter = false);
+			void accessor(const char* prop, Array& object, bool setter = false);
+			void accessor(const char* prop, glm::vec2* v, bool setter = false);
+			void accessor(const char* prop, glm::vec3* v, bool setter = false);
+			void accessor(const char* prop, glm::vec4* v, bool setter = false);
 
 			string typeof(const char* key) const;
 			string typeof(string& key) const;

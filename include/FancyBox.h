@@ -114,5 +114,4 @@ typedef unsigned int uint;
 #include "model/scene.h"
 
 #include "system/global.h"
-#include "system/frame.h"
-#include "system/callback.h"
+#include "system/event.h"
