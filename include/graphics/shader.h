@@ -20,14 +20,13 @@ namespace fbox
 				TYPE_GEOMETRY = 3
 			};
 
-			Shader() : _handle(0), _type(TYPE_NONE), _raw(0) {}
-			Shader(shaderType type) : _handle(0), _type(type), _raw(0) {}
+			Shader() : _handle(0), _type(TYPE_NONE) {}
+			Shader(shaderType type) : _handle(0), _type(type) {}
 			~Shader() {}
 
-			void read(string& filepath);
-			void read(const char* filepath);
+			void compile(string& filepath);
+			void compile(const char* filepath);
 
-			void compile();
 			void release();
 
 			const handleType handle() const;
@@ -36,7 +35,6 @@ namespace fbox
 
 			handleType _handle;
 			shaderType _type;
-			char* _raw;
 
 		};
 

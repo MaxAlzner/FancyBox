@@ -46,7 +46,7 @@ void OnFileDrop(GLFWwindow* window, int count, const char** paths)
 	{
 		string path = paths[i];
 		printf(" Dropped file: %s\n", path.data());
-		fbox::Import::Read(path);
+		fbox::Import::Parse(path);
 	}
 }
 

@@ -28,11 +28,11 @@ namespace fbox
 			this->_value = axis._value;
 			this->_deadzone = axis._deadzone;
 		}
-		inline operator float() const
+		inline operator float()
 		{
-			return this->_value;
+			return (this->_value >= 0.0f ? 1.0f : -1.0f) * ((abs(this->_value) - this->_deadzone) / (1.0f - this->_deadzone));
 		}
-		inline operator bool() const
+		inline operator bool()
 		{
 			if (abs(this->_value) <= this->_deadzone)
 			{

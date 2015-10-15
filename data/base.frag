@@ -90,8 +90,10 @@ void pointLight_albedo(inout vec3 diffuse, inout vec3 specular, in vec3 n, in ve
 	vec3 l = normalize(position - vertex_ss);
 	vec3 h = normalize(l + v);
 	float intensity = pointLights_ss[light].intensity;
+	float range = pointLights_ss[light].range;
 	float dist = distance(position, vertex_ss);
 	float atten = (1.0 / (falloff.x + (falloff.y * dist) + (falloff.z * dist * dist))) * intensity;
+	atten = range / min((intensity * dist) + (intensity * dist * dist), range);
 	float n_dot_l = dot(n, l);
 	float n_dot_h = dot(n, h);
 	float n_dot_v = dot(n, v);

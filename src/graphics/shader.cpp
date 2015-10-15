@@ -7,37 +7,9 @@ namespace fbox
 	namespace gl
 	{
 
-		FBOXAPI void Shader::read(string& filename)
-		{
-			if (this->_raw != 0)
-			{
-				this->release();
-			}
-
-			FILE* file = fopen(filename.data(), "r");
-			if (file != 0)
-			{
-				fseek(file, 0, SEEK_END);
-				long size = ftell(file);
-				this->_raw = (char*)malloc(size + 1);
-				memset(this->_raw, 0, size + 1);
-				fseek(file, 0, SEEK_SET);
-				fread(this->_raw, size, 1, file);
-			}
-		}
-		FBOXAPI void Shader::read(const char* filename)
-		{
-			this->read(string(filename));
-		}
-
-		FBOXAPI void Shader::compile()
+		FBOXAPI void Shader::compile(string& filename)
 		{
 			if (this->_type == 0)
-			{
-				return;
-			}
-
-			if (this->_raw == 0)
 			{
 				return;
 			}
@@ -51,37 +23,41 @@ namespace fbox
 			default: break;
 			}
 
-			this->_handle = glCreateShader(type);
-			glShaderSource(this->_handle, 1, (const char**)&this->_raw, 0);
-			glCompileShader(this->_handle);
-			int logLength = 0;
-			glGetShaderiv(this->_handle, GL_INFO_LOG_LENGTH, &logLength);
-			if (logLength > 0)
+			char* raw = 0;
+			if (Import::Read(filename, &raw) > 0)
 			{
-				char* errorBuffer = new char[512];
-				memset(errorBuffer, 0, sizeof(char) * 512);
-				glGetShaderInfoLog(this->_handle, 512, &logLength, errorBuffer);
-
+				this->_handle = glCreateShader(type);
+				glShaderSource(this->_handle, 1, (const char**)&raw, 0);
+				glCompileShader(this->_handle);
+				int logLength = 0;
+				glGetShaderiv(this->_handle, GL_INFO_LOG_LENGTH, &logLength);
 				if (logLength > 0)
 				{
-					printf(errorBuffer);
+					char* errorBuffer = new char[512];
+					memset(errorBuffer, 0, sizeof(char) * 512);
+					glGetShaderInfoLog(this->_handle, 512, &logLength, errorBuffer);
+					if (logLength > 0)
+					{
+						printf(errorBuffer);
+					}
+
+					delete[] errorBuffer;
 				}
 
-				delete[] errorBuffer;
+				delete[] raw;
 			}
 		}
+		FBOXAPI void Shader::compile(const char* filename)
+		{
+			this->compile(string(filename));
+		}
+
 		FBOXAPI void Shader::release()
 		{
 			if (this->_handle != 0)
 			{
 				glDeleteShader(this->_handle);
 				this->_handle = 0;
-			}
-
-			if (this->_raw != 0)
-			{
-				delete[] this->_raw;
-				this->_raw = 0;
 			}
 		}
 

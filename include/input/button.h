@@ -21,6 +21,7 @@ namespace fbox
 
 		inline void operator=(const bool value)
 		{
+			this->_latched = false;
 			this->_pressed = value;
 		}
 		inline void operator=(const Button& button)
@@ -28,13 +29,14 @@ namespace fbox
 			this->_pressed = button._pressed;
 			this->_latched = button._latched;
 		}
-		inline operator bool() const
+		inline operator bool()
 		{
 			if (this->_latched)
 			{
 				return false;
 			}
 
+			this->_latched = true;
 			return this->_pressed;
 		}
 

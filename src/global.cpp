@@ -132,51 +132,51 @@ namespace fbox
 
 	FBOXAPI UNIFORM_FLAG GetUniformFlag(string& name)
 	{
-		if (name == "os_to_ws") return UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD;
-		else if (name == "ws_to_cs") return UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA;
-		else if (name == "ws_to_ls") return UNIFORM_FLAG_MATRIX_WORLD_TO_LIGHT;
-		else if (name == "projection") return UNIFORM_FLAG_MATRIX_PROJECTION;
-		else if (name == "directionalLight_forward_ws") return UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR;
-		else if (name == "directionalLight_color") return UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR;
-		else if (name == "directionalLight_intensity") return UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY;
-		//else if (name == "pointLight_pos_ws") return UNIFORM_FLAG_LIGHT_POINT_POSITION;
-		//else if (name == "pointLight_color") return UNIFORM_FLAG_LIGHT_POINT_COLOR;
-		//else if (name == "pointLight_intensity") return UNIFORM_FLAG_LIGHT_POINT_INTENSITY;
-		//else if (name == "pointLight_range") return UNIFORM_FLAG_LIGHT_POINT_RANGE;
-		else if (name == "numOfPointLights") return UNIFORM_FLAG_LIGHT_POINT_NUM;
-		//else if (name == "spotLight_pos_ws") return UNIFORM_FLAG_LIGHT_SPOT_POSITION;
-		//else if (name == "spotLight_forward_ws") return UNIFORM_FLAG_LIGHT_SPOT_VECTOR;
-		//else if (name == "spotLight_color") return UNIFORM_FLAG_LIGHT_SPOT_COLOR;
-		//else if (name == "spotLight_intensity") return UNIFORM_FLAG_LIGHT_SPOT_INTENSITY;
-		//else if (name == "spotLight_range") return UNIFORM_FLAG_LIGHT_SPOT_RANGE;
-		else if (name == "numOfSpotLights") return UNIFORM_FLAG_LIGHT_SPOT_NUM;
-		else if (name == "overlay") return UNIFORM_FLAG_COLOR_OVERLAY;
-		else if (name == "highlight") return UNIFORM_FLAG_COLOR_HIGHLIGHT;
-		else if (name == "roughness") return UNIFORM_FLAG_BRDF_ROUGHNESS;
-		else if (name == "refractionIndex") return UNIFORM_FLAG_BRDF_REFRACTION_INDEX;
-		else if (name == "uvRepeat") return UNIFORM_FLAG_UV_REPEAT;
-		else if (name == "uvOffset") return UNIFORM_FLAG_UV_OFFSET;
-		else if (name == "screenSize") return UNIFORM_FLAG_SIZE_SCREEN;
-		else if (name == "mapSize") return UNIFORM_FLAG_SIZE_MAP;
-		else if (name == "randomFilter") return UNIFORM_FLAG_FILTER_RANDOM;
-		else if (name == "gamma") return UNIFORM_FLAG_GAMMA;
-		else if (name == "colorMap") return UNIFORM_FLAG_MAP_COLOR;
-		else if (name == "normalMap") return UNIFORM_FLAG_MAP_NORMAL;
-		else if (name == "specularMap") return UNIFORM_FLAG_MAP_SPECULAR;
-		else if (name == "state") return UNIFORM_FLAG_STATE;
-		else return UNIFORM_FLAG_INVALID;
+		if (name == "os_to_ws") { return UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD; }
+		else if (name == "ws_to_cs") { return UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA; }
+		else if (name == "ws_to_ls") { return UNIFORM_FLAG_MATRIX_WORLD_TO_LIGHT; }
+		else if (name == "projection") { return UNIFORM_FLAG_MATRIX_PROJECTION; }
+		else if (name == "directionalLight_forward_ws") { return UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR; }
+		else if (name == "directionalLight_color") { return UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR; }
+		else if (name == "directionalLight_intensity") { return UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY; }
+		//else if (name == "pointLight_pos_ws") { return UNIFORM_FLAG_LIGHT_POINT_POSITION; }
+		//else if (name == "pointLight_color") { return UNIFORM_FLAG_LIGHT_POINT_COLOR; }
+		//else if (name == "pointLight_intensity") { return UNIFORM_FLAG_LIGHT_POINT_INTENSITY; }
+		//else if (name == "pointLight_range") { return UNIFORM_FLAG_LIGHT_POINT_RANGE; }
+		else if (name == "numOfPointLights") { return UNIFORM_FLAG_LIGHT_POINT_NUM; }
+		//else if (name == "spotLight_pos_ws") { return UNIFORM_FLAG_LIGHT_SPOT_POSITION; }
+		//else if (name == "spotLight_forward_ws") { return UNIFORM_FLAG_LIGHT_SPOT_VECTOR; }
+		//else if (name == "spotLight_color") { return UNIFORM_FLAG_LIGHT_SPOT_COLOR; }
+		//else if (name == "spotLight_intensity") { return UNIFORM_FLAG_LIGHT_SPOT_INTENSITY; }
+		//else if (name == "spotLight_range") { return UNIFORM_FLAG_LIGHT_SPOT_RANGE; }
+		else if (name == "numOfSpotLights") { return UNIFORM_FLAG_LIGHT_SPOT_NUM; }
+		else if (name == "overlay") { return UNIFORM_FLAG_COLOR_OVERLAY; }
+		else if (name == "highlight") { return UNIFORM_FLAG_COLOR_HIGHLIGHT; }
+		else if (name == "roughness") { return UNIFORM_FLAG_BRDF_ROUGHNESS; }
+		else if (name == "refractionIndex") { return UNIFORM_FLAG_BRDF_REFRACTION_INDEX; }
+		else if (name == "uvRepeat") { return UNIFORM_FLAG_UV_REPEAT; }
+		else if (name == "uvOffset") { return UNIFORM_FLAG_UV_OFFSET; }
+		else if (name == "screenSize") { return UNIFORM_FLAG_SIZE_SCREEN; }
+		else if (name == "mapSize") { return UNIFORM_FLAG_SIZE_MAP; }
+		else if (name == "randomFilter") { return UNIFORM_FLAG_FILTER_RANDOM; }
+		else if (name == "gamma") { return UNIFORM_FLAG_GAMMA; }
+		else if (name == "colorMap") { return UNIFORM_FLAG_MAP_COLOR; }
+		else if (name == "normalMap") { return UNIFORM_FLAG_MAP_NORMAL; }
+		else if (name == "specularMap") { return UNIFORM_FLAG_MAP_SPECULAR; }
+		else if (name == "state") { return UNIFORM_FLAG_STATE; }
+		else { return UNIFORM_FLAG_INVALID; }
 	}
 	FBOXAPI UNIFORM_BLOCK GetUniformBlockFlag(string& name)
 	{
-		if (name == "PointLight[0]") return UNIFORM_BLOCK_LIGHT_POINT1;
-		else if (name == "PointLight[1]") return UNIFORM_BLOCK_LIGHT_POINT2;
-		else if (name == "PointLight[2]") return UNIFORM_BLOCK_LIGHT_POINT3;
-		else if (name == "PointLight[3]") return UNIFORM_BLOCK_LIGHT_POINT4;
-		else if (name == "SpotLight[0]") return UNIFORM_BLOCK_LIGHT_SPOT1;
-		else if (name == "SpotLight[1]") return UNIFORM_BLOCK_LIGHT_SPOT2;
-		else if (name == "SpotLight[2]") return UNIFORM_BLOCK_LIGHT_SPOT3;
-		else if (name == "SpotLight[3]") return UNIFORM_BLOCK_LIGHT_SPOT4;
-		else return UNIFORM_BLOCK_INVALID;
+		if (name == "PointLight[0]") { return UNIFORM_BLOCK_LIGHT_POINT1; }
+		else if (name == "PointLight[1]") { return UNIFORM_BLOCK_LIGHT_POINT2; }
+		else if (name == "PointLight[2]") { return UNIFORM_BLOCK_LIGHT_POINT3; }
+		else if (name == "PointLight[3]") { return UNIFORM_BLOCK_LIGHT_POINT4; }
+		else if (name == "SpotLight[0]") { return UNIFORM_BLOCK_LIGHT_SPOT1; }
+		else if (name == "SpotLight[1]") { return UNIFORM_BLOCK_LIGHT_SPOT2; }
+		else if (name == "SpotLight[2]") { return UNIFORM_BLOCK_LIGHT_SPOT3; }
+		else if (name == "SpotLight[3]") { return UNIFORM_BLOCK_LIGHT_SPOT4; }
+		else { return UNIFORM_BLOCK_INVALID; }
 	}
 
 	FBOXAPI gl::Uniform* GetUniform(UNIFORM_FLAG flag)
@@ -239,24 +239,49 @@ namespace fbox
 	{
 		clockValue NewPing = clock();
 		LastFrameTicks = NewPing > Ping ? NewPing - Ping : 0;
-		FixedTime = float(Ping) / float(TicksPerSecond);
-		DeltaTime = float(LastFrameTicks) / float(TicksPerSecond);
+		FixedTime = Frame::timeValue(Ping) / Frame::timeValue(TicksPerSecond);
+		DeltaTime = Frame::timeValue(LastFrameTicks) / Frame::timeValue(TicksPerSecond);
 
 		Count++;
 	}
 
-	FBOXAPI void Import::Read(string& filename)
+	FBOXAPI int Import::Read(string& filename, char** outRaw)
 	{
 		FILE* file = fopen(filename.data(), "r");
 		if (file != 0)
 		{
-			fseek(file, 0, SEEK_END);
-			long size = ftell(file);
-			char* raw = new char[size + 1];
-			memset(raw, 0, size + 1);
 			fseek(file, 0, SEEK_SET);
-			fread(raw, 1, size, file);
+			int bytes = 0;
+			while (fgetc(file) != EOF)
+			{
+				bytes++;
+				if (feof(file) != 0)
+				{
+					break;
+				}
+			}
 
+			char* raw = new char[bytes + 1];
+			memset(raw, 0, bytes + 1);
+			fseek(file, 0, SEEK_SET);
+			fread(raw, 1, bytes, file);
+			fclose(file);
+			if (outRaw != 0)
+			{
+				*outRaw = raw;
+			}
+			
+			return bytes;
+		}
+
+		return -1;
+	}
+
+	FBOXAPI void Import::Parse(string& filename)
+	{
+		char* raw = 0;
+		if (Import::Read(filename, &raw) > 0)
+		{
 			XmlDocument document;
 			document.parse<0>(raw);
 			XmlNode* root = document.first_node();
@@ -275,7 +300,6 @@ namespace fbox
 
 			document.clear();
 			delete[] raw;
-			fclose(file);
 		}
 	}
 

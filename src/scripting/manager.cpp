@@ -92,24 +92,21 @@ namespace fbox
 		FBOXAPI void Manager::Register(string& filename)
 		{
 #if 1
-			FILE* file = fopen(filename.data(), "r");
-			if (Started() && file != 0)
+			if (Started())
 			{
-				fseek(file, 0, SEEK_END);
-				long size = ftell(file);
-				char* raw = new char[size + 1];
-				memset(raw, 0, size + 1);
-				fseek(file, 0, SEEK_SET);
-				fread(raw, 1, size, file);
-
-				v8::Local<v8::String> source = v8::String::NewFromUtf8(Isolate, raw);
-				if (!source.IsEmpty())
+				char* raw = 0;
+				if (Import::Read(filename, &raw) > 0)
 				{
-					v8::Handle<v8::Script> script = v8::Script::Compile(source);
-					script->Run();
+					v8::Local<v8::String> source = v8::String::NewFromUtf8(Isolate, raw);
+					if (!source.IsEmpty())
+					{
+						v8::Handle<v8::Script> script = v8::Script::Compile(source);
+						script->Run();
+					}
 				}
 
 				delete[] raw;
+
 			}
 #endif
 		}

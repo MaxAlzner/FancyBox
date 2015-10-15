@@ -98,6 +98,9 @@ namespace fbox
 		transform.accessor("position", &this->object->transform->position, true);
 		transform.accessor("rotation", &this->object->transform->rotation, true);
 		transform.accessor("scale", &this->object->transform->scale, true);
+		transform.accessor("forward", &this->object->transform->forward, false);
+		transform.accessor("up", &this->object->transform->up, false);
+		transform.accessor("right", &this->object->transform->right, false);
 		this->state.set("transform", transform);
 		if (this->object->material != 0)
 		{

@@ -84,23 +84,6 @@ namespace fbox
 
 	} InputState;
 
-	typedef struct PointLightData
-	{
-
-		inline PointLightData(glm::vec4& position, glm::vec4& color, const float intensity, const float range) :
-			position(position),
-			color(color),
-			intensity(intensity),
-			range(range) {}
-		inline ~PointLightData() {}
-
-		glm::vec4 position;
-		glm::vec4 color;
-		float intensity;
-		float range;
-
-	} PointLightData;
-
 	typedef struct TextureAsset
 	{
 
@@ -196,7 +179,9 @@ namespace fbox
 		typedef rapidxml::xml_node<char> XmlNode;
 		typedef rapidxml::xml_attribute<char> XmlAttribute;
 
-		static void Read(string& filename);
+		static int Read(string& filename, char** outRaw);
+
+		static void Parse(string& filename);
 
 		static void Register(string& filename, gl::Texture** outTexture);
 		static void Register(string& filename, gl::VertexArray** outVertexArray);
