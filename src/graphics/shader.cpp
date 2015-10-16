@@ -14,19 +14,23 @@ namespace fbox
 				return;
 			}
 
-			GLenum type = GL_NONE;
-			switch (this->_type)
+			if (this->_handle == 0)
 			{
-			case TYPE_VERTEX: type = GL_VERTEX_SHADER; break;
-			case TYPE_FRAGMENT: type = GL_FRAGMENT_SHADER; break;
-			case TYPE_GEOMETRY: type = GL_GEOMETRY_SHADER; break;
-			default: break;
+				GLenum type = GL_NONE;
+				switch (this->_type)
+				{
+				case TYPE_VERTEX: type = GL_VERTEX_SHADER; break;
+				case TYPE_FRAGMENT: type = GL_FRAGMENT_SHADER; break;
+				case TYPE_GEOMETRY: type = GL_GEOMETRY_SHADER; break;
+				default: break;
+				}
+
+				this->_handle = glCreateShader(type);
 			}
 
 			char* raw = 0;
 			if (Import::Read(filename, &raw) > 0)
 			{
-				this->_handle = glCreateShader(type);
 				glShaderSource(this->_handle, 1, (const char**)&raw, 0);
 				glCompileShader(this->_handle);
 				int logLength = 0;

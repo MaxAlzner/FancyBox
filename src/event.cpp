@@ -298,7 +298,7 @@ namespace fbox
 
 	FBOXAPI void OnStart()
 	{
-#if 1
+#if 0
 		js::Object global = js::Manager::Global();
 		js::Array globals = global.properties();
 		for (int i = 0; i < globals.count(); i++)
@@ -320,6 +320,14 @@ namespace fbox
 	}
 	FBOXAPI void OnUpdate()
 	{
+		if (Input.Key[KEY_SPACE])
+		{
+			VertexProgram->compile("base.vert");
+			FragmentProgram->compile("base.frag");
+			MainProgram->link();
+			MainProgram->activate();
+		}
+
 		if (MainScene != 0)
 		{
 			MainScene->update();

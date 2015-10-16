@@ -92,8 +92,7 @@ void pointLight_albedo(inout vec3 diffuse, inout vec3 specular, in vec3 n, in ve
 	float intensity = pointLights_ss[light].intensity;
 	float range = pointLights_ss[light].range;
 	float dist = distance(position, vertex_ss);
-	float atten = (1.0 / (falloff.x + (falloff.y * dist) + (falloff.z * dist * dist))) * intensity;
-	atten = range / min((intensity * dist) + (intensity * dist * dist), range);
+	float atten = (range / (falloff.x + (falloff.y * dist) + (falloff.z * dist * dist))) * intensity;
 	float n_dot_l = dot(n, l);
 	float n_dot_h = dot(n, h);
 	float n_dot_v = dot(n, v);
@@ -134,7 +133,7 @@ void main()
 	vec3 diffuse = vec3(0.0);
 	vec3 specular = vec3(0.0);
 
-#if 0
+#if 1
 	directionalLight_albedo(diffuse, specular, n, v);
 #endif
 	
