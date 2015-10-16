@@ -143,7 +143,6 @@ namespace fbox
 		void bind();
 
 		void adjust(float width, float height);
-		void adjust();
 
 		//inline ray getRay(float u, float v);
 		//inline ray getRay(vec2& uv);

@@ -116,8 +116,8 @@ namespace fbox
 	extern FBOXAPI gl::Shader* VertexProgram;
 	extern FBOXAPI gl::Shader* FragmentProgram;
 	extern FBOXAPI gl::Program* MainProgram;
-	extern FBOXAPI std::vector<gl::Uniform*> Uniforms;
-	extern FBOXAPI std::vector<gl::UniformBlock*> UniformBlocks;
+	extern FBOXAPI std::vector<gl::Uniform> Uniforms;
+	extern FBOXAPI std::vector<gl::UniformBlock> UniformBlocks;
 	extern FBOXAPI std::vector<gl::VertexArray*> VertexArrays;
 	extern FBOXAPI std::vector<gl::Texture*> Textures;
 

@@ -10,8 +10,8 @@ namespace fbox
 	FBOXAPI gl::Shader* VertexProgram = 0;
 	FBOXAPI gl::Shader* FragmentProgram = 0;
 	FBOXAPI gl::Program* MainProgram = 0;
-	FBOXAPI std::vector<gl::Uniform*> Uniforms;
-	FBOXAPI std::vector<gl::UniformBlock*> UniformBlocks;
+	FBOXAPI std::vector<gl::Uniform> Uniforms;
+	FBOXAPI std::vector<gl::UniformBlock> UniformBlocks;
 	FBOXAPI std::vector<gl::VertexArray*> VertexArrays;
 	FBOXAPI std::vector<gl::Texture*> Textures;
 
@@ -68,17 +68,15 @@ namespace fbox
 			UNIFORM_FLAG flag = GetUniformFlag(string(name));
 			if (flag != UNIFORM_FLAG_INVALID)
 			{
-				gl::Uniform* uniform = new gl::Uniform(MainProgram, string(name));
-				uniform->grab();
-				Uniforms[(int)flag - 1] = uniform;
+				Uniforms[(int)flag - 1] = gl::Uniform(MainProgram, string(name));
 			}
 		}
 
-		delete[] name;
 		printf("Program Uniforms\n");
 		for (int i = 0; i < Uniforms.size(); i++)
 		{
-			gl::Uniform* uniform = Uniforms[i];
+			gl::Uniform* uniform = &Uniforms[i];
+			uniform->grab();
 			printf("  %d ). ", i + 1);
 			if (uniform != 0)
 			{
@@ -98,7 +96,6 @@ namespace fbox
 			return;
 		}
 
-		name = new char[64];
 		for (int i = 0; i < blocks; i++)
 		{
 			int length;
@@ -107,9 +104,7 @@ namespace fbox
 			UNIFORM_BLOCK flag = GetUniformBlockFlag(string(name));
 			if (flag != UNIFORM_BLOCK_INVALID)
 			{
-				gl::UniformBlock* block = new gl::UniformBlock(MainProgram, string(name));
-				block->grab();
-				UniformBlocks[(int)flag - 1] = block;
+				UniformBlocks[(int)flag - 1] = gl::UniformBlock(MainProgram, string(name));
 			}
 		}
 
@@ -117,7 +112,8 @@ namespace fbox
 		printf("Program Uniform Blocks\n");
 		for (int i = 0; i < UniformBlocks.size(); i++)
 		{
-			gl::UniformBlock* block = UniformBlocks[i];
+			gl::UniformBlock* block = &UniformBlocks[i];
+			block->grab();
 			printf("  %d ). ", i + 1);
 			if (block != 0)
 			{
@@ -183,7 +179,7 @@ namespace fbox
 	{
 		if (flag != UNIFORM_FLAG_INVALID)
 		{
-			return Uniforms[(int)flag - 1];
+			return &Uniforms[(int)flag - 1];
 		}
 
 		return 0;
@@ -192,7 +188,7 @@ namespace fbox
 	{
 		if (block != UNIFORM_BLOCK_INVALID)
 		{
-			return UniformBlocks[(int)block - 1];
+			return &UniformBlocks[(int)block - 1];
 		}
 
 		return 0;

@@ -56,21 +56,7 @@ namespace fbox
 
 		for (uint i = 0; i < UniformBlocks.size(); i++)
 		{
-			gl::UniformBlock* uniform = UniformBlocks[i];
-			if (uniform != 0)
-			{
-				uniform->release();
-				delete uniform;
-			}
-		}
-
-		for (uint i = 0; i < Uniforms.size(); i++)
-		{
-			gl::Uniform* uniform = Uniforms[i];
-			if (uniform != 0)
-			{
-				delete uniform;
-			}
+			UniformBlocks[i].release();
 		}
 
 		Textures.clear();
@@ -335,8 +321,10 @@ namespace fbox
 	}
 	FBOXAPI void OnDraw()
 	{
-		glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(0);
+		GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(0);
 		if (MainScene != 0)
 		{
 			MainScene->render();

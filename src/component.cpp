@@ -151,11 +151,15 @@ namespace fbox
 
 	FBOXAPI void Camera::adjust(float width, float height)
 	{
-
-	}
-	FBOXAPI void Camera::adjust()
-	{
-
+		width /= 2.0f;
+		height /= 2.0f;
+		this->viewport.p1 = (this->object->transform->right * -width) + (this->object->transform->up * height) + this->object->transform->position;
+		this->viewport.p2 = (this->object->transform->right * width) + (this->object->transform->up * height) + this->object->transform->position;
+		this->viewport.p3 = (this->object->transform->right * width) + (this->object->transform->up * -height) + this->object->transform->position;
+		this->viewport.p4 = (this->object->transform->right * -width) + (this->object->transform->up * -height) + this->object->transform->position;
+		this->viewport.px = normalize(this->viewport.p2 - this->viewport.p1);
+		this->viewport.py = normalize(this->viewport.p4 - this->viewport.p1);
+		this->viewport.focal = this->object->transform->position + -this->object->transform->forward;
 	}
 
 	FBOXAPI void Light::bind()
@@ -163,8 +167,8 @@ namespace fbox
 		if (this->lightType == LIGHT_DIRECTIONAL)
 		{
 			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR)->bind3f(this->object->transform->forward);
-			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR)->bind3f(vec3(1.0f, 1.0f, 0.0f));
-			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY)->bind1f(1.0f);
+			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR)->bind4f(this->color);
+			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY)->bind1f(this->intensity);
 		}
 		else if (this->lightType == LIGHT_POINT)
 		{
@@ -184,7 +188,21 @@ namespace fbox
 		}
 		else if (this->lightType == LIGHT_SPOT)
 		{
-
+			struct
+			{
+				vec4 position;
+				mat4 space;
+				vec4 color;
+				float intensity;
+				float range;
+			} lightData;
+			lightData.position = vec4(this->object->transform->position, 1.0);
+			lightData.space = this->object->transform->space;
+			lightData.color = this->color;
+			lightData.intensity = this->intensity;
+			lightData.range = this->range;
+			GetUniformBlock(UNIFORM_BLOCK_LIGHT_SPOT1)->bind(&lightData, sizeof(lightData));
+			GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(1);
 		}
 	}
 
