@@ -37,26 +37,25 @@ namespace fbox
 				return;
 			}
 
-			this->_handle = glCreateProgram();
-			glAttachShader(this->_handle, this->_vertex->handle());
-			glAttachShader(this->_handle, this->_fragment->handle());
-
-			int logLength = 0;
-			char* errorBuffer = new char[512];
-			memset(errorBuffer, 0, sizeof(char) * 512);
-			int linkStatus = GL_FALSE;
-
-			glLinkProgram(this->_handle);
-			glGetProgramiv(this->_handle, GL_LINK_STATUS, &linkStatus);
-			glGetProgramiv(this->_handle, GL_INFO_LOG_LENGTH, &logLength);
-			glGetProgramInfoLog(this->_handle, 512, &logLength, errorBuffer);
-
-			if (logLength > 0)
+			if (this->_handle == 0)
 			{
-				printf(errorBuffer);
+				this->_handle = glCreateProgram();
 			}
 
-			delete[] errorBuffer;
+			glAttachShader(this->_handle, this->_vertex->handle());
+			glAttachShader(this->_handle, this->_fragment->handle());
+			glLinkProgram(this->_handle);
+
+			int logLength = 0;
+			glGetProgramiv(this->_handle, GL_INFO_LOG_LENGTH, &logLength);
+			if (logLength > 0)
+			{
+				char* errorBuffer = new char[512];
+				memset(errorBuffer, 0, sizeof(char) * 512);
+				glGetProgramInfoLog(this->_handle, 512, &logLength, errorBuffer);
+				printf(errorBuffer);
+				delete[] errorBuffer;
+			}
 		}
 		FBOXAPI void Program::release()
 		{

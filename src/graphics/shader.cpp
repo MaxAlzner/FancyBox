@@ -40,11 +40,7 @@ namespace fbox
 					char* errorBuffer = new char[512];
 					memset(errorBuffer, 0, sizeof(char) * 512);
 					glGetShaderInfoLog(this->_handle, 512, &logLength, errorBuffer);
-					if (logLength > 0)
-					{
-						printf(errorBuffer);
-					}
-
+					printf(errorBuffer);
 					delete[] errorBuffer;
 				}
 
