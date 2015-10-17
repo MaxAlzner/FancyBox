@@ -41,6 +41,8 @@ namespace fbox
 
 			void texture(Texture* texture, unsigned int slot);
 
+			bool valid() const;
+
 			const locType handle() const;
 			const string name() const;
 

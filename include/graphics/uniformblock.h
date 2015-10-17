@@ -21,6 +21,8 @@ namespace fbox
 
 			void bind(unsigned int index, void* data, unsigned int bytes);
 
+			bool valid() const;
+
 			const indexType handle() const;
 			const string name() const;
 			const Buffer* buffer() const;

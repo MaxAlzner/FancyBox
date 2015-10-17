@@ -266,6 +266,11 @@ namespace fbox
 			glBindTexture(texture->target(), texture->handle());
 		}
 
+		FBOXAPI bool Uniform::valid() const
+		{
+			return this->_handle >= 0;
+		}
+
 		FBOXAPI const Uniform::locType Uniform::handle() const
 		{
 			return this->_handle;

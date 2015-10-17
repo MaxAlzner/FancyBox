@@ -7,6 +7,9 @@ namespace fbox
 
 	FBOXAPI InputState Input;
 
+	FBOXAPI Camera* MainCamera = 0;
+	FBOXAPI Scene* MainScene = 0;
+
 	FBOXAPI gl::Shader* VertexProgram = 0;
 	FBOXAPI gl::Shader* FragmentProgram = 0;
 	FBOXAPI gl::Program* MainProgram = 0;
@@ -20,9 +23,6 @@ namespace fbox
 	FBOXAPI std::list<MeshAsset> MeshAssets;
 	//FBOXAPI std::list<AudioAsset> AudioAssets;
 	//FBOXAPI std::list<ScriptAsset> ScriptAssets;
-
-	FBOXAPI Camera* MainCamera = 0;
-	FBOXAPI Scene* MainScene = 0;
 
 	FBOXAPI void ReleaseAssets()
 	{
@@ -78,7 +78,7 @@ namespace fbox
 			gl::Uniform* uniform = &Uniforms[i];
 			uniform->grab();
 			printf("  %d ). ", i + 1);
-			if (uniform != 0)
+			if (uniform->valid())
 			{
 				printf("%s : %d\n", uniform->name().data(), uniform->handle());
 			}
@@ -115,7 +115,7 @@ namespace fbox
 			gl::UniformBlock* block = &UniformBlocks[i];
 			block->grab();
 			printf("  %d ). ", i + 1);
-			if (block != 0)
+			if (block->valid())
 			{
 				printf("%s : %d\n", block->name().data(), block->handle());
 			}
