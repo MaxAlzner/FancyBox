@@ -67,7 +67,7 @@ int main(int argv, char** argc)
 		exit(1);
 	}
 
-	GLFWwindow* window = glfwCreateWindow(480, 320, "FancyBox", 0, 0);
+	GLFWwindow* window = glfwCreateWindow(fbox::Screen.x, fbox::Screen.y, "FancyBox", 0, 0);
 	glfwSetCursorPosCallback(window, OnMouseMove);
 	glfwSetCursorEnterCallback(window, OnMouseEnter);
 	glfwSetMouseButtonCallback(window, OnMouseButton);

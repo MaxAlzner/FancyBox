@@ -101,12 +101,12 @@ namespace fbox
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 				if (this->_main != 0)
 				{
-					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, this->_dimensions.x, this->_dimensions.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, Screen.x, Screen.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 				}
 
 				if (this->_depth != 0)
 				{
-					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, this->_dimensions.x, this->_dimensions.y, GL_DEPTH_BUFFER_BIT, GL_LINEAR);
+					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, Screen.x, Screen.y, GL_DEPTH_BUFFER_BIT, GL_LINEAR);
 				}
 			}
 			else

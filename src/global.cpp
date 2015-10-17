@@ -5,6 +5,7 @@
 namespace fbox
 {
 
+	FBOXAPI glm::ivec2 Screen(480, 320);
 	FBOXAPI InputState Input;
 
 	FBOXAPI Camera* MainCamera = 0;
@@ -13,6 +14,7 @@ namespace fbox
 	FBOXAPI gl::Shader* VertexProgram = 0;
 	FBOXAPI gl::Shader* FragmentProgram = 0;
 	FBOXAPI gl::Program* MainProgram = 0;
+	FBOXAPI gl::Framebuffer* MainRender = 0;
 	FBOXAPI std::vector<gl::Uniform> Uniforms;
 	FBOXAPI std::vector<gl::UniformBlock> UniformBlocks;
 	FBOXAPI std::vector<gl::VertexArray*> VertexArrays;

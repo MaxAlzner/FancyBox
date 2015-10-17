@@ -12,6 +12,8 @@ namespace fbox
 		VertexArrays.resize(64);
 		Textures.resize(64);
 
+		MainRender = new gl::Framebuffer(gl::Framebuffer::TYPE_DRAW, glm::ivec2(800, 600));
+
 		VertexProgram = new gl::Shader(gl::Shader::TYPE_VERTEX);
 		FragmentProgram = new gl::Shader(gl::Shader::TYPE_FRAGMENT);
 		MainProgram = new gl::Program;
@@ -33,6 +35,9 @@ namespace fbox
 		VertexProgram->release();
 		delete VertexProgram;
 		VertexProgram = 0;
+		MainRender->release();
+		delete MainRender;
+		MainRender = 0;
 
 		for (uint i = 0; i < Textures.size(); i++)
 		{
@@ -85,6 +90,7 @@ namespace fbox
 		glEnable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
 
+		MainRender->create();
 		VertexProgram->compile("base.vert");
 		FragmentProgram->compile("base.frag");
 		MainProgram->link();
@@ -105,6 +111,7 @@ namespace fbox
 		delete[] randoms;
 #endif
 
+#if 1
 		js::Object global = js::Manager::Global();
 		js::Object mouse;
 		mouse.accessor("position", &Input.Mouse.position);
@@ -269,6 +276,7 @@ namespace fbox
 		frame.accessor("fixedTime", "number", &Frame::FixedTime, sizeof(Frame::timeValue), false);
 		frame.accessor("deltaTime", "number", &Frame::DeltaTime, sizeof(Frame::timeValue), false);
 		global.accessor("Frame", frame);
+#endif
 	}
 	FBOXAPI void OnDispose()
 	{
@@ -279,7 +287,7 @@ namespace fbox
 
 	FBOXAPI void OnReshape(int width, int height)
 	{
-		glViewport(0, 0, width, height);
+		Screen = glm::ivec2(width, height);
 	}
 
 	FBOXAPI void OnStart()
@@ -312,6 +320,7 @@ namespace fbox
 			FragmentProgram->compile("base.frag");
 			MainProgram->link();
 			MainProgram->activate();
+			GrabUniforms();
 		}
 
 		if (MainScene != 0)
@@ -321,14 +330,17 @@ namespace fbox
 	}
 	FBOXAPI void OnDraw()
 	{
-		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		MainRender->bind();
+		MainRender->clear();
 		GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(0);
 		GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(0);
 		if (MainScene != 0)
 		{
 			MainScene->render();
 		}
+
+		MainRender->unbind();
+		MainRender->blit(0);
 	}
 
 }

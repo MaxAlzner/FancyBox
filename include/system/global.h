@@ -111,6 +111,7 @@ namespace fbox
 
 	//} SoundAsset;
 
+	extern FBOXAPI glm::ivec2 Screen;
 	extern FBOXAPI InputState Input;
 
 	extern FBOXAPI Camera* MainCamera;
@@ -119,6 +120,7 @@ namespace fbox
 	extern FBOXAPI gl::Shader* VertexProgram;
 	extern FBOXAPI gl::Shader* FragmentProgram;
 	extern FBOXAPI gl::Program* MainProgram;
+	extern FBOXAPI gl::Framebuffer* MainRender;
 	extern FBOXAPI std::vector<gl::Uniform> Uniforms;
 	extern FBOXAPI std::vector<gl::UniformBlock> UniformBlocks;
 	extern FBOXAPI std::vector<gl::VertexArray*> VertexArrays;
