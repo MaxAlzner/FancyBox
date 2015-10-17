@@ -113,6 +113,9 @@ namespace fbox
 
 	extern FBOXAPI InputState Input;
 
+	extern FBOXAPI Camera* MainCamera;
+	extern FBOXAPI Scene* MainScene;
+
 	extern FBOXAPI gl::Shader* VertexProgram;
 	extern FBOXAPI gl::Shader* FragmentProgram;
 	extern FBOXAPI gl::Program* MainProgram;
@@ -125,9 +128,6 @@ namespace fbox
 	extern FBOXAPI std::list<TextureAsset> TextureAssets;
 	extern FBOXAPI std::list<MeshAsset> MeshAssets;
 	//extern FBOXAPI std::list<AudioAsset> AudioAssets;
-
-	extern FBOXAPI Camera* MainCamera;
-	extern FBOXAPI Scene* MainScene;
 
 	FBOXAPI extern void ReleaseAssets();
 

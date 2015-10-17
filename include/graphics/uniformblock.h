@@ -19,7 +19,7 @@ namespace fbox
 			void grab();
 			void release();
 
-			void bind(void* data, unsigned int bytes);
+			void bind(unsigned int index, void* data, unsigned int bytes);
 
 			const indexType handle() const;
 			const string name() const;

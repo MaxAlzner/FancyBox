@@ -39,8 +39,9 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI void UniformBlock::bind(void* data, unsigned int bytes)
+		FBOXAPI void UniformBlock::bind(unsigned int index, void* data, unsigned int bytes)
 		{
+			glUniformBlockBinding(this->_program->handle(), this->_handle, index);
 			if (this->_buffer != 0)
 			{
 				this->_buffer->map(data, bytes);
