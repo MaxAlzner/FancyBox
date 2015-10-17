@@ -7,6 +7,8 @@ namespace fbox
 	namespace gl
 	{
 
+		FBOXAPI glm::ivec2 Framebuffer::_screen(240, 160);
+
 		FBOXAPI void Framebuffer::create()
 		{
 			glGenFramebuffers(1, &this->_handle);
@@ -101,12 +103,12 @@ namespace fbox
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 				if (this->_main != 0)
 				{
-					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, Screen.x, Screen.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, _screen.x, _screen.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 				}
 
 				if (this->_depth != 0)
 				{
-					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, Screen.x, Screen.y, GL_DEPTH_BUFFER_BIT, GL_LINEAR);
+					glBlitFramebuffer(0, 0, this->_dimensions.x, this->_dimensions.y, 0, 0, _screen.x, _screen.y, GL_DEPTH_BUFFER_BIT, GL_LINEAR);
 				}
 			}
 			else
@@ -142,6 +144,11 @@ namespace fbox
 		FBOXAPI glm::ivec2 Framebuffer::dimensions() const
 		{
 			return this->_dimensions;
+		}
+
+		FBOXAPI void Framebuffer::screen(glm::ivec2& dimensions)
+		{
+			_screen = dimensions;
 		}
 
 	}

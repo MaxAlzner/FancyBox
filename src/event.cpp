@@ -13,6 +13,7 @@ namespace fbox
 		Textures.resize(64);
 
 		MainRender = new gl::Framebuffer(gl::Framebuffer::TYPE_DRAW, glm::ivec2(800, 600));
+		gl::Framebuffer::screen(Screen);
 
 		VertexProgram = new gl::Shader(gl::Shader::TYPE_VERTEX);
 		FragmentProgram = new gl::Shader(gl::Shader::TYPE_FRAGMENT);
@@ -288,6 +289,7 @@ namespace fbox
 	FBOXAPI void OnReshape(int width, int height)
 	{
 		Screen = glm::ivec2(width, height);
+		gl::Framebuffer::screen(Screen);
 	}
 
 	FBOXAPI void OnStart()

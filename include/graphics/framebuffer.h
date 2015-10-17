@@ -40,6 +40,8 @@ namespace fbox
 			Texture* depth() const;
 			glm::ivec2 dimensions() const;
 
+			static void screen(glm::ivec2& dimensions);
+
 			glm::vec4 clearColor;
 
 		protected:
@@ -49,6 +51,8 @@ namespace fbox
 			handleType _handle;
 			frameType _type;
 			glm::ivec2 _dimensions;
+
+			static glm::ivec2 _screen;
 
 		};
 
