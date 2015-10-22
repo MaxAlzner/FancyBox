@@ -6,7 +6,8 @@ var PulsingLight = (function ()
 		this.Delta = 0;
 		this.OnUpdate = function ()
 		{
-			this.light.intensity = Math.sin(this.Delta) + 1.0;
+			var t = (Math.sin(this.Delta) + 1) * 0.5;
+			this.light.intensity = t;
 			this.Delta += 0.02;
 		};
 	};

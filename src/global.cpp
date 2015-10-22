@@ -505,13 +505,14 @@ namespace fbox
 		glm::vec4 color = ParseColor(node->last_attribute("color"));
 		float intensity = ParseFloat(node->last_attribute("intensity"), 1.0f);
 		float range = ParseFloat(node->last_attribute("range"), 5.0f);
+		float angle = ParseFloat(node->last_attribute("angle"), 60.0f);
 		if (type == "point")
 		{
 			return new Light(Light::LIGHT_POINT, color, intensity);
 		}
 		else if (type == "spot")
 		{
-			return new Light(Light::LIGHT_SPOT, color, intensity, range);
+			return new Light(Light::LIGHT_SPOT, color, intensity, range, angle);
 		}
 		else if (type == "directional")
 		{

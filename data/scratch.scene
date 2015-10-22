@@ -6,7 +6,7 @@
 	<script src="pulsinglight.js" />
 	<actor name="MainCamera">
 		<transform>
-			<translate x="0" y="1" z="4" />
+			<translate x="0" y="3" z="8" />
 			<rotate x="-10" y="180" />
 		</transform>
 		<camera x="4" y="3" fov="45" near="0.1" far="100" />
@@ -38,11 +38,24 @@
 		<texture type="specular" src="EV_Stairs_S.tga" />
 		<mesh src="EV_Stairs.obj" />
 	</actor>
+ 	<actor name="DirectionalLight1">
+		<transform>
+			<rotate x="60" y="-20" />
+		</transform>
+		<light type="directional" intensity="0.4" />
+	</actor>
 	<actor name="PointLight1">
 		<transform>
 			<translate y="1" x="0" />
 		</transform>
 		<light type="point" intensity="1" range="4" color="rgba(255, 255, 255, 1.0)" />
 		<behavior name="PulsingLight" />
+	</actor>
+	<actor name="SpotLight1">
+		<transform>
+			<rotate x="45" />
+			<translate y="6" z="-3" />
+		</transform>
+		<light type="spot" angle="60" />
 	</actor>
 </scene>

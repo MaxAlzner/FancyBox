@@ -123,6 +123,7 @@ namespace fbox
 			light.accessor("color", &this->object->light->color, true);
 			light.accessor("intensity", "number", &this->object->light->intensity, sizeof(float));
 			light.accessor("range", "number", &this->object->light->range, sizeof(float));
+			light.accessor("angle", "number", &this->object->light->angle, sizeof(float));
 			this->state.set("light", light);
 		}
 
@@ -183,7 +184,8 @@ namespace fbox
 			lightData.color = this->color;
 			lightData.intensity = this->intensity;
 			lightData.range = this->range;
-			GetUniformBlock(UNIFORM_BLOCK_LIGHT_POINT1)->bind(&lightData, sizeof(lightData));
+			int size = sizeof(lightData);
+			GetUniformBlock(UNIFORM_BLOCK_LIGHT_POINT1)->bind(0, &lightData, sizeof(lightData));
 			GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(1);
 		}
 		else if (this->lightType == LIGHT_SPOT)
@@ -191,17 +193,20 @@ namespace fbox
 			struct
 			{
 				vec4 position;
-				mat4 space;
+				vec3 forward;
+				float angle;
 				vec4 color;
 				float intensity;
 				float range;
 			} lightData;
 			lightData.position = vec4(this->object->transform->position, 1.0);
-			lightData.space = this->object->transform->space;
+			lightData.forward = this->object->transform->forward;
+			lightData.angle = this->angle;
 			lightData.color = this->color;
 			lightData.intensity = this->intensity;
 			lightData.range = this->range;
-			GetUniformBlock(UNIFORM_BLOCK_LIGHT_SPOT1)->bind(&lightData, sizeof(lightData));
+			int size = sizeof(lightData);
+			GetUniformBlock(UNIFORM_BLOCK_LIGHT_SPOT1)->bind(4, &lightData, sizeof(lightData));
 			GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(1);
 		}
 	}

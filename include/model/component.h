@@ -185,19 +185,29 @@ namespace fbox
 			lightType(LIGHT_NONE),
 			color(1.0f),
 			intensity(1.0f),
-			range(5.0f) {}
+			range(5.0f),
+			angle(60.0f) {}
 		inline Light(LIGHTTYPE lightType, glm::vec4& color, const float intensity) :
 			Component("Light"),
 			lightType(lightType),
 			color(color),
 			intensity(intensity),
-			range(5.0f) {}
+			range(5.0f),
+			angle(60.0f) {}
 		inline Light(LIGHTTYPE lightType, glm::vec4& color, const float intensity, const float range) :
 			Component("Light"),
 			lightType(lightType),
 			color(color),
 			intensity(intensity),
-			range(range) {}
+			range(range),
+			angle(60.0f) {}
+		inline Light(LIGHTTYPE lightType, glm::vec4& color, const float intensity, const float range, const float angle) :
+			Component("Light"),
+			lightType(lightType),
+			color(color),
+			intensity(intensity),
+			range(range),
+			angle(angle) {}
 		inline ~Light() {}
 
 		void bind();
@@ -206,6 +216,7 @@ namespace fbox
 		glm::vec4 color;
 		float intensity;
 		float range;
+		float angle;
 
 	protected:
 
