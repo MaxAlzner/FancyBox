@@ -1,10 +1,199 @@
-#ifndef FBOX_KEY_H
-#define FBOX_KEY_H
+#ifndef FBOX_INPUT_H
+#define FBOX_INPUT_H
+
+#include "FancyBox_setup.h"
 
 namespace fbox
 {
 
-	typedef enum KeyCode
+	typedef struct FBOXAPI Button
+	{
+
+		inline Button() : _latched(false), _pressed(false) {}
+		inline ~Button() {}
+
+		inline void latch()
+		{
+			this->_latched = true;
+		}
+		inline void unlatch()
+		{
+			this->_latched = false;
+		}
+
+		inline void operator=(const bool value)
+		{
+			this->_latched = false;
+			this->_pressed = value;
+		}
+		inline void operator=(const Button& button)
+		{
+			this->_pressed = button._pressed;
+			this->_latched = button._latched;
+		}
+		inline operator bool()
+		{
+			if (this->_latched)
+			{
+				return false;
+			}
+
+			this->_latched = true;
+			return this->_pressed;
+		}
+
+		bool _pressed;
+		bool _latched;
+
+	} Button;
+
+	typedef struct FBOXAPI Axis
+	{
+
+		inline Axis()
+		{
+			this->_value = 0.0f;
+			this->_deadzone = 0.4f;
+		}
+		inline ~Axis() {}
+
+		inline void deadzone(const float value)
+		{
+			this->_deadzone = fmin(fmax(value, 0.0f), 1.0f);
+		}
+
+		inline void operator=(const float value)
+		{
+			this->_value = fmin(fmax(value, -1.0f), 1.0f);
+		}
+		inline void operator=(const Axis& axis)
+		{
+			this->_value = axis._value;
+			this->_deadzone = axis._deadzone;
+		}
+		inline operator float()
+		{
+			return (this->_value >= 0.0f ? 1.0f : -1.0f) * ((abs(this->_value) - this->_deadzone) / (1.0f - this->_deadzone));
+		}
+		inline operator bool()
+		{
+			if (abs(this->_value) <= this->_deadzone)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		float _value;
+		float _deadzone;
+
+	} Axis;
+
+	typedef enum FBOXAPI MouseButton
+	{
+		BUTTON_LEFT = 0,
+		BUTTON_MIDDLE = 1,
+		BUTTON_RIGHT = 2,
+	} MouseButton;
+
+	typedef struct FBOXAPI MouseState
+	{
+
+		inline MouseState() : position(0.0f), scroll(0.0f), active(false) {}
+		inline ~MouseState() {}
+
+		glm::vec2 position;
+		float scroll;
+		Button left;
+		Button right;
+		Button middle;
+		bool active;
+
+	} MouseState;
+
+	typedef enum FBOXAPI ButtonCode
+	{
+		BUTTON_A = 0,
+		BUTTON_B = 1,
+		BUTTON_X = 2,
+		BUTTON_Y = 3,
+		BUTTON_L_BUMPER = 4,
+		BUTTON_R_BUMPER = 5,
+		BUTTON_BACK = 6,
+		BUTTON_START = 7,
+		BUTTON_L_STICK = 8,
+		BUTTON_R_STICK = 9,
+	} ButtonCode;
+
+	typedef enum FBOXAPI DPadCode
+	{
+		DPAD_UP = 0,
+		DPAD_UP_RIGHT = 1,
+		DPAD_RIGHT = 2,
+		DPAD_DOWN_RIGHT = 3,
+		DPAD_DOWN = 4,
+		DPAD_DOWN_LEFT = 5,
+		DPAD_LEFT = 6,
+		DPAD_UP_LEFT = 7,
+	} DPadCode;
+
+	typedef enum FBOXAPI AxisCode
+	{
+		AXIS_L_STICK_X = 0,
+		AXIS_L_STICK_Y = 1,
+		AXIS_L_TRIGGER = 2,
+		AXIS_R_STICK_X = 3,
+		AXIS_R_STICK_Y = 4,
+		AXIS_R_TRIGGER = 5,
+	} AxisCode;
+
+	typedef struct FBOXAPI GamepadState
+	{
+
+		inline GamepadState() : connected(false), user(-1) {}
+		inline ~GamepadState() {}
+
+		struct
+		{
+			Axis x;
+			Axis y;
+		} stickLeft;
+
+		struct
+		{
+			Axis x;
+			Axis y;
+		} stickRight;
+
+		Axis triggerLeft;
+		Axis triggerRight;
+
+		Button a;
+		Button b;
+		Button x;
+		Button y;
+		Button bumperLeft;
+		Button bumperRight;
+		Button back;
+		Button start;
+		Button stickButtonLeft;
+		Button stickButtonRight;
+
+		struct
+		{
+			Button up;
+			Button right;
+			Button down;
+			Button left;
+		} dpad;
+
+		bool connected;
+		int user;
+
+	} GamepadState;
+
+	typedef enum FBOXAPI KeyCode
 	{
 		KEY_UNKNOWN = 0,
 		//KEY_BACKSPACE = 8,
@@ -180,7 +369,7 @@ namespace fbox
 
 	} KeyCode;
 
-	typedef struct KeyboardState
+	typedef struct FBOXAPI KeyboardState
 	{
 
 		inline KeyboardState()

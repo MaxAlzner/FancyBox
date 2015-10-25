@@ -5,28 +5,90 @@
 namespace fbox
 {
 
-	FBOXAPI glm::ivec2 Screen(480, 320);
-	FBOXAPI InputState Input;
+	FBOXAPI MouseState Input::Mouse;
+	FBOXAPI KeyboardState Input::Key;
+	FBOXAPI GamepadState Input::Gamepad;
 
-	FBOXAPI Camera* MainCamera = 0;
-	FBOXAPI Scene* MainScene = 0;
+	FBOXAPI Scene* Stage::CurrentScene = 0;
 
-	FBOXAPI gl::Shader* VertexProgram = 0;
-	FBOXAPI gl::Shader* FragmentProgram = 0;
-	FBOXAPI gl::Program* MainProgram = 0;
-	FBOXAPI gl::Framebuffer* MainRender = 0;
-	FBOXAPI std::vector<gl::Uniform> Uniforms;
-	FBOXAPI std::vector<gl::UniformBlock> UniformBlocks;
-	FBOXAPI std::vector<gl::VertexArray*> VertexArrays;
-	FBOXAPI std::vector<gl::Texture*> Textures;
+	FBOXAPI std::list<Scene*> Stage::Scenes;
+	FBOXAPI std::list<Schema*> Stage::Schemas;
 
-	//FBOXAPI std::vector<Media*> Assets;
-	FBOXAPI std::list<TextureAsset> TextureAssets;
-	FBOXAPI std::list<MeshAsset> MeshAssets;
-	//FBOXAPI std::list<AudioAsset> AudioAssets;
-	//FBOXAPI std::list<ScriptAsset> ScriptAssets;
+	FBOXAPI glm::ivec2 Renderer::Screen(480, 320);
+	FBOXAPI Camera* Renderer::MainCamera = 0;
 
-	FBOXAPI void ReleaseAssets()
+	FBOXAPI gl::Shader* Renderer::VertexProgram = 0;
+	FBOXAPI gl::Shader* Renderer::FragmentProgram = 0;
+	FBOXAPI gl::Program* Renderer::MainProgram = 0;
+	FBOXAPI gl::Framebuffer* Renderer::MainRender = 0;
+	FBOXAPI std::vector<gl::Uniform> Renderer::Uniforms;
+	FBOXAPI std::vector<gl::UniformBlock> Renderer::UniformBlocks;
+	FBOXAPI std::vector<gl::VertexArray*> Renderer::VertexArrays;
+	FBOXAPI std::vector<gl::Texture*> Renderer::Textures;
+
+	FBOXAPI std::list<TextureAsset> Renderer::TextureAssets;
+	FBOXAPI std::list<MeshAsset> Renderer::MeshAssets;
+
+	FBOXAPI void Stage::Release()
+	{
+		for (std::list<Scene*>::reverse_iterator i = Scenes.rbegin(); i != Scenes.rend(); i++)
+		{
+			Scene* scene = *i;
+			if (scene != 0)
+			{
+				scene->dispose();
+				delete scene;
+			}
+		}
+
+		for (std::list<Schema*>::reverse_iterator i = Schemas.rbegin(); i != Schemas.rend(); i++)
+		{
+			Schema* schema = *i;
+			if (schema != 0)
+			{
+				schema->release();
+				delete schema;
+			}
+		}
+
+		Scenes.clear();
+		Schemas.clear();
+	}
+
+	FBOXAPI void Renderer::Initialize()
+	{
+		//Uniforms.resize(32);
+		//UniformBlocks.resize(16);
+		VertexArrays.resize(64);
+		Textures.resize(64);
+
+		MainRender = new gl::Framebuffer(gl::Framebuffer::TYPE_DRAW, glm::ivec2(800, 600));
+		gl::Framebuffer::screen(Screen);
+
+		VertexProgram = new gl::Shader(gl::Shader::TYPE_VERTEX);
+		FragmentProgram = new gl::Shader(gl::Shader::TYPE_FRAGMENT);
+		MainProgram = new gl::Program;
+		MainProgram->vertex(VertexProgram);
+		MainProgram->fragment(FragmentProgram);
+	}
+	FBOXAPI void Renderer::Dispose()
+	{
+		Renderer::Release();
+		MainProgram->release();
+		delete MainProgram;
+		MainProgram = 0;
+		FragmentProgram->release();
+		delete FragmentProgram;
+		FragmentProgram = 0;
+		VertexProgram->release();
+		delete VertexProgram;
+		VertexProgram = 0;
+		MainRender->release();
+		delete MainRender;
+		MainRender = 0;
+	}
+	
+	FBOXAPI void Renderer::Release()
 	{
 		for (std::list<TextureAsset>::reverse_iterator i = TextureAssets.rbegin(); i != TextureAssets.rend(); i++)
 		{
@@ -49,9 +111,39 @@ namespace fbox
 
 		TextureAssets.clear();
 		MeshAssets.clear();
+
+		for (uint i = 0; i < Textures.size(); i++)
+		{
+			gl::Texture* texture = Textures[i];
+			if (texture != 0)
+			{
+				texture->release();
+				delete texture;
+			}
+		}
+
+		for (uint i = 0; i < VertexArrays.size(); i++)
+		{
+			gl::VertexArray* vao = VertexArrays[i];
+			if (vao != 0)
+			{
+				vao->release();
+				delete vao;
+			}
+		}
+
+		for (uint i = 0; i < UniformBlocks.size(); i++)
+		{
+			UniformBlocks[i].release();
+		}
+
+		Textures.clear();
+		VertexArrays.clear();
+		UniformBlocks.clear();
+		Uniforms.clear();
 	}
 
-	FBOXAPI void GrabUniforms()
+	FBOXAPI void Renderer::GrabUniforms()
 	{
 		int uniforms = 0;
 		glGetProgramiv(MainProgram->handle(), GL_ACTIVE_UNIFORMS, &uniforms);
@@ -62,6 +154,7 @@ namespace fbox
 		}
 
 		char* name = new char[64];
+		Uniforms.resize(uniforms);
 		for (int i = 0; i < uniforms; i++)
 		{
 			int length;
@@ -94,10 +187,12 @@ namespace fbox
 		glGetProgramiv(MainProgram->handle(), GL_ACTIVE_UNIFORM_BLOCKS, &blocks);
 		if (blocks < 1)
 		{
+			delete[] name;
 			printf("No uniform blocks could be found\n");
 			return;
 		}
 
+		UniformBlocks.resize(blocks);
 		for (int i = 0; i < blocks; i++)
 		{
 			int length;
@@ -128,7 +223,7 @@ namespace fbox
 		}
 	}
 
-	FBOXAPI UNIFORM_FLAG GetUniformFlag(string& name)
+	FBOXAPI UNIFORM_FLAG Renderer::GetUniformFlag(string& name)
 	{
 		if (name == "os_to_ws") { return UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD; }
 		else if (name == "ws_to_cs") { return UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA; }
@@ -137,16 +232,7 @@ namespace fbox
 		else if (name == "directionalLight_forward_ws") { return UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR; }
 		else if (name == "directionalLight_color") { return UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR; }
 		else if (name == "directionalLight_intensity") { return UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY; }
-		//else if (name == "pointLight_pos_ws") { return UNIFORM_FLAG_LIGHT_POINT_POSITION; }
-		//else if (name == "pointLight_color") { return UNIFORM_FLAG_LIGHT_POINT_COLOR; }
-		//else if (name == "pointLight_intensity") { return UNIFORM_FLAG_LIGHT_POINT_INTENSITY; }
-		//else if (name == "pointLight_range") { return UNIFORM_FLAG_LIGHT_POINT_RANGE; }
 		else if (name == "numOfPointLights") { return UNIFORM_FLAG_LIGHT_POINT_NUM; }
-		//else if (name == "spotLight_pos_ws") { return UNIFORM_FLAG_LIGHT_SPOT_POSITION; }
-		//else if (name == "spotLight_forward_ws") { return UNIFORM_FLAG_LIGHT_SPOT_VECTOR; }
-		//else if (name == "spotLight_color") { return UNIFORM_FLAG_LIGHT_SPOT_COLOR; }
-		//else if (name == "spotLight_intensity") { return UNIFORM_FLAG_LIGHT_SPOT_INTENSITY; }
-		//else if (name == "spotLight_range") { return UNIFORM_FLAG_LIGHT_SPOT_RANGE; }
 		else if (name == "numOfSpotLights") { return UNIFORM_FLAG_LIGHT_SPOT_NUM; }
 		else if (name == "overlay") { return UNIFORM_FLAG_COLOR_OVERLAY; }
 		else if (name == "highlight") { return UNIFORM_FLAG_COLOR_HIGHLIGHT; }
@@ -164,7 +250,7 @@ namespace fbox
 		else if (name == "state") { return UNIFORM_FLAG_STATE; }
 		else { return UNIFORM_FLAG_INVALID; }
 	}
-	FBOXAPI UNIFORM_BLOCK GetUniformBlockFlag(string& name)
+	FBOXAPI UNIFORM_BLOCK Renderer::GetUniformBlockFlag(string& name)
 	{
 		if (name == "PointLight[0]") { return UNIFORM_BLOCK_LIGHT_POINT1; }
 		else if (name == "PointLight[1]") { return UNIFORM_BLOCK_LIGHT_POINT2; }
@@ -177,7 +263,7 @@ namespace fbox
 		else { return UNIFORM_BLOCK_INVALID; }
 	}
 
-	FBOXAPI gl::Uniform* GetUniform(UNIFORM_FLAG flag)
+	FBOXAPI gl::Uniform* Renderer::GetUniform(UNIFORM_FLAG flag)
 	{
 		if (flag != UNIFORM_FLAG_INVALID)
 		{
@@ -186,7 +272,7 @@ namespace fbox
 
 		return 0;
 	}
-	FBOXAPI gl::UniformBlock* GetUniformBlock(UNIFORM_BLOCK block)
+	FBOXAPI gl::UniformBlock* Renderer::GetUniformBlock(UNIFORM_BLOCK block)
 	{
 		if (block != UNIFORM_BLOCK_INVALID)
 		{
@@ -275,30 +361,13 @@ namespace fbox
 		return -1;
 	}
 
-	FBOXAPI void Import::Parse(string& filename)
+	FBOXAPI Schema* Import::Parse(string& filename)
 	{
-		char* raw = 0;
-		if (Import::Read(filename, &raw) > 0)
-		{
-			XmlDocument document;
-			document.parse<0>(raw);
-			XmlNode* root = document.first_node();
-			if (root != 0)
-			{
-				string type = root->name();
-				if (type == "scene")
-				{
-					Import::ParseScene(root);
-				}
-				else if (type == "actor")
-				{
-					Import::ParseActor(root);
-				}
-			}
-
-			document.clear();
-			delete[] raw;
-		}
+		Schema* schema = new Schema;
+		Stage::Schemas.push_back(schema);
+		schema->parse(filename);
+		schema->apply(Stage::CurrentScene);
+		return schema;
 	}
 
 	FBOXAPI void Import::Register(string& filename, gl::Texture** outTexture)
@@ -322,9 +391,8 @@ namespace fbox
 		asset.Filename = filename;
 		asset.Surface = surface;
 		asset.Texture = texture;
-		//Assets.push_back(surface);
-		Textures.push_back(texture);
-		TextureAssets.push_back(asset);
+		Renderer::Textures.push_back(texture);
+		Renderer::TextureAssets.push_back(asset);
 	}
 	FBOXAPI void Import::Register(string& filename, gl::VertexArray** outVertexArray)
 	{
@@ -336,7 +404,7 @@ namespace fbox
 			fclose(file);
 		}
 
-		gl::VertexArray* vao = new gl::VertexArray(MainProgram);
+		gl::VertexArray* vao = new gl::VertexArray(Renderer::MainProgram);
 		vao->create(shape);
 		if (outVertexArray != 0)
 		{
@@ -347,267 +415,8 @@ namespace fbox
 		asset.Filename = filename;
 		asset.Shape = shape;
 		asset.VertexArrayObject = vao;
-		//Assets.push_back(shape);
-		VertexArrays.push_back(vao);
-		MeshAssets.push_back(asset);
-	}
-
-	FBOXAPI void Import::ParseScript(XmlNode* node)
-	{
-		string src = Value(node->last_attribute("src"));
-		js::Manager::Register(src);
-	}
-	FBOXAPI void Import::ParseScene(XmlNode* node)
-	{
-		node = node->first_node();
-		while (node != 0)
-		{
-			string type = node->name();
-			if (type == "actor")
-			{
-				Import::ParseActor(node);
-			}
-			else if (type == "script")
-			{
-				Import::ParseScript(node);
-			}
-
-			node = node->next_sibling();
-		}
-	}
-	FBOXAPI void Import::ParseActor(XmlNode* node)
-	{
-		Actor* actor = new Actor;
-		actor->name = Value(node->last_attribute("name"));
-		node = node->first_node();
-		while (node != 0)
-		{
-			string type = node->name();
-			if (type == "transform")
-			{
-				Import::ParseTransform(node, actor->transform);
-			}
-			else if (type == "material")
-			{
-				actor->add(Import::ParseMaterial(node));
-			}
-			else if (type == "mesh")
-			{
-				actor->add(Import::ParseMesh(node));
-			}
-			else if (type == "texture")
-			{
-				actor->add(Import::ParseTexture(node));
-			}
-			else if (type == "behavior")
-			{
-				actor->add(Import::ParseBehavior(node));
-			}
-			else if (type == "camera")
-			{
-				actor->add(Import::ParseCamera(node));
-			}
-			else if (type == "light")
-			{
-				actor->add(Import::ParseLight(node));
-			}
-
-			node = node->next_sibling();
-		}
-
-		MainScene->add(actor);
-	}
-
-	FBOXAPI void Import::ParseTransform(XmlNode* node, Transform* transform)
-	{
-		if (node != 0 && transform != 0)
-		{
-			node = node->first_node();
-			while (node != 0)
-			{
-				string name = node->name();
-				float v = ParseFloat(node, 0.0f);
-				float x = ParseFloat(node->last_attribute("x"), 0.0f);
-				float y = ParseFloat(node->last_attribute("y"), 0.0f);
-				float z = ParseFloat(node->last_attribute("z"), 0.0f);
-				if (name == "translate")
-				{
-					transform->position += glm::vec3(x, y, z) + v;
-				}
-				else if (name == "rotate")
-				{
-					transform->rotation += glm::vec3(x, y, z) + v;
-				}
-				else if (name == "scale")
-				{
-					v = v == 0.0f ? 1.0f : v;
-					x = x == 0.0f ? 1.0f : x;
-					y = y == 0.0f ? 1.0f : y;
-					z = z == 0.0f ? 1.0f : z;
-					transform->scale *= glm::vec3(x, y, z) * v;
-				}
-
-				node = node->next_sibling();
-			}
-		}
-	}
-	FBOXAPI MeshFilter* Import::ParseMesh(XmlNode* node)
-	{
-		string src = Value(node->last_attribute("src"));
-		gl::VertexArray* vao = 0;
-		Register(src, &vao);
-		return new MeshFilter(vao);
-	}
-	FBOXAPI TextureFilter* Import::ParseTexture(XmlNode* node)
-	{
-		string src = Value(node->last_attribute("src"));
-		string type = Value(node->last_attribute("type"));
-		gl::Texture* texture = 0;
-		Register(src, &texture);
-		if (type == "diffuse")
-		{
-			return new TextureFilter(TextureFilter::TEXTURE_COLOR, texture);
-		}
-		else if (type == "normal")
-		{
-			return new TextureFilter(TextureFilter::TEXTURE_NORMAL, texture);
-		}
-		else if (type == "specular")
-		{
-			return new TextureFilter(TextureFilter::TEXTURE_SPECULAR, texture);
-		}
-
-		return new TextureFilter;
-	}
-	FBOXAPI Material* Import::ParseMaterial(XmlNode* node)
-	{
-		Material* component = new Material;
-
-		return component;
-	}
-	FBOXAPI Behavior* Import::ParseBehavior(XmlNode* node)
-	{
-		string name = Value(node->last_attribute("name"));
-		return new Behavior(name);
-	}
-	FBOXAPI Camera* Import::ParseCamera(XmlNode* node)
-	{
-		float x = ParseFloat(node->last_attribute("x"), 4.0f);
-		float y = ParseFloat(node->last_attribute("y"), 3.0f);
-		float nearZ = ParseFloat(node->last_attribute("near"), 0.1f);
-		float farZ = ParseFloat(node->last_attribute("far"), 100.0f);
-		float fov = ParseFloat(node->last_attribute("fov"), 60.0f);
-		return new Camera(glm::vec2(x, y), glm::vec2(nearZ, farZ), fov);
-	}
-	FBOXAPI Light* Import::ParseLight(XmlNode* node)
-	{
-		string type = Value(node->last_attribute("type"));
-		glm::vec4 color = ParseColor(node->last_attribute("color"));
-		float intensity = ParseFloat(node->last_attribute("intensity"), 1.0f);
-		float range = ParseFloat(node->last_attribute("range"), 5.0f);
-		float angle = ParseFloat(node->last_attribute("angle"), 60.0f);
-		if (type == "point")
-		{
-			return new Light(Light::LIGHT_POINT, color, intensity);
-		}
-		else if (type == "spot")
-		{
-			return new Light(Light::LIGHT_SPOT, color, intensity, range, angle);
-		}
-		else if (type == "directional")
-		{
-			return new Light(Light::LIGHT_DIRECTIONAL, color, intensity, range);
-		}
-
-		return new Light;
-	}
-
-	FBOXAPI int Import::ParseInt(XmlNode* node, int defaultValue)
-	{
-		if (node == 0) return defaultValue;
-		char* value = node->value();
-		if (value == 0) return defaultValue;
-
-		return atoi(value);
-	}
-	FBOXAPI int Import::ParseInt(XmlAttribute* attr, int defaultValue)
-	{
-		if (attr == 0) return defaultValue;
-		char* value = attr->value();
-		if (value == 0) return defaultValue;
-
-		return atoi(value);
-	}
-	FBOXAPI float Import::ParseFloat(XmlNode* node, float defaultValue)
-	{
-		if (node == 0) return defaultValue;
-		char* value = node->value();
-		if (value == 0) return defaultValue;
-
-		return (float)atof(value);
-	}
-	FBOXAPI float Import::ParseFloat(XmlAttribute* attr, float defaultValue)
-	{
-		if (attr == 0) return defaultValue;
-		char* value = attr->value();
-		if (value == 0) return defaultValue;
-
-		return (float)atof(value);
-	}
-	FBOXAPI bool Import::ParseBool(XmlNode* node, bool defaultValue)
-	{
-		if (node == 0) return defaultValue;
-		char* value = node->value();
-		if (value == 0) return defaultValue;
-
-		if (strstr(value, "true") != 0) return true;
-		return false;
-	}
-	FBOXAPI bool Import::ParseBool(XmlAttribute* attr, bool defaultValue)
-	{
-		if (attr == 0) return defaultValue;
-		char* value = attr->value();
-		if (value == 0) return defaultValue;
-
-		if (strstr(value, "true") != 0) return true;
-		return false;
-	}
-
-	FBOXAPI glm::vec4 Import::ParseColor(XmlNode* node)
-	{
-		glm::vec4 c(1.0f);
-		if (node == 0)
-		{
-			return c;
-		}
-
-		XmlNode* child = 0;
-		child = node->first_node("red");
-		if (child != 0) c.r = ParseFloat(child, 1.0f);
-		child = node->first_node("green");
-		if (child != 0) c.g = ParseFloat(child, 1.0f);
-		child = node->first_node("blue");
-		if (child != 0) c.b = ParseFloat(child, 1.0f);
-
-		return c;
-	}
-	FBOXAPI glm::vec4 Import::ParseColor(XmlAttribute* attr)
-	{
-		glm::vec4 c(1.0f);
-		if (attr != 0)
-		{
-			int r, g, b;
-			sscanf_s(attr->value(), "rgba(%d, %d, %d, %f)", &r, &g, &b, &c.a);
-			c.r = float(r) / 255.0f;
-			c.g = float(g) / 255.0f;
-			c.b = float(b) / 255.0f;
-		}
-
-		return c;
-	}
-	FBOXAPI string Import::Value(XmlAttribute* attr)
-	{
-		return attr != 0 ? string(attr->value()) : string();
+		Renderer::VertexArrays.push_back(vao);
+		Renderer::MeshAssets.push_back(asset);
 	}
 
 }

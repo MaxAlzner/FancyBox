@@ -8,7 +8,7 @@ namespace fbox
 
 	FBOXAPI void Transform::bind()
 	{
-		GetUniform(UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD)->bind4x4f(this->transformation);
+		Renderer::GetUniform(UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD)->bind4x4f(this->transformation);
 	}
 
 	FBOXAPI void Transform::recalculate()
@@ -55,13 +55,13 @@ namespace fbox
 		switch (this->type)
 		{
 		case TEXTURE_COLOR:
-			GetUniform(UNIFORM_FLAG_MAP_COLOR)->texture(this->texture, 0);
+			Renderer::GetUniform(UNIFORM_FLAG_MAP_COLOR)->texture(this->texture, 0);
 			break;
 		case TEXTURE_NORMAL:
-			GetUniform(UNIFORM_FLAG_MAP_NORMAL)->texture(this->texture, 1);
+			Renderer::GetUniform(UNIFORM_FLAG_MAP_NORMAL)->texture(this->texture, 1);
 			break;
 		case TEXTURE_SPECULAR:
-			GetUniform(UNIFORM_FLAG_MAP_SPECULAR)->texture(this->texture, 2);
+			Renderer::GetUniform(UNIFORM_FLAG_MAP_SPECULAR)->texture(this->texture, 2);
 			break;
 		case TEXTURE_TRANSPARENCY:
 			break;
@@ -145,9 +145,9 @@ namespace fbox
 		vec3 up = this->object->transform->up;
 		mat4 view = lookAt(eye, focus, up);
 		mat4 proj = perspective(this->fov, this->aperture.x / this->aperture.y, this->clipping.x, this->clipping.y);
-		GetUniform(UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA)->bind4x4f(view);
-		GetUniform(UNIFORM_FLAG_MATRIX_PROJECTION)->bind4x4f(proj);
-		MainCamera = this;
+		Renderer::GetUniform(UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA)->bind4x4f(view);
+		Renderer::GetUniform(UNIFORM_FLAG_MATRIX_PROJECTION)->bind4x4f(proj);
+		Renderer::MainCamera = this;
 	}
 
 	FBOXAPI void Camera::adjust(float width, float height)
@@ -167,9 +167,9 @@ namespace fbox
 	{
 		if (this->lightType == LIGHT_DIRECTIONAL)
 		{
-			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR)->bind3f(this->object->transform->forward);
-			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR)->bind4f(this->color);
-			GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY)->bind1f(this->intensity);
+			Renderer::GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_VECTOR)->bind3f(this->object->transform->forward);
+			Renderer::GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_COLOR)->bind4f(this->color);
+			Renderer::GetUniform(UNIFORM_FLAG_LIGHT_DIRECTIONAL_INTENSITY)->bind1f(this->intensity);
 		}
 		else if (this->lightType == LIGHT_POINT)
 		{
@@ -184,9 +184,8 @@ namespace fbox
 			lightData.color = this->color;
 			lightData.intensity = this->intensity;
 			lightData.range = this->range;
-			int size = sizeof(lightData);
-			GetUniformBlock(UNIFORM_BLOCK_LIGHT_POINT1)->bind(0, &lightData, sizeof(lightData));
-			GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(1);
+			Renderer::GetUniformBlock(UNIFORM_BLOCK_LIGHT_POINT1)->bind(0, &lightData, sizeof(lightData));
+			Renderer::GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(1);
 		}
 		else if (this->lightType == LIGHT_SPOT)
 		{
@@ -205,9 +204,8 @@ namespace fbox
 			lightData.color = this->color;
 			lightData.intensity = this->intensity;
 			lightData.range = this->range;
-			int size = sizeof(lightData);
-			GetUniformBlock(UNIFORM_BLOCK_LIGHT_SPOT1)->bind(4, &lightData, sizeof(lightData));
-			GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(1);
+			Renderer::GetUniformBlock(UNIFORM_BLOCK_LIGHT_SPOT1)->bind(4, &lightData, sizeof(lightData));
+			Renderer::GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(1);
 		}
 	}
 

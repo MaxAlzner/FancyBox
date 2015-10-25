@@ -1,10 +1,13 @@
-#ifndef FBOX_ALBUFFER_H
-#define FBOX_ALBUFFER_H
+#ifndef FBOX_AUDIO_H
+#define FBOX_AUDIO_H
+
+#include "FancyBox_setup.h"
 
 namespace fbox
 {
 	namespace al
 	{
+		class FBOXAPI Buffer;
 
 		class FBOXAPI Buffer
 		{

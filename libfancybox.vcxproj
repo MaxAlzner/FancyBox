@@ -74,30 +74,13 @@ xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\audio\buffer.h" />
     <ClInclude Include="include\FancyBox.h" />
-    <ClInclude Include="include\graphics\buffer.h" />
-    <ClInclude Include="include\graphics\framebuffer.h" />
-    <ClInclude Include="include\graphics\program.h" />
-    <ClInclude Include="include\graphics\shader.h" />
-    <ClInclude Include="include\graphics\texture.h" />
-    <ClInclude Include="include\graphics\uniform.h" />
-    <ClInclude Include="include\graphics\uniformblock.h" />
-    <ClInclude Include="include\graphics\vertexarray.h" />
-    <ClInclude Include="include\input\axis.h" />
-    <ClInclude Include="include\input\button.h" />
-    <ClInclude Include="include\input\gamepad.h" />
-    <ClInclude Include="include\input\key.h" />
-    <ClInclude Include="include\input\mouse.h" />
-    <ClInclude Include="include\model\actor.h" />
-    <ClInclude Include="include\model\component.h" />
-    <ClInclude Include="include\model\scene.h" />
-    <ClInclude Include="include\scripting\array.h" />
-    <ClInclude Include="include\scripting\manager.h" />
-    <ClInclude Include="include\scripting\object.h" />
-    <ClInclude Include="include\scripting\functionparameters.h" />
-    <ClInclude Include="include\system\event.h" />
-    <ClInclude Include="include\system\global.h" />
+    <ClInclude Include="include\FancyBox_audio.h" />
+    <ClInclude Include="include\FancyBox_graphics.h" />
+    <ClInclude Include="include\FancyBox_input.h" />
+    <ClInclude Include="include\FancyBox_scripting.h" />
+    <ClInclude Include="include\FancyBox_setup.h" />
+    <ClInclude Include="include\FancyBox_system.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\actor.cpp" />
@@ -114,6 +97,7 @@ xcopy "$(FreeImageBinDir)*.dll" "$(OutDir)" /Y</Command>
     <ClCompile Include="src\graphics\vertexarray.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\schema.cpp" />
     <ClCompile Include="src\scripting\functionparameters.cpp" />
     <ClCompile Include="src\scripting\array.cpp" />
     <ClCompile Include="src\scripting\manager.cpp" />

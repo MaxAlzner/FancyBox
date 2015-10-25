@@ -56,8 +56,8 @@ namespace fbox
 	}
 	FBOXAPI void Actor::render()
 	{
-		GetUniform(UNIFORM_FLAG_UV_OFFSET)->bind2f(glm::vec2(0.0f));
-		GetUniform(UNIFORM_FLAG_UV_REPEAT)->bind2f(glm::vec2(1.0f));
+		Renderer::GetUniform(UNIFORM_FLAG_UV_OFFSET)->bind2f(glm::vec2(0.0f));
+		Renderer::GetUniform(UNIFORM_FLAG_UV_REPEAT)->bind2f(glm::vec2(1.0f));
 		for (std::list<Component*>::iterator i = this->components.begin(); i != this->components.end(); i++)
 		{
 			Component* component = *i;

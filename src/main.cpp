@@ -3,13 +3,13 @@
 
 void OnMouseMove(GLFWwindow* window, double x, double y)
 {
-	fbox::Input.Mouse.position.x = (float)x;
-	fbox::Input.Mouse.position.y = (float)y;
+	fbox::Input::Mouse.position.x = (float)x;
+	fbox::Input::Mouse.position.y = (float)y;
 }
 
 void OnMouseEnter(GLFWwindow* window, int entered)
 {
-	fbox::Input.Mouse.active = entered == GL_TRUE;
+	fbox::Input::Mouse.active = entered == GL_TRUE;
 }
 
 void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
@@ -17,13 +17,13 @@ void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 	switch (button)
 	{
 	case GLFW_MOUSE_BUTTON_LEFT:
-		fbox::Input.Mouse.left = action == GLFW_PRESS ? true : false;
+		fbox::Input::Mouse.left = action == GLFW_PRESS ? true : false;
 		break;
 	case GLFW_MOUSE_BUTTON_MIDDLE:
-		fbox::Input.Mouse.middle = action == GLFW_PRESS ? true : false;
+		fbox::Input::Mouse.middle = action == GLFW_PRESS ? true : false;
 		break;
 	case GLFW_MOUSE_BUTTON_RIGHT:
-		fbox::Input.Mouse.right = action == GLFW_PRESS ? true : false;
+		fbox::Input::Mouse.right = action == GLFW_PRESS ? true : false;
 		break;
 	default:
 		break;
@@ -32,12 +32,12 @@ void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 
 void OnMouseScroll(GLFWwindow* window, double offsetx, double offsety)
 {
-	fbox::Input.Mouse.scroll = offsety;
+	fbox::Input::Mouse.scroll = offsety;
 }
 
 void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	fbox::Input.Key[key] = action == GLFW_PRESS ? true : false;
+	fbox::Input::Key[key] = action == GLFW_PRESS ? true : false;
 }
 
 void OnFileDrop(GLFWwindow* window, int count, const char** paths)
@@ -52,8 +52,8 @@ void OnFileDrop(GLFWwindow* window, int count, const char** paths)
 
 void cleanup()
 {
-	fbox::OnDispose();
-	fbox::OnUnload();
+	fbox::Event::OnUnload();
+	fbox::Event::OnDispose();
 	glfwTerminate();
 }
 
@@ -61,13 +61,12 @@ int main(int argv, char** argc)
 {
 	srand(time(0));
 	atexit(cleanup);
-	fbox::OnLoad();
 	if (!glfwInit())
 	{
 		exit(1);
 	}
 
-	GLFWwindow* window = glfwCreateWindow(fbox::Screen.x, fbox::Screen.y, "FancyBox", 0, 0);
+	GLFWwindow* window = glfwCreateWindow(fbox::Renderer::Screen.x, fbox::Renderer::Screen.y, "FancyBox", 0, 0);
 	glfwSetCursorPosCallback(window, OnMouseMove);
 	glfwSetCursorEnterCallback(window, OnMouseEnter);
 	glfwSetMouseButtonCallback(window, OnMouseButton);
@@ -80,16 +79,17 @@ int main(int argv, char** argc)
 	}
 
 	glfwMakeContextCurrent(window);
-	fbox::OnInitialize();
+	fbox::Event::OnInitialize();
+	fbox::Event::OnLoad();
 	OnFileDrop(window, argv - 1, (const char**)argc + 1);
 
-	fbox::OnStart();
+	fbox::Event::OnStart();
 	while (!glfwWindowShouldClose(window))
 	{
 		fbox::Frame::Start();
 		glfwPollEvents();
-		fbox::OnUpdate();
-		fbox::OnDraw();
+		fbox::Event::OnUpdate();
+		fbox::Event::OnDraw();
 		glfwSwapBuffers(window);
 		fbox::Frame::Finish();
 	}
