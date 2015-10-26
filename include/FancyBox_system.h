@@ -444,6 +444,8 @@ namespace fbox
 
 		static void Release();
 
+		static void Build();
+
 	};
 
 	class FBOXAPI Renderer
@@ -451,12 +453,13 @@ namespace fbox
 	public:
 
 		static glm::ivec2 Screen;
+		static glm::ivec2 MainRender;
 		static Camera* MainCamera;
 
 		static gl::Shader* VertexProgram;
 		static gl::Shader* FragmentProgram;
 		static gl::Program* MainProgram;
-		static gl::Framebuffer* MainRender;
+		static gl::Framebuffer* MainFramebuffer;
 		static std::vector<gl::Uniform> Uniforms;
 		static std::vector<gl::UniformBlock> UniformBlocks;
 		static std::vector<gl::VertexArray*> VertexArrays;
@@ -516,9 +519,18 @@ namespace fbox
 	{
 	public:
 
+		static string VertexShader;
+		static string FragmentShader;
+
 		static int Read(string& filename, char** outRaw);
 
-		static Schema* Parse(string& filename);
+		static void Config(string& filename);
+		static void Config(const char* filename);
+
+		static void Load(string& filename);
+		static void Load(const char* filename);
+
+		static void Model(string& filename);
 
 		static void Register(string& filename, gl::Texture** outTexture);
 		static void Register(string& filename, gl::VertexArray** outVertexArray);
@@ -529,6 +541,7 @@ namespace fbox
 	{
 	public:
 
+		static void OnPreInitialize();
 		static void OnInitialize();
 		static void OnDispose();
 

@@ -28,6 +28,9 @@
 #include <time.h>
 #include <dirent.h>
 
+#include <fstream>
+#include <sstream>
+
 #include <string>
 #include <vector>
 #include <list>
@@ -48,5 +51,12 @@
 typedef std::string string;
 typedef FIBITMAP surface;
 typedef unsigned int uint;
+
+inline string _stdcall trim(string& str)
+{
+	size_t first = str.find_first_not_of(' ');
+	size_t last = str.find_last_not_of(' ');
+	return str.substr(first, (last - first) + 1);
+}
 
 #endif

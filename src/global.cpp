@@ -15,12 +15,13 @@ namespace fbox
 	FBOXAPI std::list<Schema*> Stage::Schemas;
 
 	FBOXAPI glm::ivec2 Renderer::Screen(480, 320);
+	FBOXAPI glm::ivec2 Renderer::MainRender(800, 600);
 	FBOXAPI Camera* Renderer::MainCamera = 0;
 
 	FBOXAPI gl::Shader* Renderer::VertexProgram = 0;
 	FBOXAPI gl::Shader* Renderer::FragmentProgram = 0;
 	FBOXAPI gl::Program* Renderer::MainProgram = 0;
-	FBOXAPI gl::Framebuffer* Renderer::MainRender = 0;
+	FBOXAPI gl::Framebuffer* Renderer::MainFramebuffer = 0;
 	FBOXAPI std::vector<gl::Uniform> Renderer::Uniforms;
 	FBOXAPI std::vector<gl::UniformBlock> Renderer::UniformBlocks;
 	FBOXAPI std::vector<gl::VertexArray*> Renderer::VertexArrays;
@@ -55,6 +56,18 @@ namespace fbox
 		Schemas.clear();
 	}
 
+	FBOXAPI void Stage::Build()
+	{
+		for (std::list<Schema*>::iterator i = Schemas.begin(); i != Schemas.end(); i++)
+		{
+			Schema* schema = *i;
+			if (schema != 0)
+			{
+				schema->apply(CurrentScene);
+			}
+		}
+	}
+
 	FBOXAPI void Renderer::Initialize()
 	{
 		//Uniforms.resize(32);
@@ -62,7 +75,7 @@ namespace fbox
 		VertexArrays.resize(64);
 		Textures.resize(64);
 
-		MainRender = new gl::Framebuffer(gl::Framebuffer::TYPE_DRAW, glm::ivec2(800, 600));
+		MainFramebuffer = new gl::Framebuffer(gl::Framebuffer::TYPE_DRAW, MainRender);
 		gl::Framebuffer::screen(Screen);
 
 		VertexProgram = new gl::Shader(gl::Shader::TYPE_VERTEX);
@@ -83,9 +96,9 @@ namespace fbox
 		VertexProgram->release();
 		delete VertexProgram;
 		VertexProgram = 0;
-		MainRender->release();
-		delete MainRender;
-		MainRender = 0;
+		MainFramebuffer->release();
+		delete MainFramebuffer;
+		MainFramebuffer = 0;
 	}
 	
 	FBOXAPI void Renderer::Release()
@@ -329,6 +342,9 @@ namespace fbox
 		Count++;
 	}
 
+	FBOXAPI string Import::VertexShader;
+	FBOXAPI string Import::FragmentShader;
+
 	FBOXAPI int Import::Read(string& filename, char** outRaw)
 	{
 		FILE* file = fopen(filename.data(), "r");
@@ -361,13 +377,75 @@ namespace fbox
 		return -1;
 	}
 
-	FBOXAPI Schema* Import::Parse(string& filename)
+	FBOXAPI void Import::Config(string& filename)
+	{
+		std::ifstream file(filename);
+		string line;
+		while (std::getline(file, line))
+		{
+			if (!line.empty())
+			{
+				size_t seperator = line.find_first_of('=');
+				string key = trim(line.substr(0, seperator));
+				string value = trim(line.substr(seperator + 1));
+				if (key == "width")
+				{
+					Renderer::Screen.x = atoi(value.c_str());
+				}
+				else if (key == "height")
+				{
+					Renderer::Screen.y = atoi(value.c_str());
+				}
+				else if (key == "main_width")
+				{
+					Renderer::MainRender.x = atoi(value.c_str());
+				}
+				else if (key == "main_height")
+				{
+					Renderer::MainRender.y = atoi(value.c_str());
+				}
+				else if (key == "shader_vert")
+				{
+					Import::VertexShader = value;
+				}
+				else if (key == "shader_frag")
+				{
+					Import::FragmentShader = value;
+				}
+			}
+		}
+
+		file.close();
+	}
+	FBOXAPI void Import::Config(const char* filename)
+	{
+		Config(string(filename));
+	}
+
+	FBOXAPI void Import::Load(string& filename)
+	{
+		std::ifstream file(filename);
+		string line;
+		while (std::getline(file, line))
+		{
+			if (!line.empty())
+			{
+				Model(line);
+			}
+		}
+
+		file.close();
+	}
+	FBOXAPI void Import::Load(const char* filename)
+	{
+		Load(string(filename));
+	}
+
+	FBOXAPI void Import::Model(string& filename)
 	{
 		Schema* schema = new Schema;
 		Stage::Schemas.push_back(schema);
 		schema->parse(filename);
-		schema->apply(Stage::CurrentScene);
-		return schema;
 	}
 
 	FBOXAPI void Import::Register(string& filename, gl::Texture** outTexture)

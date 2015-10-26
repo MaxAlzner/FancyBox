@@ -46,7 +46,8 @@ void OnFileDrop(GLFWwindow* window, int count, const char** paths)
 	{
 		string path = paths[i];
 		printf(" Dropped file: %s\n", path.data());
-		fbox::Import::Parse(path);
+		fbox::Import::Model(path);
+		fbox::Stage::Build();
 	}
 }
 
@@ -59,6 +60,7 @@ void cleanup()
 
 int main(int argv, char** argc)
 {
+	fbox::Event::OnPreInitialize();
 	srand(time(0));
 	atexit(cleanup);
 	if (!glfwInit())
@@ -81,8 +83,6 @@ int main(int argv, char** argc)
 	glfwMakeContextCurrent(window);
 	fbox::Event::OnInitialize();
 	fbox::Event::OnLoad();
-	OnFileDrop(window, argv - 1, (const char**)argc + 1);
-
 	fbox::Event::OnStart();
 	while (!glfwWindowShouldClose(window))
 	{

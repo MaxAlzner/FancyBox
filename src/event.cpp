@@ -5,6 +5,11 @@
 namespace fbox
 {
 	
+	FBOXAPI void Event::OnPreInitialize()
+	{
+		Import::Config("config.ini");
+		Import::Load("load.ini");
+	}
 	FBOXAPI void Event::OnInitialize()
 	{
 		FreeImage_Initialise();
@@ -39,9 +44,9 @@ namespace fbox
 		glEnable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
 
-		Renderer::MainRender->create();
-		Renderer::VertexProgram->compile("base.vert");
-		Renderer::FragmentProgram->compile("base.frag");
+		Renderer::MainFramebuffer->create();
+		Renderer::VertexProgram->compile(Import::VertexShader);
+		Renderer::FragmentProgram->compile(Import::FragmentShader);
 		Renderer::MainProgram->link();
 		Renderer::MainProgram->activate();
 		Renderer::GrabUniforms();
@@ -227,6 +232,7 @@ namespace fbox
 
 	FBOXAPI void Event::OnStart()
 	{
+		Stage::Build();
 #if 0
 		js::Object global = js::Manager::Global();
 		js::Array globals = global.properties();
@@ -265,8 +271,8 @@ namespace fbox
 	}
 	FBOXAPI void Event::OnDraw()
 	{
-		Renderer::MainRender->bind();
-		Renderer::MainRender->clear();
+		Renderer::MainFramebuffer->bind();
+		Renderer::MainFramebuffer->clear();
 		Renderer::GetUniform(UNIFORM_FLAG_LIGHT_POINT_NUM)->bind1i(0);
 		Renderer::GetUniform(UNIFORM_FLAG_LIGHT_SPOT_NUM)->bind1i(0);
 		if (Stage::CurrentScene != 0)
@@ -274,8 +280,8 @@ namespace fbox
 			Stage::CurrentScene->render();
 		}
 
-		Renderer::MainRender->unbind();
-		Renderer::MainRender->blit(0);
+		Renderer::MainFramebuffer->unbind();
+		Renderer::MainFramebuffer->blit(0);
 	}
 
 }
