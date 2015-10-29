@@ -442,7 +442,8 @@ namespace fbox
 		static std::list<Scene*> Scenes;
 		static std::list<Schema*> Schemas;
 
-		static void Release();
+		static void ReleaseScenes();
+		static void ReleaseSchemas();
 
 		static void Build();
 
@@ -471,9 +472,11 @@ namespace fbox
 		static void Initialize();
 		static void Dispose();
 
-		static void Release();
+		static void ReleaseAssets();
 
 		static void GrabUniforms();
+		static void CreateFramebuffers();
+		static void CompileProgram();
 
 		static UNIFORM_FLAG GetUniformFlag(string& name);
 		static UNIFORM_BLOCK GetUniformBlockFlag(string& name);

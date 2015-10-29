@@ -13,6 +13,7 @@ namespace fbox
 	FBOXAPI void Event::OnInitialize()
 	{
 		FreeImage_Initialise();
+		js::Manager::Initialize();
 
 		if (glewInit() != GLEW_OK)
 		{
@@ -24,31 +25,25 @@ namespace fbox
 			exit(1);
 		}
 
-		Renderer::Initialize();
-		Stage::CurrentScene = new Scene;
-		Stage::Scenes.push_back(Stage::CurrentScene);
-	}
-	FBOXAPI void Event::OnDispose()
-	{
-		Stage::Release();
-		Renderer::Dispose();
-		FreeImage_DeInitialise();
-	}
-
-	FBOXAPI void Event::OnLoad()
-	{
-		js::Manager::Initialize();
-
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
 
-		Renderer::MainFramebuffer->create();
-		Renderer::VertexProgram->compile(Import::VertexShader);
-		Renderer::FragmentProgram->compile(Import::FragmentShader);
-		Renderer::MainProgram->link();
-		Renderer::MainProgram->activate();
+		Renderer::Initialize();
+	}
+	FBOXAPI void Event::OnDispose()
+	{
+		Stage::ReleaseSchemas();
+		Renderer::Dispose();
+		js::Manager::Dispose();
+		FreeImage_DeInitialise();
+	}
+
+	FBOXAPI void Event::OnLoad()
+	{
+		Renderer::CreateFramebuffers();
+		Renderer::CompileProgram();
 		Renderer::GrabUniforms();
 
 #if 1
@@ -217,11 +212,13 @@ namespace fbox
 		frame.accessor("deltaTime", "number", &Frame::DeltaTime, sizeof(Frame::timeValue), false);
 		global.accessor("Frame", frame);
 #endif
+
+		Stage::Build();
 	}
 	FBOXAPI void Event::OnUnload()
 	{
-		Renderer::Release();
-		js::Manager::Dispose();
+		Stage::ReleaseScenes();
+		Renderer::ReleaseAssets();
 	}
 
 	FBOXAPI void OnReshape(int width, int height)
@@ -232,7 +229,6 @@ namespace fbox
 
 	FBOXAPI void Event::OnStart()
 	{
-		Stage::Build();
 #if 0
 		js::Object global = js::Manager::Global();
 		js::Array globals = global.properties();
@@ -255,14 +251,12 @@ namespace fbox
 	}
 	FBOXAPI void Event::OnUpdate()
 	{
-		//if (Input::Key[KEY_SPACE])
-		//{
-		//	VertexProgram->compile("base.vert");
-		//	FragmentProgram->compile("base.frag");
-		//	MainProgram->link();
-		//	MainProgram->activate();
-		//	GrabUniforms();
-		//}
+		if (Input::Key[KEY_SPACE])
+		{
+			OnUnload();
+			OnLoad();
+			OnStart();
+		}
 
 		if (Stage::CurrentScene != 0)
 		{

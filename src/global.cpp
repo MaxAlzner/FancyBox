@@ -30,7 +30,7 @@ namespace fbox
 	FBOXAPI std::list<TextureAsset> Renderer::TextureAssets;
 	FBOXAPI std::list<MeshAsset> Renderer::MeshAssets;
 
-	FBOXAPI void Stage::Release()
+	FBOXAPI void Stage::ReleaseScenes()
 	{
 		for (std::list<Scene*>::reverse_iterator i = Scenes.rbegin(); i != Scenes.rend(); i++)
 		{
@@ -42,6 +42,11 @@ namespace fbox
 			}
 		}
 
+		Scenes.clear();
+		CurrentScene = 0;
+	}
+	FBOXAPI void Stage::ReleaseSchemas()
+	{
 		for (std::list<Schema*>::reverse_iterator i = Schemas.rbegin(); i != Schemas.rend(); i++)
 		{
 			Schema* schema = *i;
@@ -52,12 +57,14 @@ namespace fbox
 			}
 		}
 
-		Scenes.clear();
 		Schemas.clear();
 	}
 
 	FBOXAPI void Stage::Build()
 	{
+		Stage::ReleaseScenes();
+		Stage::CurrentScene = new Scene;
+		Stage::Scenes.push_back(Stage::CurrentScene);
 		for (std::list<Schema*>::iterator i = Schemas.begin(); i != Schemas.end(); i++)
 		{
 			Schema* schema = *i;
@@ -86,7 +93,7 @@ namespace fbox
 	}
 	FBOXAPI void Renderer::Dispose()
 	{
-		Renderer::Release();
+		Renderer::ReleaseAssets();
 		MainProgram->release();
 		delete MainProgram;
 		MainProgram = 0;
@@ -101,7 +108,7 @@ namespace fbox
 		MainFramebuffer = 0;
 	}
 	
-	FBOXAPI void Renderer::Release()
+	FBOXAPI void Renderer::ReleaseAssets()
 	{
 		for (std::list<TextureAsset>::reverse_iterator i = TextureAssets.rbegin(); i != TextureAssets.rend(); i++)
 		{
@@ -154,6 +161,7 @@ namespace fbox
 		VertexArrays.clear();
 		UniformBlocks.clear();
 		Uniforms.clear();
+		MainCamera = 0;
 	}
 
 	FBOXAPI void Renderer::GrabUniforms()
@@ -234,6 +242,17 @@ namespace fbox
 				printf("Not found\n");
 			}
 		}
+	}
+	FBOXAPI void Renderer::CreateFramebuffers()
+	{
+		Renderer::MainFramebuffer->create();
+	}
+	FBOXAPI void Renderer::CompileProgram()
+	{
+		Renderer::VertexProgram->compile(Import::VertexShader);
+		Renderer::FragmentProgram->compile(Import::FragmentShader);
+		Renderer::MainProgram->link();
+		Renderer::MainProgram->activate();
 	}
 
 	FBOXAPI UNIFORM_FLAG Renderer::GetUniformFlag(string& name)
@@ -383,7 +402,7 @@ namespace fbox
 		string line;
 		while (std::getline(file, line))
 		{
-			if (!line.empty())
+			if (!line.empty() && line[0] != '#')
 			{
 				size_t seperator = line.find_first_of('=');
 				string key = trim(line.substr(0, seperator));

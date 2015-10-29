@@ -91,7 +91,6 @@ namespace fbox
 
 		FBOXAPI void Manager::Register(string& filename)
 		{
-#if 1
 			if (Started())
 			{
 				char* raw = 0;
@@ -108,7 +107,6 @@ namespace fbox
 				delete[] raw;
 
 			}
-#endif
 		}
 		FBOXAPI void Manager::Execute(string& command)
 		{
