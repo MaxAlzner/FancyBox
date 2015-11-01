@@ -399,40 +399,47 @@ namespace fbox
 	FBOXAPI void Import::Config(const std::string& filename)
 	{
 		std::ifstream file(filename.c_str());
-		std::string line;
-		while (std::getline(file, line))
+		if (file.is_open())
 		{
-			if (!line.empty() && line[0] != '#')
+			std::string line;
+			while (std::getline(file, line))
 			{
-				size_t seperator = line.find_first_of('=');
-				std::string key = trim(line.substr(0, seperator));
-				std::string value = trim(line.substr(seperator + 1));
-				printf("%s = %s\n", key.c_str(), value.c_str());
-				if (key == "width")
+				if (!line.empty() && line[0] != '#')
 				{
-					Renderer::Screen.x = atoi(value.c_str());
-				}
-				else if (key == "height")
-				{
-					Renderer::Screen.y = atoi(value.c_str());
-				}
-				else if (key == "main_width")
-				{
-					Renderer::MainRender.x = atoi(value.c_str());
-				}
-				else if (key == "main_height")
-				{
-					Renderer::MainRender.y = atoi(value.c_str());
-				}
-				else if (key == "shader_vert")
-				{
-					Import::VertexShader = value;
-				}
-				else if (key == "shader_frag")
-				{
-					Import::FragmentShader = value;
+					size_t seperator = line.find_first_of('=');
+					std::string key = trim(line.substr(0, seperator));
+					std::string value = trim(line.substr(seperator + 1));
+					printf("%s = %s\n", key.c_str(), value.c_str());
+					if (key == "width")
+					{
+						Renderer::Screen.x = atoi(value.c_str());
+					}
+					else if (key == "height")
+					{
+						Renderer::Screen.y = atoi(value.c_str());
+					}
+					else if (key == "main_width")
+					{
+						Renderer::MainRender.x = atoi(value.c_str());
+					}
+					else if (key == "main_height")
+					{
+						Renderer::MainRender.y = atoi(value.c_str());
+					}
+					else if (key == "shader_vert")
+					{
+						Import::VertexShader = value;
+					}
+					else if (key == "shader_frag")
+					{
+						Import::FragmentShader = value;
+					}
 				}
 			}
+		}
+		else
+		{
+			printf("Failed to open: %s\n", filename.c_str());
 		}
 
 		file.close();
@@ -445,14 +452,21 @@ namespace fbox
 	FBOXAPI void Import::Load(const std::string& filename)
 	{
 		std::ifstream file(filename.c_str());
-		std::string line;
-		while (std::getline(file, line))
+		if (file.is_open())
 		{
-			if (!line.empty())
+			std::string line;
+			while (std::getline(file, line))
 			{
-				printf("schema: %s\n", line.c_str());
-				Model(line);
+				if (!line.empty())
+				{
+					printf("schema: %s\n", line.c_str());
+					Model(line);
+				}
 			}
+		}
+		else
+		{
+			printf("Failed to open: %s\n", filename.c_str());
 		}
 
 		file.close();
