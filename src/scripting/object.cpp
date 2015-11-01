@@ -415,7 +415,7 @@ namespace fbox
 			v8::Handle<v8::Object> ctx = (v8::Handle<v8::Object>)info.Data().As<v8::Object>();
 			std::string type(*v8::String::Utf8Value(ctx->Get(0)));
 			v8::Handle<v8::Value> src = ctx->Get(1);
-			if (type == "null") { info.GetReturnValue().Set(v8::Null()); }
+			if (type == "null") { info.GetReturnValue().Set(v8::Null(Manager::Isolate)); }
 			else if (type == "string") { info.GetReturnValue().Set(v8::String::NewFromUtf8(Manager::Isolate, ((std::string*)src->Int32Value())->c_str())); }
 			else if (type == "boolean") { info.GetReturnValue().Set(*((bool*)src->Int32Value())); }
 			else if (type == "number") { info.GetReturnValue().Set(*((float*)src->Int32Value())); }

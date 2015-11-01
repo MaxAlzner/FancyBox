@@ -62,7 +62,7 @@ namespace fbox
 
 			static v8::Context::Scope ContextScope(Context);
 
-			v8::Local<v8::Object> debug = v8::Object::New();
+			v8::Local<v8::Object> debug = v8::Object::New(Isolate);
 			debug->Set(v8::String::NewFromUtf8(Manager::Isolate, "Log"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
 			debug->Set(v8::String::NewFromUtf8(Manager::Isolate, "Warning"), v8::FunctionTemplate::New(Isolate, DebugWarningCallback)->GetFunction());
 			debug->Set(v8::String::NewFromUtf8(Manager::Isolate, "Error"), v8::FunctionTemplate::New(Isolate, DebugErrorCallback)->GetFunction());
