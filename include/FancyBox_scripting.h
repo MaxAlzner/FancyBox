@@ -96,8 +96,8 @@ namespace fbox
 
 		protected:
 
-			static v8::Handle<v8::Value> _getterCallback(v8::Local<v8::String> prop, const v8::AccessorInfo& info);
-			static void _setterCallback(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::AccessorInfo& info);
+			static void _getter(v8::Local<v8::String> prop, const v8::PropertyCallbackInfo<v8::Value>& info);
+			static void _setter(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 
 			v8::Handle<v8::Object>* _state;
 
@@ -222,7 +222,7 @@ namespace fbox
 
 		protected:
 
-			static v8::Persistent<v8::Context> Context;
+			static v8::Local<v8::Context> Context;
 
 		};
 

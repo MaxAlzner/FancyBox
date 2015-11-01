@@ -51,12 +51,8 @@
 #include <FreeImage.h>
 
 #if defined(_WIN32)
-#define _const const
+#define _stdcall _stdcall
 #else
-#define _const 
-#endif
-
-#if !defined(_stdcall)
 #define _stdcall __attribute__((stdcall))
 #endif
 

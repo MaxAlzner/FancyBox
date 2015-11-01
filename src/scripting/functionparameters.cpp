@@ -13,19 +13,19 @@ namespace fbox
 		}
 		FBOXAPI void FunctionParameters::add(int32_t value)
 		{
-			this->_parameters.push_back(v8::Int32::New(value));
+			this->_parameters.push_back(v8::Int32::New(Manager::Isolate, value));
 		}
 		FBOXAPI void FunctionParameters::add(bool value)
 		{
-			this->_parameters.push_back(v8::Boolean::New(value));
+			this->_parameters.push_back(v8::Boolean::New(Manager::Isolate, value));
 		}
 		FBOXAPI void FunctionParameters::add(float value)
 		{
-			this->_parameters.push_back(v8::Number::New((double)value));
+			this->_parameters.push_back(v8::Number::New(Manager::Isolate, (double)value));
 		}
 		FBOXAPI void FunctionParameters::add(double value)
 		{
-			this->_parameters.push_back(v8::Number::New(value));
+			this->_parameters.push_back(v8::Number::New(Manager::Isolate, value));
 		}
 		FBOXAPI void FunctionParameters::add(const Object& value)
 		{

@@ -13,7 +13,7 @@ namespace fbox
 			if (Manager::Started())
 			{
 				this->_state = new v8::Handle<v8::Object>;
-				*this->_state = v8::Object::New();
+				*this->_state = v8::Object::New(Manager::Isolate);
 			}
 		}
 		FBOXAPI Object::Object(const v8::Handle<v8::Object>& object)
@@ -45,28 +45,28 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(v8::String::New(key), v8::Int32::New(value));
+				(*this->_state)->Set(v8::String::New(key), v8::Int32::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Object::set(const char* key, bool value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(v8::String::New(key), v8::Boolean::New(value));
+				(*this->_state)->Set(v8::String::New(key), v8::Boolean::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Object::set(const char* key, float value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(v8::String::New(key), v8::Number::New((double)value));
+				(*this->_state)->Set(v8::String::New(key), v8::Number::New(Manager::Isolate, (double)value));
 			}
 		}
 		FBOXAPI void Object::set(const char* key, double value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(v8::String::New(key), v8::Number::New(value));
+				(*this->_state)->Set(v8::String::New(key), v8::Number::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Object::set(const char* key, const Object& object)
@@ -259,31 +259,31 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
-				v8::Handle<v8::Object> data = v8::Object::New();
+				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
 				data->Set(0, v8::String::New(type));
 				data->Set(1, v8::Uint32::New((unsigned int)src));
 				data->Set(2, v8::Uint32::New(size));
-				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
+				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getter), setter ? &(this->_setter) : 0, data);
 			}
 		}
 		FBOXAPI void Object::accessor(const char* prop, const Object& object, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && object._state != 0)
 			{
-				v8::Handle<v8::Object> data = v8::Object::New();
+				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
 				data->Set(0, v8::String::New("object"));
 				data->Set(1, *object._state);
-				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
+				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getter), setter ? &(this->_setter) : 0, data);
 			}
 		}
 		FBOXAPI void Object::accessor(const char* prop, const Array& object, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
-				v8::Handle<v8::Object> data = v8::Object::New();
+				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
 				data->Set(0, v8::String::New("array"));
 				data->Set(1, (v8::Handle<v8::Value>)object);
-				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
+				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getter), setter ? &(this->_setter) : 0, data);
 			}
 		}
 		FBOXAPI void Object::accessor(const char* prop, const glm::vec2* v, bool setter)
@@ -353,6 +353,7 @@ namespace fbox
 					else if (value->IsObject()) { return "object"; }
 					else if (value->IsBoolean() || value->IsBooleanObject()) { return "boolean"; }
 					else if (value->IsNumber() || value->IsNumberObject()) { return "number"; }
+					else if (value->IsSymbol() || value->IsSymbolObject()) { return "symbol"; }
 					else if (value->IsInt32()) { return "int32"; }
 					else if (value->IsUint32()) { return "uint32"; }
 					else if (value->IsDate()) { return "date"; }
@@ -409,21 +410,20 @@ namespace fbox
 			return v8::Handle<v8::Value>();
 		}
 
-		FBOXAPI v8::Handle<v8::Value> Object::_getterCallback(v8::Local<v8::String> prop, const v8::AccessorInfo& info)
+		FBOXAPI void Object::_getter(v8::Local<v8::String> prop, const v8::PropertyCallbackInfo<v8::Value>& info)
 		{
 			v8::Handle<v8::Object> ctx = (v8::Handle<v8::Object>)info.Data().As<v8::Object>();
 			std::string type(*v8::String::Utf8Value(ctx->Get(0)));
 			v8::Handle<v8::Value> src = ctx->Get(1);
-			if (type == "null") { return v8::Null(); }
-			else if (type == "string") { return v8::String::New(((std::string*)src->Int32Value())->c_str()); }
-			else if (type == "boolean") { return v8::Boolean::New(*((bool*)src->Int32Value())); }
-			else if (type == "number") { return v8::Number::New(*((float*)src->Int32Value())); }
-			else if (type == "int32") { return v8::Int32::New(*((int32_t*)src->Int32Value())); }
-			else if (type == "uint32") { return v8::Uint32::New(*((uint32_t*)src->Int32Value())); }
-			else if (type == "array" || type == "object") { return src; }
-			else return v8::Undefined();
+			if (type == "null") { info.GetReturnValue().Set(v8::Null()); }
+			else if (type == "string") { info.GetReturnValue().Set(((std::string*)src->Int32Value())->c_str()); }
+			else if (type == "boolean") { info.GetReturnValue().Set(*((bool*)src->Int32Value())); }
+			else if (type == "number") { info.GetReturnValue().Set(*((float*)src->Int32Value())); }
+			else if (type == "int32") { info.GetReturnValue().Set(*((int32_t*)src->Int32Value())); }
+			else if (type == "uint32") { info.GetReturnValue().Set(*((uint32_t*)src->Int32Value())); }
+			else if (type == "array" || type == "object") { info.GetReturnValue().Set(src); }
 		}
-		FBOXAPI void Object::_setterCallback(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::AccessorInfo& info)
+		FBOXAPI void Object::_setter(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
 		{
 			v8::Handle<v8::Object> ctx = (v8::Handle<v8::Object>)info.Data().As<v8::Object>();
 			std::string type(*v8::String::Utf8Value(ctx->Get(0)));

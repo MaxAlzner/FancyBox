@@ -13,7 +13,7 @@ namespace fbox
 			if (Manager::Started())
 			{
 				this->_state = new v8::Handle<v8::Array>;
-				*this->_state = v8::Array::New();
+				*this->_state = v8::Array::New(Manager::Isolate);
 			}
 		}
 		FBOXAPI Array::Array(const int length)
@@ -22,7 +22,7 @@ namespace fbox
 			if (Manager::Started())
 			{
 				this->_state = new v8::Handle<v8::Array>;
-				*this->_state = v8::Array::New(length);
+				*this->_state = v8::Array::New(Manager::Isolate, length);
 			}
 		}
 		FBOXAPI Array::Array(const v8::Handle<v8::Array>& source)
@@ -54,28 +54,28 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(this->count(), v8::Int32::New(value));
+				(*this->_state)->Set(this->count(), v8::Int32::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Array::add(bool value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(this->count(), v8::Boolean::New(value));
+				(*this->_state)->Set(this->count(), v8::Boolean::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Array::add(float value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(this->count(), v8::Number::New((double)value));
+				(*this->_state)->Set(this->count(), v8::Number::New(Manager::Isolate, (double)value));
 			}
 		}
 		FBOXAPI void Array::add(double value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(this->count(), v8::Number::New(value));
+				(*this->_state)->Set(this->count(), v8::Number::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Array::add(const Object& value)
@@ -104,28 +104,28 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(index, v8::Int32::New(value));
+				(*this->_state)->Set(index, v8::Int32::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Array::set(const int index, bool value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(index, v8::Boolean::New(value));
+				(*this->_state)->Set(index, v8::Boolean::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Array::set(const int index, float value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(index, v8::Number::New((double)value));
+				(*this->_state)->Set(index, v8::Number::New(Manager::Isolate, (double)value));
 			}
 		}
 		FBOXAPI void Array::set(const int index, double value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(index, v8::Number::New(value));
+				(*this->_state)->Set(index, v8::Number::New(Manager::Isolate, value));
 			}
 		}
 		FBOXAPI void Array::set(const int index, const Object& value)
@@ -251,6 +251,7 @@ namespace fbox
 					else if (value->IsObject()) { return "object"; }
 					else if (value->IsBoolean() || value->IsBooleanObject()) { return "boolean"; }
 					else if (value->IsNumber() || value->IsNumberObject()) { return "number"; }
+					else if (value->IsSymbol() || value->IsSymbolObject()) { return "symbol"; }
 					else if (value->IsInt32()) { return "int32"; }
 					else if (value->IsUint32()) { return "uint32"; }
 					else if (value->IsDate()) { return "date"; }
