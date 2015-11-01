@@ -27,14 +27,14 @@ namespace fbox
 	public:
 
 		inline Component() {}
-		inline Component(string& type) : componentType(type) {}
+		inline Component(const std::string& type) : componentType(type) {}
 		inline Component(const char* type) : componentType(type) {}
-		inline ~Component() {}
+		inline virtual ~Component() {}
 
-		virtual void bind() = 0;
+		virtual void bind() {}
 
 		Actor* object;
-		string componentType;
+		std::string componentType;
 
 	};
 
@@ -129,7 +129,7 @@ namespace fbox
 	public:
 
 		inline Behavior() : Component("Behavior") {}
-		inline Behavior(string& name) : Component("Behavior"), name(name) {}
+		inline Behavior(const std::string& name) : Component("Behavior"), name(name) {}
 		inline Behavior(const char* name) : Component("Behavior"), name(name) {}
 		inline ~Behavior() {}
 
@@ -139,7 +139,7 @@ namespace fbox
 		void end();
 		void update();
 
-		string name;
+		std::string name;
 		js::Object state;
 
 	};
@@ -253,10 +253,10 @@ namespace fbox
 
 		void add(Component* component);
 
-		Component* findComponent(string& type);
+		Component* findComponent(const std::string& type);
 		Component* findComponent(const char* type);
 
-		string name;
+		std::string name;
 		Transform* transform;
 		MeshFilter* meshfilter;
 		Material* material;
@@ -285,10 +285,10 @@ namespace fbox
 
 		void add(Actor* actor);
 
-		Actor* findActor(string& name);
+		Actor* findActor(const std::string& name);
 		Actor* findActor(const char* name);
 
-		string name;
+		std::string name;
 		std::list<Actor*> actors;
 
 	};
@@ -304,15 +304,15 @@ namespace fbox
 		typedef struct ComponentModel
 		{
 
-			string type;
-			std::map<string, string> attributes;
+			std::string type;
+			std::map<std::string, std::string> attributes;
 
 		} ComponentModel;
 
 		typedef struct ActorModel
 		{
 
-			string name;
+			std::string name;
 			std::list<ComponentModel*> transforms;
 			std::list<ComponentModel*> components;
 
@@ -323,23 +323,23 @@ namespace fbox
 
 		void release();
 
-		void parse(string& filename);
+		void parse(const std::string& filename);
 		void parse(XmlNode* node);
 		void parse(XmlNode* node, ActorModel* actor);
 		void parse(XmlNode* node, ComponentModel* component);
 
 		void apply(Scene* scene);
 
-		std::list<string> scripts;
+		std::list<std::string> scripts;
 		std::list<ActorModel*> actors;
 
 	protected:
 
-		static string value(XmlAttribute* attribute);
-		static float fvalue(string& str, float def = 0.0f);
-		static int ivalue(string& str, int def = 0);
-		static bool bvalue(string& str, bool def = false);
-		static glm::vec4 color(string& str);
+		static std::string value(XmlAttribute* attribute);
+		static float fvalue(const std::string& str, float def = 0.0f);
+		static int ivalue(const std::string& str, int def = 0);
+		static bool bvalue(const std::string& str, bool def = false);
+		static glm::vec4 color(const std::string& str);
 
 	};
 
@@ -410,7 +410,7 @@ namespace fbox
 
 		surface* Surface;
 		gl::Texture* Texture;
-		string Filename;
+		std::string Filename;
 
 	} TextureAsset;
 
@@ -419,7 +419,7 @@ namespace fbox
 
 		shape* Shape;
 		gl::VertexArray* VertexArrayObject;
-		string Filename;
+		std::string Filename;
 
 	} MeshAsset;
 
@@ -478,8 +478,8 @@ namespace fbox
 		static void CreateFramebuffers();
 		static void CompileProgram();
 
-		static UNIFORM_FLAG GetUniformFlag(string& name);
-		static UNIFORM_BLOCK GetUniformBlockFlag(string& name);
+		static UNIFORM_FLAG GetUniformFlag(const std::string& name);
+		static UNIFORM_BLOCK GetUniformBlockFlag(const std::string& name);
 
 		static gl::Uniform* GetUniform(UNIFORM_FLAG flag);
 		static gl::UniformBlock* GetUniformBlock(UNIFORM_BLOCK block);
@@ -490,8 +490,8 @@ namespace fbox
 	{
 	public:
 
-		typedef __int64 frameValue;
-		typedef __int64 clockValue;
+		typedef int64_t frameValue;
+		typedef int64_t clockValue;
 		typedef float timeValue;
 
 		static frameValue Count;
@@ -522,21 +522,21 @@ namespace fbox
 	{
 	public:
 
-		static string VertexShader;
-		static string FragmentShader;
+		static std::string VertexShader;
+		static std::string FragmentShader;
 
-		static int Read(string& filename, char** outRaw);
+		static int Read(const std::string& filename, char** outRaw);
 
-		static void Config(string& filename);
+		static void Config(const std::string& filename);
 		static void Config(const char* filename);
 
-		static void Load(string& filename);
+		static void Load(const std::string& filename);
 		static void Load(const char* filename);
 
-		static void Model(string& filename);
+		static void Model(const std::string& filename);
 
-		static void Register(string& filename, gl::Texture** outTexture);
-		static void Register(string& filename, gl::VertexArray** outVertexArray);
+		static void Register(const std::string& filename, gl::Texture** outTexture);
+		static void Register(const std::string& filename, gl::VertexArray** outVertexArray);
 
 	};
 

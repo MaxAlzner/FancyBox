@@ -84,7 +84,7 @@ namespace fbox
 		}
 	}
 
-	FBOXAPI Actor* Scene::findActor(string& name)
+	FBOXAPI Actor* Scene::findActor(const std::string& name)
 	{
 		for (std::list<Actor*>::iterator i = this->actors.begin(); i != this->actors.end(); i++)
 		{
@@ -99,7 +99,7 @@ namespace fbox
 	}
 	FBOXAPI Actor* Scene::findActor(const char* name)
 	{
-		return this->findActor(string(name));
+		return this->findActor(std::string(name));
 	}
 
 }

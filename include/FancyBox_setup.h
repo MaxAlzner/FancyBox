@@ -17,6 +17,8 @@
 
 #define _USE_MATH_DEFINES
 
+#define GLM_FORCE_RADIANS
+
 #if defined(_WIN32) || defined(__WIN32__)
 #include <Windows.h>
 #endif
@@ -48,11 +50,22 @@
 #include <v8.h>
 #include <FreeImage.h>
 
-typedef std::string string;
-typedef FIBITMAP surface;
-typedef unsigned int uint;
+#if defined(_WIN32)
+#define _const const
+#else
+#define _const 
+#endif
 
-inline string _stdcall trim(string& str)
+#if !defined(_stdcall)
+#define _stdcall __attribute__((stdcall))
+#endif
+
+typedef FIBITMAP surface;
+#if !defined(uint)
+typedef unsigned int uint;
+#endif
+
+inline std::string _stdcall trim(const std::string& str)
 {
 	size_t first = str.find_first_not_of(' ');
 	size_t last = str.find_last_not_of(' ');

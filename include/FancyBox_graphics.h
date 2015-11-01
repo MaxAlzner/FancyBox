@@ -23,20 +23,20 @@ namespace fbox
 			typedef GLint locType;
 
 			Uniform() : _program(0), _handle(0) {}
-			Uniform(Program* program, string& name) : _program(program), _handle(0), _name(name) {}
+			Uniform(Program* program, const std::string& name) : _program(program), _handle(0), _name(name) {}
 			~Uniform() {}
 
 			void grab();
 
 			void bind1i(int x);
-			void bind2i(glm::ivec2& v);
-			void bind3i(glm::ivec3& v);
-			void bind4i(glm::ivec4& v);
+			void bind2i(const glm::ivec2& v);
+			void bind3i(const glm::ivec3& v);
+			void bind4i(const glm::ivec4& v);
 			void bind1b(bool x);
 			void bind1f(float x);
-			void bind2f(glm::vec2& v);
-			void bind3f(glm::vec3& v);
-			void bind4f(glm::vec4& v);
+			void bind2f(const glm::vec2& v);
+			void bind3f(const glm::vec3& v);
+			void bind4f(const glm::vec4& v);
 			void bind1iv(const int* buffer, unsigned int count);
 			void bind2iv(const glm::ivec2* buffer, unsigned int count);
 			void bind3iv(const glm::ivec3* buffer, unsigned int count);
@@ -46,21 +46,21 @@ namespace fbox
 			void bind2fv(const glm::vec2* buffer, unsigned int count);
 			void bind3fv(const glm::vec3* buffer, unsigned int count);
 			void bind4fv(const glm::vec4* buffer, unsigned int count);
-			void bind3x3f(glm::mat3& m);
-			void bind4x4f(glm::mat4& m);
+			void bind3x3f(const glm::mat3& m);
+			void bind4x4f(const glm::mat4& m);
 
 			void texture(Texture* texture, unsigned int slot);
 
 			bool valid() const;
 
 			const locType handle() const;
-			const string name() const;
+			const std::string name() const;
 
 		protected:
 
 			Program* _program;
 			locType _handle;
-			string _name;
+			std::string _name;
 
 		};
 
@@ -169,7 +169,7 @@ namespace fbox
 			typedef GLuint indexType;
 
 			UniformBlock() : _program(0), _buffer(0), _handle(0) {}
-			UniformBlock(Program* program, string& name) : _program(program), _buffer(0), _handle(0), _name(name) {}
+			UniformBlock(Program* program, const std::string& name) : _program(program), _buffer(0), _handle(0), _name(name) {}
 			~UniformBlock() {}
 
 			void grab();
@@ -180,7 +180,7 @@ namespace fbox
 			bool valid() const;
 
 			const indexType handle() const;
-			const string name() const;
+			const std::string name() const;
 			const Buffer* buffer() const;
 
 		protected:
@@ -188,7 +188,7 @@ namespace fbox
 			Program* _program;
 			Buffer* _buffer;
 			indexType _handle;
-			string _name;
+			std::string _name;
 
 		};
 
@@ -249,8 +249,20 @@ namespace fbox
 				TYPE_DEPTH,
 			};
 
-			Framebuffer() : clearColor(0.0f), _dimensions(400, 300), _main(0), _depth(0), _handle(0), _type(TYPE_NONE) {}
-			Framebuffer(frameType type, glm::ivec2& dimensions) : clearColor(0.0f), _dimensions(dimensions), _main(0), _depth(0), _handle(0), _type(type) {}
+			Framebuffer() :
+				clearColor(0.0f),
+				_main(0),
+				_depth(0),
+				_handle(0),
+				_type(TYPE_NONE),
+				_dimensions(400, 300) {}
+			Framebuffer(frameType type, const glm::ivec2& dimensions) :
+				clearColor(0.0f),
+				_main(0),
+				_depth(0),
+				_handle(0),
+				_type(type),
+				_dimensions(dimensions) {}
 			~Framebuffer() {}
 
 			void create();
@@ -260,7 +272,7 @@ namespace fbox
 			void unbind();
 
 			void clear();
-			void resize(glm::ivec2& dimensions);
+			void resize(const glm::ivec2& dimensions);
 
 			void blit(Framebuffer* destination);
 
@@ -269,7 +281,7 @@ namespace fbox
 			Texture* depth() const;
 			glm::ivec2 dimensions() const;
 
-			static void screen(glm::ivec2& dimensions);
+			static void screen(const glm::ivec2& dimensions);
 
 			glm::vec4 clearColor;
 
@@ -303,7 +315,7 @@ namespace fbox
 			Shader(shaderType type) : _handle(0), _type(type) {}
 			~Shader() {}
 
-			void compile(string& filepath);
+			void compile(const std::string& filepath);
 			void compile(const char* filepath);
 
 			void release();
@@ -323,7 +335,7 @@ namespace fbox
 
 			typedef GLuint handleType;
 
-			Program() : _handle(0), _vertex(0), _fragment(0), _geometry(0) {}
+			Program() : _vertex(0), _fragment(0), _geometry(0), _handle(0) {}
 			~Program() {}
 
 			void vertex(Shader* shader);

@@ -181,15 +181,15 @@ namespace fbox
 			int length;
 			memset(name, 0, 64);
 			glGetActiveUniformName(MainProgram->handle(), i, 64, &length, name);
-			UNIFORM_FLAG flag = GetUniformFlag(string(name));
+			UNIFORM_FLAG flag = GetUniformFlag(std::string(name));
 			if (flag != UNIFORM_FLAG_INVALID)
 			{
-				Uniforms[(int)flag - 1] = gl::Uniform(MainProgram, string(name));
+				Uniforms[(int)flag - 1] = gl::Uniform(MainProgram, std::string(name));
 			}
 		}
 
 		printf("Program Uniforms\n");
-		for (int i = 0; i < Uniforms.size(); i++)
+		for (size_t i = 0; i < Uniforms.size(); i++)
 		{
 			gl::Uniform* uniform = &Uniforms[i];
 			uniform->grab();
@@ -219,16 +219,16 @@ namespace fbox
 			int length;
 			memset(name, 0, 64);
 			glGetActiveUniformBlockName(MainProgram->handle(), i, 64, &length, name);
-			UNIFORM_BLOCK flag = GetUniformBlockFlag(string(name));
+			UNIFORM_BLOCK flag = GetUniformBlockFlag(std::string(name));
 			if (flag != UNIFORM_BLOCK_INVALID)
 			{
-				UniformBlocks[(int)flag - 1] = gl::UniformBlock(MainProgram, string(name));
+				UniformBlocks[(int)flag - 1] = gl::UniformBlock(MainProgram, std::string(name));
 			}
 		}
 
 		delete[] name;
 		printf("Program Uniform Blocks\n");
-		for (int i = 0; i < UniformBlocks.size(); i++)
+		for (size_t i = 0; i < UniformBlocks.size(); i++)
 		{
 			gl::UniformBlock* block = &UniformBlocks[i];
 			block->grab();
@@ -255,7 +255,7 @@ namespace fbox
 		Renderer::MainProgram->activate();
 	}
 
-	FBOXAPI UNIFORM_FLAG Renderer::GetUniformFlag(string& name)
+	FBOXAPI UNIFORM_FLAG Renderer::GetUniformFlag(const std::string& name)
 	{
 		if (name == "os_to_ws") { return UNIFORM_FLAG_MATRIX_OBJECT_TO_WORLD; }
 		else if (name == "ws_to_cs") { return UNIFORM_FLAG_MATRIX_WORLD_TO_CAMERA; }
@@ -282,7 +282,7 @@ namespace fbox
 		else if (name == "state") { return UNIFORM_FLAG_STATE; }
 		else { return UNIFORM_FLAG_INVALID; }
 	}
-	FBOXAPI UNIFORM_BLOCK Renderer::GetUniformBlockFlag(string& name)
+	FBOXAPI UNIFORM_BLOCK Renderer::GetUniformBlockFlag(const std::string& name)
 	{
 		if (name == "PointLight[0]") { return UNIFORM_BLOCK_LIGHT_POINT1; }
 		else if (name == "PointLight[1]") { return UNIFORM_BLOCK_LIGHT_POINT2; }
@@ -361,10 +361,10 @@ namespace fbox
 		Count++;
 	}
 
-	FBOXAPI string Import::VertexShader;
-	FBOXAPI string Import::FragmentShader;
+	FBOXAPI std::string Import::VertexShader;
+	FBOXAPI std::string Import::FragmentShader;
 
-	FBOXAPI int Import::Read(string& filename, char** outRaw)
+	FBOXAPI int Import::Read(const std::string& filename, char** outRaw)
 	{
 		FILE* file = fopen(filename.data(), "r");
 		if (file != 0)
@@ -396,17 +396,18 @@ namespace fbox
 		return -1;
 	}
 
-	FBOXAPI void Import::Config(string& filename)
+	FBOXAPI void Import::Config(const std::string& filename)
 	{
-		std::ifstream file(filename);
-		string line;
+		std::ifstream file(filename.c_str());
+		std::string line;
 		while (std::getline(file, line))
 		{
 			if (!line.empty() && line[0] != '#')
 			{
 				size_t seperator = line.find_first_of('=');
-				string key = trim(line.substr(0, seperator));
-				string value = trim(line.substr(seperator + 1));
+				std::string key = trim(line.substr(0, seperator));
+				std::string value = trim(line.substr(seperator + 1));
+				printf("%s = %s\n", key.c_str(), value.c_str());
 				if (key == "width")
 				{
 					Renderer::Screen.x = atoi(value.c_str());
@@ -438,17 +439,18 @@ namespace fbox
 	}
 	FBOXAPI void Import::Config(const char* filename)
 	{
-		Config(string(filename));
+		Config(std::string(filename));
 	}
 
-	FBOXAPI void Import::Load(string& filename)
+	FBOXAPI void Import::Load(const std::string& filename)
 	{
-		std::ifstream file(filename);
-		string line;
+		std::ifstream file(filename.c_str());
+		std::string line;
 		while (std::getline(file, line))
 		{
 			if (!line.empty())
 			{
+				printf("schema: %s\n", line.c_str());
 				Model(line);
 			}
 		}
@@ -457,17 +459,17 @@ namespace fbox
 	}
 	FBOXAPI void Import::Load(const char* filename)
 	{
-		Load(string(filename));
+		Load(std::string(filename));
 	}
 
-	FBOXAPI void Import::Model(string& filename)
+	FBOXAPI void Import::Model(const std::string& filename)
 	{
 		Schema* schema = new Schema;
 		Stage::Schemas.push_back(schema);
 		schema->parse(filename);
 	}
 
-	FBOXAPI void Import::Register(string& filename, gl::Texture** outTexture)
+	FBOXAPI void Import::Register(const std::string& filename, gl::Texture** outTexture)
 	{
 		FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename.data());
 		if (format == FIF_UNKNOWN)
@@ -491,7 +493,7 @@ namespace fbox
 		Renderer::Textures.push_back(texture);
 		Renderer::TextureAssets.push_back(asset);
 	}
-	FBOXAPI void Import::Register(string& filename, gl::VertexArray** outVertexArray)
+	FBOXAPI void Import::Register(const std::string& filename, gl::VertexArray** outVertexArray)
 	{
 		shape* shape = new ::shape;
 		FILE* file = fopen(filename.data(), "r");

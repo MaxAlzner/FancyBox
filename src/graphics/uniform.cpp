@@ -22,21 +22,21 @@ namespace fbox
 				glUniform1i(this->_handle, (GLint)x);
 			}
 		}
-		FBOXAPI void Uniform::bind2i(glm::ivec2& v)
+		FBOXAPI void Uniform::bind2i(const glm::ivec2& v)
 		{
 			if (this->_handle >= 0)
 			{
 				glUniform2i(this->_handle, (GLint)v.x, (GLint)v.y);
 			}
 		}
-		FBOXAPI void Uniform::bind3i(glm::ivec3& v)
+		FBOXAPI void Uniform::bind3i(const glm::ivec3& v)
 		{
 			if (this->_handle >= 0)
 			{
 				glUniform3i(this->_handle, (GLint)v.x, (GLint)v.y, (GLint)v.z);
 			}
 		}
-		FBOXAPI void Uniform::bind4i(glm::ivec4& v)
+		FBOXAPI void Uniform::bind4i(const glm::ivec4& v)
 		{
 			if (this->_handle >= 0)
 			{
@@ -57,21 +57,21 @@ namespace fbox
 				glUniform1f(this->_handle, (GLfloat)x);
 			}
 		}
-		FBOXAPI void Uniform::bind2f(glm::vec2& v)
+		FBOXAPI void Uniform::bind2f(const glm::vec2& v)
 		{
 			if (this->_handle >= 0)
 			{
 				glUniform2f(this->_handle, (GLfloat)v.x, (GLfloat)v.y);
 			}
 		}
-		FBOXAPI void Uniform::bind3f(glm::vec3& v)
+		FBOXAPI void Uniform::bind3f(const glm::vec3& v)
 		{
 			if (this->_handle >= 0)
 			{
 				glUniform3f(this->_handle, (GLfloat)v.x, (GLfloat)v.y, (GLfloat)v.z);
 			}
 		}
-		FBOXAPI void Uniform::bind4f(glm::vec4& v)
+		FBOXAPI void Uniform::bind4f(const glm::vec4& v)
 		{
 			if (this->_handle >= 0)
 			{
@@ -134,14 +134,14 @@ namespace fbox
 				glUniform4fv(this->_handle, count, (const GLfloat*)buffer);
 			}
 		}
-		FBOXAPI void Uniform::bind3x3f(glm::mat3& m)
+		FBOXAPI void Uniform::bind3x3f(const glm::mat3& m)
 		{
 			if (this->_handle >= 0)
 			{
 				glUniformMatrix3fv(this->_handle, 1, GL_FALSE, (const GLfloat*)glm::value_ptr(m));
 			}
 		}
-		FBOXAPI void Uniform::bind4x4f(glm::mat4& m)
+		FBOXAPI void Uniform::bind4x4f(const glm::mat4& m)
 		{
 			if (this->_handle >= 0)
 			{
@@ -275,7 +275,7 @@ namespace fbox
 		{
 			return this->_handle;
 		}
-		FBOXAPI const string Uniform::name() const
+		FBOXAPI const std::string Uniform::name() const
 		{
 			return this->_name;
 		}

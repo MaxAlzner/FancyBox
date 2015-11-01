@@ -1,6 +1,6 @@
 
 #define FBOX_EXPORT
-#include "../include/FancyBox.h"
+#include "../../include/FancyBox.h"
 
 namespace fbox
 {
@@ -13,7 +13,7 @@ namespace fbox
 			if (Manager::Started())
 			{
 				this->_state = new v8::Handle<v8::Array>;
-				*this->_state = v8::Array::New(Manager::Isolate);
+				*this->_state = v8::Array::New();
 			}
 		}
 		FBOXAPI Array::Array(const int length)
@@ -22,10 +22,10 @@ namespace fbox
 			if (Manager::Started())
 			{
 				this->_state = new v8::Handle<v8::Array>;
-				*this->_state = v8::Array::New(Manager::Isolate, length);
+				*this->_state = v8::Array::New(length);
 			}
 		}
-		FBOXAPI Array::Array(v8::Handle<v8::Array>& source)
+		FBOXAPI Array::Array(const v8::Handle<v8::Array>& source)
 		{
 			this->_state = 0;
 			if (Manager::Started())
@@ -43,7 +43,7 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI void Array::add(string& value)
+		FBOXAPI void Array::add(const std::string& value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -78,14 +78,14 @@ namespace fbox
 				(*this->_state)->Set(this->count(), v8::Number::New(value));
 			}
 		}
-		FBOXAPI void Array::add(Object& value)
+		FBOXAPI void Array::add(const Object& value)
 		{
 			if (Manager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)value).IsEmpty())
 			{
 				(*this->_state)->Set(this->count(), (v8::Handle<v8::Value>)value);
 			}
 		}
-		FBOXAPI void Array::add(Array& value)
+		FBOXAPI void Array::add(const Array& value)
 		{
 			if (Manager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)value).IsEmpty())
 			{
@@ -93,7 +93,7 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI void Array::set(const int index, string& value)
+		FBOXAPI void Array::set(const int index, const std::string& value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -128,14 +128,14 @@ namespace fbox
 				(*this->_state)->Set(index, v8::Number::New(value));
 			}
 		}
-		FBOXAPI void Array::set(const int index, Object& value)
+		FBOXAPI void Array::set(const int index, const Object& value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
 				(*this->_state)->Set(index, (v8::Handle<v8::Value>)value);
 			}
 		}
-		FBOXAPI void Array::set(const int index, Array& value)
+		FBOXAPI void Array::set(const int index, const Array& value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -143,7 +143,7 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI string Array::gets(const int index)
+		FBOXAPI std::string Array::gets(const int index)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
@@ -155,7 +155,7 @@ namespace fbox
 				}
 			}
 
-			return string();
+			return std::string();
 		}
 		FBOXAPI int32_t Array::geti(const int index)
 		{
@@ -236,7 +236,7 @@ namespace fbox
 			return Array();
 		}
 
-		FBOXAPI string Array::typeof(const int index) const
+		FBOXAPI std::string Array::type(const int index) const
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
@@ -246,7 +246,6 @@ namespace fbox
 					if (value->IsUndefined()) { return "undefined"; }
 					else if (value->IsNull()) { return "null"; }
 					else if (value->IsString() || value->IsStringObject()) { return "string"; }
-					else if (value->IsSymbol() || value->IsSymbolObject()) { return "symbol"; }
 					else if (value->IsFunction()) { return "function"; }
 					else if (value->IsArray()) { return "array"; }
 					else if (value->IsObject()) { return "object"; }
@@ -288,14 +287,14 @@ namespace fbox
 				*this->_state = *object._state;
 			}
 		}
-		FBOXAPI void Array::operator=(v8::Handle<v8::Array>& object)
+		FBOXAPI void Array::operator=(const v8::Handle<v8::Array>& object)
 		{
 			if (this->_state != 0)
 			{
 				*this->_state = object;
 			}
 		}
-		FBOXAPI Array::operator v8::Handle<v8::Array>()
+		FBOXAPI Array::operator v8::Handle<v8::Array>() const
 		{
 			if (this->_state != 0)
 			{
@@ -304,16 +303,16 @@ namespace fbox
 
 			return v8::Handle<v8::Array>();
 		}
-		FBOXAPI Array::operator v8::Handle<v8::Value>()
+		FBOXAPI Array::operator v8::Handle<v8::Value>() const
 		{
 			if (this->_state != 0)
 			{
-				return v8::Handle<v8::Value>::Cast(*this->_state);
+				return (v8::Handle<v8::Value>)*this->_state;
 			}
 
 			return v8::Handle<v8::Value>();
 		}
-		FBOXAPI void Array::operator+=(string& value)
+		FBOXAPI void Array::operator+=(const std::string& value)
 		{
 			this->add(value);
 		}
@@ -333,16 +332,16 @@ namespace fbox
 		{
 			this->add(value);
 		}
-		FBOXAPI void Array::operator+=(Object& value)
+		FBOXAPI void Array::operator+=(const Object& value)
 		{
 			this->add(value);
 		}
-		FBOXAPI void Array::operator+=(Array& value)
+		FBOXAPI void Array::operator+=(const Array& value)
 		{
 			this->add(value);
 		}
 
-		FBOXAPI string Array::Iterator::gets()
+		FBOXAPI std::string Array::Iterator::gets()
 		{
 			if (Manager::Started() && this->_array != 0 && this->_array->_state != 0 && !this->_array->_state->IsEmpty())
 			{
@@ -354,7 +353,7 @@ namespace fbox
 				}
 			}
 
-			return string();
+			return std::string();
 		}
 		FBOXAPI int32_t Array::Iterator::geti()
 		{
@@ -435,11 +434,11 @@ namespace fbox
 			return Array();
 		}
 
-		FBOXAPI string Array::Iterator::typeof() const
+		FBOXAPI std::string Array::Iterator::type() const
 		{
 			if (Manager::Started() && this->_array != 0 && this->_array->_state != 0 && !this->_array->_state->IsEmpty())
 			{
-				return this->_array->typeof(this->_index);
+				return this->_array->type(this->_index);
 			}
 
 			return "undefined";

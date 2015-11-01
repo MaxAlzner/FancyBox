@@ -42,7 +42,7 @@ namespace fbox
 		this->actors.clear();
 	}
 
-	FBOXAPI void Schema::parse(string& filename)
+	FBOXAPI void Schema::parse(const std::string& filename)
 	{
 		char* raw = 0;
 		if (Import::Read(filename, &raw) > 0)
@@ -63,7 +63,7 @@ namespace fbox
 	{
 		if (node != 0)
 		{
-			string type = node->name();
+			std::string type = node->name();
 			if (type == "scene")
 			{
 				XmlNode* child = node->first_node();
@@ -75,7 +75,7 @@ namespace fbox
 			}
 			else if (type == "script")
 			{
-				string src = Schema::value(node->last_attribute("src"));
+				std::string src = Schema::value(node->last_attribute("src"));
 				this->scripts.push_back(src);
 			}
 			else if (type == "actor")
@@ -94,7 +94,7 @@ namespace fbox
 			XmlNode* child = node->first_node();
 			while (child != 0)
 			{
-				string type = child->name();
+				std::string type = child->name();
 				if (type == "transform")
 				{
 					XmlNode* transformation = child->first_node();
@@ -126,9 +126,9 @@ namespace fbox
 			XmlAttribute* attribute = node->first_attribute();
 			while (attribute != 0)
 			{
-				string name = attribute->name();
-				string value = attribute->value();
-				component->attributes.insert(std::pair<string, string>(name, value));
+				std::string name = attribute->name();
+				std::string value = attribute->value();
+				component->attributes.insert(std::pair<std::string, std::string>(name, value));
 				attribute = attribute->next_attribute();
 			}
 		}
@@ -138,7 +138,7 @@ namespace fbox
 	{
 		if (scene != 0)
 		{
-			for (std::list<string>::iterator i = this->scripts.begin(); i != this->scripts.end(); i++)
+			for (std::list<std::string>::iterator i = this->scripts.begin(); i != this->scripts.end(); i++)
 			{
 				js::Manager::Register(*i);
 			}
@@ -180,15 +180,15 @@ namespace fbox
 						{
 							if (component->type == "mesh")
 							{
-								string src = component->attributes["src"];
+								std::string src = component->attributes["src"];
 								gl::VertexArray* vao = 0;
 								Import::Register(src, &vao);
 								actor->add(new MeshFilter(vao));
 							}
 							else if (component->type == "texture")
 							{
-								string src = component->attributes["src"];
-								string type = component->attributes["type"];
+								std::string src = component->attributes["src"];
+								std::string type = component->attributes["type"];
 								gl::Texture* texture = 0;
 								Import::Register(src, &texture);
 								if (type == "diffuse")
@@ -211,7 +211,7 @@ namespace fbox
 							}
 							else if (component->type == "behavior")
 							{
-								string name = component->attributes["name"];
+								std::string name = component->attributes["name"];
 								actor->add(new Behavior(name));
 							}
 							else if (component->type == "camera")
@@ -225,7 +225,7 @@ namespace fbox
 							}
 							else if (component->type == "light")
 							{
-								string type = component->attributes["type"];
+								std::string type = component->attributes["type"];
 								Light* light = 0;
 								if (type == "point")
 								{
@@ -259,29 +259,29 @@ namespace fbox
 		}
 	}
 
-	FBOXAPI string Schema::value(XmlAttribute* attribute)
+	FBOXAPI std::string Schema::value(XmlAttribute* attribute)
 	{
 		return attribute != 0 ? attribute->value() : "";
 	}
-	FBOXAPI float Schema::fvalue(string& str, float def)
+	FBOXAPI float Schema::fvalue(const std::string& str, float def)
 	{
 		return str.empty() ? def : (float)atof(str.c_str());
 	}
-	FBOXAPI int Schema::ivalue(string& str, int def)
+	FBOXAPI int Schema::ivalue(const std::string& str, int def)
 	{
 		return str.empty() ? def : atoi(str.c_str());
 	}
-	FBOXAPI bool Schema::bvalue(string& str, bool def)
+	FBOXAPI bool Schema::bvalue(const std::string& str, bool def)
 	{
 		return str == "true";
 	}
-	FBOXAPI glm::vec4 Schema::color(string& str)
+	FBOXAPI glm::vec4 Schema::color(const std::string& str)
 	{
 		glm::vec4 c(1.0f);
 		if (!str.empty())
 		{
 			int r, g, b;
-			sscanf_s(str.c_str(), "rgba(%d, %d, %d, %f)", &r, &g, &b, &c.a);
+			sscanf(str.c_str(), "rgba(%d, %d, %d, %f)", &r, &g, &b, &c.a);
 			c.r = float(r) / 255.0f;
 			c.g = float(g) / 255.0f;
 			c.b = float(b) / 255.0f;

@@ -55,7 +55,7 @@ namespace fbox
 		{
 			return this->_handle;
 		}
-		FBOXAPI const string UniformBlock::name() const
+		FBOXAPI const std::string UniformBlock::name() const
 		{
 			return this->_name;
 		}

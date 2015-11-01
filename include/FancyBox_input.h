@@ -9,7 +9,7 @@ namespace fbox
 	typedef struct FBOXAPI Button
 	{
 
-		inline Button() : _latched(false), _pressed(false) {}
+		inline Button() : _pressed(false), _latched(false) {}
 		inline ~Button() {}
 
 		inline void latch()
@@ -50,11 +50,7 @@ namespace fbox
 	typedef struct FBOXAPI Axis
 	{
 
-		inline Axis()
-		{
-			this->_value = 0.0f;
-			this->_deadzone = 0.4f;
-		}
+		inline Axis() : _value(0.0f), _deadzone(0.4f) {}
 		inline ~Axis() {}
 
 		inline void deadzone(const float value)

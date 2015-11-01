@@ -1,6 +1,6 @@
 
 #define FBOX_EXPORT
-#include "../include/FancyBox.h"
+#include "../../include/FancyBox.h"
 
 namespace fbox
 {
@@ -12,11 +12,11 @@ namespace fbox
 			this->_state = 0;
 			if (Manager::Started())
 			{
-				this->_state = new v8::Handle < v8::Object >;
-				*this->_state = v8::Object::New(Manager::Isolate);
+				this->_state = new v8::Handle<v8::Object>;
+				*this->_state = v8::Object::New();
 			}
 		}
-		FBOXAPI Object::Object(v8::Handle<v8::Object>& object)
+		FBOXAPI Object::Object(const v8::Handle<v8::Object>& object)
 		{
 			this->_state = 0;
 			if (Manager::Started())
@@ -34,7 +34,7 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI void Object::set(const char* key, string& value)
+		FBOXAPI void Object::set(const char* key, const std::string& value)
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
@@ -69,14 +69,14 @@ namespace fbox
 				(*this->_state)->Set(v8::String::New(key), v8::Number::New(value));
 			}
 		}
-		FBOXAPI void Object::set(const char* key, Object& object)
+		FBOXAPI void Object::set(const char* key, const Object& object)
 		{
 			if (Manager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)object).IsEmpty())
 			{
 				(*this->_state)->Set(v8::String::New(key), (v8::Handle<v8::Object>)object);
 			}
 		}
-		FBOXAPI void Object::set(const char* key, Array& object)
+		FBOXAPI void Object::set(const char* key, const Array& object)
 		{
 			if (Manager::Started() && this->_state != 0 && !((v8::Handle<v8::Value>)object).IsEmpty())
 			{
@@ -84,7 +84,7 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI string Object::gets(const char* key)
+		FBOXAPI std::string Object::gets(const char* key)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
@@ -96,7 +96,7 @@ namespace fbox
 				}
 			}
 
-			return string();
+			return std::string();
 		}
 		FBOXAPI int32_t Object::geti(const char* key)
 		{
@@ -185,15 +185,15 @@ namespace fbox
 				if (!value.IsEmpty() && value->IsFunction())
 				{
 					v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-					func->Call(v8::Handle<v8::Value>::Cast(*this->_state), 0, 0);
+					func->Call(*this->_state, 0, 0);
 				}
 			}
 		}
-		FBOXAPI void Object::call(string& name)
+		FBOXAPI void Object::call(const std::string& name)
 		{
 			this->call(name.data());
 		}
-		FBOXAPI void Object::call(const char* name, FunctionParameters& parameters)
+		FBOXAPI void Object::call(const char* name, const FunctionParameters& parameters)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && parameters.count() > 0)
 			{
@@ -201,11 +201,11 @@ namespace fbox
 				if (!value.IsEmpty() && value->IsFunction())
 				{
 					v8::Handle<v8::Function> func = v8::Handle<v8::Function>::Cast(value);
-					func->Call(v8::Handle<v8::Value>::Cast(*this->_state), parameters.count(), parameters);
+					func->Call(*this->_state, parameters.count(), parameters);
 				}
 			}
 		}
-		FBOXAPI void Object::call(string& name, FunctionParameters& parameters)
+		FBOXAPI void Object::call(const std::string& name, const FunctionParameters& parameters)
 		{
 			this->call(name.data(), parameters);
 		}
@@ -228,11 +228,11 @@ namespace fbox
 
 			return Object();
 		}
-		FBOXAPI Object Object::construct(string& name)
+		FBOXAPI Object Object::construct(const std::string& name)
 		{
 			return this->construct(name.data());
 		}
-		FBOXAPI Object Object::construct(const char* name, FunctionParameters& parameters)
+		FBOXAPI Object Object::construct(const char* name, const FunctionParameters& parameters)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && parameters.count() > 0)
 			{
@@ -250,43 +250,43 @@ namespace fbox
 
 			return Object();
 		}
-		FBOXAPI Object Object::construct(string& name, FunctionParameters& parameters)
+		FBOXAPI Object Object::construct(const std::string& name, const FunctionParameters& parameters)
 		{
 			return this->construct(name.data(), parameters);
 		}
 
-		FBOXAPI void Object::accessor(const char* prop, const char* type, void* src, int size, bool setter)
+		FBOXAPI void Object::accessor(const char* prop, const char* type, const void* src, int size, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
-				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
+				v8::Handle<v8::Object> data = v8::Object::New();
 				data->Set(0, v8::String::New(type));
 				data->Set(1, v8::Uint32::New((unsigned int)src));
 				data->Set(2, v8::Uint32::New(size));
 				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
 			}
 		}
-		FBOXAPI void Object::accessor(const char* prop, Object& object, bool setter)
+		FBOXAPI void Object::accessor(const char* prop, const Object& object, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && object._state != 0)
 			{
-				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
+				v8::Handle<v8::Object> data = v8::Object::New();
 				data->Set(0, v8::String::New("object"));
 				data->Set(1, *object._state);
 				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
 			}
 		}
-		FBOXAPI void Object::accessor(const char* prop, Array& object, bool setter)
+		FBOXAPI void Object::accessor(const char* prop, const Array& object, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
-				v8::Handle<v8::Object> data = v8::Object::New(Manager::Isolate);
+				v8::Handle<v8::Object> data = v8::Object::New();
 				data->Set(0, v8::String::New("array"));
 				data->Set(1, (v8::Handle<v8::Value>)object);
 				(*this->_state)->SetAccessor(v8::String::New(prop), &(this->_getterCallback), setter ? &(this->_setterCallback) : 0, data);
 			}
 		}
-		FBOXAPI void Object::accessor(const char* prop, glm::vec2* v, bool setter)
+		FBOXAPI void Object::accessor(const char* prop, const glm::vec2* v, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && v != 0)
 			{
@@ -300,7 +300,7 @@ namespace fbox
 				this->accessor(prop, obj, setter);
 			}
 		}
-		FBOXAPI void Object::accessor(const char* prop, glm::vec3* v, bool setter)
+		FBOXAPI void Object::accessor(const char* prop, const glm::vec3* v, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && v != 0)
 			{
@@ -317,7 +317,7 @@ namespace fbox
 				this->accessor(prop, obj, setter);
 			}
 		}
-		FBOXAPI void Object::accessor(const char* prop, glm::vec4* v, bool setter)
+		FBOXAPI void Object::accessor(const char* prop, const glm::vec4* v, bool setter)
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty() && v != 0)
 			{
@@ -338,7 +338,7 @@ namespace fbox
 			}
 		}
 
-		FBOXAPI string Object::typeof(const char* key) const
+		FBOXAPI std::string Object::type(const char* key) const
 		{
 			if (Manager::Started() && this->_state != 0 && !this->_state->IsEmpty())
 			{
@@ -348,7 +348,6 @@ namespace fbox
 					if (value->IsUndefined()) { return "undefined"; }
 					else if (value->IsNull()) { return "null"; }
 					else if (value->IsString() || value->IsStringObject()) { return "string"; }
-					else if (value->IsSymbol() || value->IsSymbolObject()) { return "symbol"; }
 					else if (value->IsFunction()) { return "function"; }
 					else if (value->IsArray()) { return "array"; }
 					else if (value->IsObject()) { return "object"; }
@@ -363,9 +362,9 @@ namespace fbox
 
 			return "undefined";
 		}
-		FBOXAPI string Object::typeof(string& key) const
+		FBOXAPI std::string Object::type(const std::string& key) const
 		{
-			return this->typeof(key.data());
+			return this->type(key.data());
 		}
 		FBOXAPI Array Object::properties() const
 		{
@@ -384,7 +383,7 @@ namespace fbox
 				*this->_state = *object._state;
 			}
 		}
-		FBOXAPI void Object::operator=(v8::Handle<v8::Object>& object)
+		FBOXAPI void Object::operator=(const v8::Handle<v8::Object>& object)
 		{
 			if (this->_state != 0)
 			{
@@ -404,32 +403,33 @@ namespace fbox
 		{
 			if (this->_state != 0)
 			{
-				return v8::Handle<v8::Value>::Cast(*this->_state);
+				return *this->_state;
 			}
 
 			return v8::Handle<v8::Value>();
 		}
 
-		FBOXAPI void Object::_getterCallback(v8::Local<v8::String> prop, const v8::PropertyCallbackInfo<v8::Value>& info)
+		FBOXAPI v8::Handle<v8::Value> Object::_getterCallback(v8::Local<v8::String> prop, const v8::AccessorInfo& info)
 		{
 			v8::Handle<v8::Object> ctx = (v8::Handle<v8::Object>)info.Data().As<v8::Object>();
-			string type(*v8::String::Utf8Value(ctx->Get(0)));
+			std::string type(*v8::String::Utf8Value(ctx->Get(0)));
 			v8::Handle<v8::Value> src = ctx->Get(1);
-			if (type == "null") { return info.GetReturnValue().Set(v8::Null(Manager::Isolate)); }
-			else if (type == "string") { return info.GetReturnValue().Set(v8::String::New((*((string*)src->Int32Value())).data())); }
-			else if (type == "boolean") { return info.GetReturnValue().Set(*((bool*)src->Int32Value())); }
-			else if (type == "number") { return info.GetReturnValue().Set(*((float*)src->Int32Value())); }
-			else if (type == "int32") { return info.GetReturnValue().Set(*((int32_t*)src->Int32Value())); }
-			else if (type == "uint32") { return info.GetReturnValue().Set(*((uint32_t*)src->Int32Value())); }
-			else if (type == "array" || type == "object") { return info.GetReturnValue().Set(src); }
+			if (type == "null") { return v8::Null(); }
+			else if (type == "string") { return v8::String::New(((std::string*)src->Int32Value())->c_str()); }
+			else if (type == "boolean") { return v8::Boolean::New(*((bool*)src->Int32Value())); }
+			else if (type == "number") { return v8::Number::New(*((float*)src->Int32Value())); }
+			else if (type == "int32") { return v8::Int32::New(*((int32_t*)src->Int32Value())); }
+			else if (type == "uint32") { return v8::Uint32::New(*((uint32_t*)src->Int32Value())); }
+			else if (type == "array" || type == "object") { return src; }
+			else return v8::Undefined();
 		}
-		FBOXAPI void Object::_setterCallback(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
+		FBOXAPI void Object::_setterCallback(v8::Local<v8::String> prop, v8::Local<v8::Value> value, const v8::AccessorInfo& info)
 		{
 			v8::Handle<v8::Object> ctx = (v8::Handle<v8::Object>)info.Data().As<v8::Object>();
-			string type(*v8::String::Utf8Value(ctx->Get(0)));
+			std::string type(*v8::String::Utf8Value(ctx->Get(0)));
 			v8::Handle<v8::Value> src = ctx->Get(1);
 			if (value->IsNull() || value->IsUndefined()) { return; }
-			else if (type == "string" && (value->IsString() || value->IsStringObject())) { *((string*)src->Int32Value()) = *v8::String::Utf8Value(value->ToString()); }
+			else if (type == "string" && (value->IsString() || value->IsStringObject())) { *((std::string*)src->Int32Value()) = *v8::String::Utf8Value(value->ToString()); }
 			else if (type == "boolean" && (value->IsBoolean() || value->IsBooleanObject())) { *((bool*)src->Int32Value()) = value->BooleanValue(); }
 			else if (type == "number" && (value->IsNumber() || value->IsNumberObject())) { *((float*)src->Int32Value()) = (float)value->NumberValue(); }
 			else if (type == "int32" && value->IsInt32()) { *((int32_t*)src->Int32Value()) = value->Int32Value(); }
@@ -439,7 +439,7 @@ namespace fbox
 				v8::Handle<v8::Array> obj = src.As<v8::Array>();
 				v8::Handle<v8::Array> values = value.As<v8::Array>();
 				obj.Clear();
-				for (int i = 0; i < values->Length(); i++)
+				for (uint32_t i = 0; i < values->Length(); i++)
 				{
 					obj->Set(i, values->Get(i));
 				}
@@ -449,7 +449,7 @@ namespace fbox
 				v8::Handle<v8::Object> obj = src.As<v8::Object>();
 				v8::Handle<v8::Object> values = value.As<v8::Object>();
 				v8::Handle<v8::Array> props = values->GetPropertyNames();
-				for (int i = 0; i < props->Length(); i++)
+				for (uint32_t i = 0; i < props->Length(); i++)
 				{
 					obj->Set(props->Get(i), values->Get(props->Get(i)));
 				}

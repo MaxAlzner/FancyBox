@@ -89,7 +89,7 @@ namespace fbox
 			glClearColor(this->clearColor.r, this->clearColor.g, this->clearColor.b, this->clearColor.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
-		FBOXAPI void Framebuffer::resize(glm::ivec2& dimensions)
+		FBOXAPI void Framebuffer::resize(const glm::ivec2& dimensions)
 		{
 			this->_dimensions = dimensions;
 		}
@@ -146,7 +146,7 @@ namespace fbox
 			return this->_dimensions;
 		}
 
-		FBOXAPI void Framebuffer::screen(glm::ivec2& dimensions)
+		FBOXAPI void Framebuffer::screen(const glm::ivec2& dimensions)
 		{
 			_screen = dimensions;
 		}

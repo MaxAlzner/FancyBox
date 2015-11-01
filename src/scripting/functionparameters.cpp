@@ -1,17 +1,17 @@
 
 #define FBOX_EXPORT
-#include "../include/FancyBox.h"
+#include "../../include/FancyBox.h"
 
 namespace fbox
 {
 	namespace js
 	{
 
-		FBOXAPI void FunctionParameters::add(string& value)
+		FBOXAPI void FunctionParameters::add(const std::string& value)
 		{
 			this->_parameters.push_back(v8::String::New(value.data()));
 		}
-		FBOXAPI void FunctionParameters::add(__int32 value)
+		FBOXAPI void FunctionParameters::add(int32_t value)
 		{
 			this->_parameters.push_back(v8::Int32::New(value));
 		}
@@ -27,11 +27,11 @@ namespace fbox
 		{
 			this->_parameters.push_back(v8::Number::New(value));
 		}
-		FBOXAPI void FunctionParameters::add(Object& value)
+		FBOXAPI void FunctionParameters::add(const Object& value)
 		{
 			this->_parameters.push_back((v8::Handle<v8::Value>)value);
 		}
-		FBOXAPI void FunctionParameters::add(Array& value)
+		FBOXAPI void FunctionParameters::add(const Array& value)
 		{
 			this->_parameters.push_back((v8::Handle<v8::Value>)value);
 		}
@@ -45,11 +45,11 @@ namespace fbox
 		{
 			return (v8::Handle<v8::Value>*)this->_parameters.data();
 		}
-		FBOXAPI void FunctionParameters::operator+=(string& value)
+		FBOXAPI void FunctionParameters::operator+=(const std::string& value)
 		{
 			this->add(value);
 		}
-		FBOXAPI void FunctionParameters::operator+=(__int32 value)
+		FBOXAPI void FunctionParameters::operator+=(int32_t value)
 		{
 			this->add(value);
 		}
@@ -65,11 +65,11 @@ namespace fbox
 		{
 			this->add(value);
 		}
-		FBOXAPI void FunctionParameters::operator+=(Object& value)
+		FBOXAPI void FunctionParameters::operator+=(const Object& value)
 		{
 			this->add(value);
 		}
-		FBOXAPI void FunctionParameters::operator+=(Array& value)
+		FBOXAPI void FunctionParameters::operator+=(const Array& value)
 		{
 			this->add(value);
 		}

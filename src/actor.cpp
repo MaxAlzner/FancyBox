@@ -110,7 +110,7 @@ namespace fbox
 		}
 	}
 
-	FBOXAPI Component* Actor::findComponent(string& type)
+	FBOXAPI Component* Actor::findComponent(const std::string& type)
 	{
 		for (std::list<Component*>::iterator i = this->components.begin(); i != this->components.end(); i++)
 		{
@@ -125,7 +125,7 @@ namespace fbox
 	}
 	FBOXAPI Component* Actor::findComponent(const char* type)
 	{
-		return this->findComponent(string(type));
+		return this->findComponent(std::string(type));
 	}
 
 }

@@ -7,7 +7,7 @@ namespace fbox
 	namespace gl
 	{
 
-		FBOXAPI void Shader::compile(string& filename)
+		FBOXAPI void Shader::compile(const std::string& filename)
 		{
 			if (this->_type == 0)
 			{
@@ -40,7 +40,7 @@ namespace fbox
 					char* errorBuffer = new char[512];
 					memset(errorBuffer, 0, sizeof(char) * 512);
 					glGetShaderInfoLog(this->_handle, 512, &logLength, errorBuffer);
-					printf(errorBuffer);
+					printf("%s\n", errorBuffer);
 					delete[] errorBuffer;
 				}
 
@@ -49,7 +49,7 @@ namespace fbox
 		}
 		FBOXAPI void Shader::compile(const char* filename)
 		{
-			this->compile(string(filename));
+			this->compile(std::string(filename));
 		}
 
 		FBOXAPI void Shader::release()

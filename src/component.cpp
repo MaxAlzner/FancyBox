@@ -42,7 +42,7 @@ namespace fbox
 
 	FBOXAPI void Transform::look(const vec3& focus)
 	{
-		vec3 to = normalize(focus - this->position);
+		//vec3 to = normalize(focus - this->position);
 	}
 
 	FBOXAPI void MeshFilter::bind()
@@ -93,7 +93,7 @@ namespace fbox
 			this->state = js::Manager::Global().construct(this->name);
 		}
 
-		this->state.accessor("name", "string", &this->name, sizeof(string), false);
+		this->state.accessor("name", "string", &this->name, sizeof(std::string), false);
 		js::Object transform;
 		transform.accessor("position", &this->object->transform->position, true);
 		transform.accessor("rotation", &this->object->transform->rotation, true);
