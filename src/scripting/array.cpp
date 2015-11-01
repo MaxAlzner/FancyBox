@@ -47,7 +47,7 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(this->count(), v8::String::New(value.data()));
+				(*this->_state)->Set(this->count(), v8::String::NewFromUtf8(Manager::Isolate, value.data()));
 			}
 		}
 		FBOXAPI void Array::add(int32_t value)
@@ -97,7 +97,7 @@ namespace fbox
 		{
 			if (Manager::Started() && this->_state != 0)
 			{
-				(*this->_state)->Set(index, v8::String::New(value.data()));
+				(*this->_state)->Set(index, v8::String::NewFromUtf8(Manager::Isolate, value.data()));
 			}
 		}
 		FBOXAPI void Array::set(const int index, int32_t value)

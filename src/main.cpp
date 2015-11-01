@@ -1,6 +1,8 @@
 
 #include "../include/FancyBox.h"
 
+#include <GLFW/glfw3.h>
+
 void OnMouseMove(GLFWwindow* window, double x, double y)
 {
 	fbox::Input::Mouse.position.x = (float)x;

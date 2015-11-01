@@ -9,7 +9,7 @@ namespace fbox
 
 		FBOXAPI void FunctionParameters::add(const std::string& value)
 		{
-			this->_parameters.push_back(v8::String::New(value.data()));
+			this->_parameters.push_back(v8::String::NewFromUtf8(Manager::Isolate, value.data()));
 		}
 		FBOXAPI void FunctionParameters::add(int32_t value)
 		{

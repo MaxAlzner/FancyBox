@@ -44,7 +44,6 @@
 #include <shape.h>
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <v8.h>

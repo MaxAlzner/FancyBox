@@ -63,10 +63,10 @@ namespace fbox
 			static v8::Context::Scope ContextScope(Context);
 
 			v8::Local<v8::Object> debug = v8::Object::New();
-			debug->Set(v8::String::New("Log"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
-			debug->Set(v8::String::New("Warning"), v8::FunctionTemplate::New(Isolate, DebugWarningCallback)->GetFunction());
-			debug->Set(v8::String::New("Error"), v8::FunctionTemplate::New(Isolate, DebugErrorCallback)->GetFunction());
-			Context->Global()->Set(v8::String::New("Debug"), debug);
+			debug->Set(v8::String::NewFromUtf8(Manager::Isolate, "Log"), v8::FunctionTemplate::New(Isolate, DebugLogCallback)->GetFunction());
+			debug->Set(v8::String::NewFromUtf8(Manager::Isolate, "Warning"), v8::FunctionTemplate::New(Isolate, DebugWarningCallback)->GetFunction());
+			debug->Set(v8::String::NewFromUtf8(Manager::Isolate, "Error"), v8::FunctionTemplate::New(Isolate, DebugErrorCallback)->GetFunction());
+			Context->Global()->Set(v8::String::NewFromUtf8(Manager::Isolate, "Debug"), debug);
 		}
 		FBOXAPI void Manager::Dispose()
 		{
@@ -97,7 +97,7 @@ namespace fbox
 				char* raw = 0;
 				if (Import::Read(filename, &raw) > 0)
 				{
-					v8::Local<v8::String> source = v8::String::New(raw);
+					v8::Local<v8::String> source = v8::String::NewFromUtf8(Manager::Isolate, raw);
 					if (!source.IsEmpty())
 					{
 						v8::Handle<v8::Script> script = v8::Script::Compile(source);
@@ -111,7 +111,7 @@ namespace fbox
 		}
 		FBOXAPI void Manager::Execute(const std::string& command)
 		{
-			v8::Local<v8::String> source = v8::String::New(command.data());
+			v8::Local<v8::String> source = v8::String::NewFromUtf8(Manager::Isolate, command.data());
 			if (!source.IsEmpty())
 			{
 				v8::Local<v8::Script> script = v8::Script::Compile(source);
